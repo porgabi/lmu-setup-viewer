@@ -172,8 +172,10 @@ function SetupSelector() {
             </MenuItem>
           ))} */}
           {Object.entries(setups).map(([track, files]) => [
-            // make subheader text bold
-            <ListSubheader key={track}>{track}</ListSubheader>,
+            // make subheader text bold -- or give it a different colored background?
+            <ListSubheader key={track}>
+              <b>{track}</b>
+            </ListSubheader>,
             files.map((file) => {
               const setupName = file.replace(/\.[^/.]+$/, "");
               const value = `${track}/${setupName}`;
