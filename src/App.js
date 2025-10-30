@@ -103,17 +103,52 @@
 
 
 import * as React from 'react';
-import { Box, Tabs, Tab } from '@mui/material';
+import { Box, FormControl, InputLabel, Select, MenuItem, Tabs, Tab } from '@mui/material';
 import Home from './views/Home';
 import Settings from './views/Settings';
 import About from './views/About';
 
-// A helper component to show content per tab
+// A component to show content per tab.
 function TabPanel({ children, value, index }) {
   return (
     <div role="tabpanel" hidden={value !== index} style={{ padding: '2rem' }}>
       {value === index && children}
     </div>
+  );
+}
+
+// A component to select a setup from a list of setups.
+function SetupSelector() {
+  const [fruit, setSetup] = React.useState('');
+  const [fruits, setSetups] = React.useState([]);
+
+  // Simulate fetching data dynamically (e.g., from a file, API, or IPC call)
+  React.useEffect(() => {
+    const setupList = ['setup1', 'setup2', 'setup3', 'setup4', 'setup5'];
+    setSetups(setupList);
+  }, []);
+
+  const handleChange = (event) => {
+    setSetup(event.target.value);
+  };
+
+  return (
+    <Box sx={{ minWidth: 200 }}>
+      <FormControl fullWidth size="small">
+        <InputLabel>Selected setup</InputLabel>
+        <Select
+          value={fruit}
+          label="Selected setup"
+          onChange={handleChange}
+        >
+          {fruits.map((item) => (
+            <MenuItem key={item} value={item.toLowerCase()}>
+              {item}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
   );
 }
 
@@ -128,6 +163,7 @@ export default function App() {
     <Box sx={{ width: '100%' }}>
       {/* make a custom component for this similar to TabPanel */}
       <p>Select setups to view/compare. Dropdown selector? Or something better? (show them side-by-side if there are 2 selected)</p>
+      <SetupSelector />
       <Tabs
         value={value}
         onChange={handleChange}
