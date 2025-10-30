@@ -104,9 +104,9 @@
 
 import * as React from 'react';
 import { Box, FormControl, InputLabel, Select, ListSubheader, MenuItem, Tabs, Tab } from '@mui/material';
-import Home from './views/Home';
-import Settings from './views/Settings';
-import About from './views/About';
+import Powertrain from './views/Powertrain';
+import WheelsAndBrakes from './views/WheelsAndBrakes';
+import Suspension from './views/Suspension';
 
 // A component to show content per tab.
 function TabPanel({ children, value, index }) {
@@ -212,19 +212,19 @@ export default function App() {
         variant="fullWidth"
         sx={{ borderBottom: 1, borderColor: 'divider', background: '#f5f5f5' }}
       >
-        <Tab label="Home" />
-        <Tab label="Settings" />
-        <Tab label="About" />
+        <Tab label="Powertrain" />
+        <Tab label="Wheels & Brakes" />
+        <Tab label="Suspension" />
       </Tabs>
 
       <TabPanel value={value} index={0}>
-        <Home />
+        <Powertrain />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Settings />
+        <WheelsAndBrakes />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <About />
+        <Suspension />
       </TabPanel>
     </Box>
   );

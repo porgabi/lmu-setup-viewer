@@ -59,7 +59,7 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
-export default function Settings() {
+export default function WheelsAndBrakes() {
   const [username, setUsername] = useState('User123');
   const [theme, setTheme] = useState('light');
 
@@ -69,7 +69,7 @@ export default function Settings() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 300 }}>
-      <h2>⚙️ Settings</h2>
+      <h2>⚙️ WheelsAndBrakes</h2>
       <TextField
         label="Username"
         value={username}

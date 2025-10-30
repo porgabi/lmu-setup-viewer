@@ -23,10 +23,10 @@
 // src/views/About.js
 import React from 'react';
 
-export default function About() {
+export default function Suspension() {
   return (
     <div>
-      <h2>ℹ️ About</h2>
+      <h2>♨ Suspension</h2>
       <p>This is a simple desktop app built with React and Electron.</p>
       <p>Tabs are powered by MUI (Material UI).</p>
     </div>

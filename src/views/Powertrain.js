@@ -18,10 +18,10 @@
 
 import React from 'react';
 
-export default function Home() {
+export default function Powertrain() {
   return (
     <div>
-      <h2>🏠 Home</h2>
+      <h2>🏠 Powertrain</h2>
       <p>Welcome to your Electron + React app!</p>
     </div>
   );
