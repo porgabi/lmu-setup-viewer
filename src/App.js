@@ -103,7 +103,7 @@
 
 
 import * as React from 'react';
-import { Box, FormControl, InputLabel, Select, MenuItem, Tabs, Tab } from '@mui/material';
+import { Box, FormControl, InputLabel, Select, ListSubheader, MenuItem, Tabs, Tab } from '@mui/material';
 import Home from './views/Home';
 import Settings from './views/Settings';
 import About from './views/About';
@@ -119,14 +119,28 @@ function TabPanel({ children, value, index }) {
 
 // A component to select a setup from a list of setups.
 function SetupSelector() {
-  const [fruit, setSetup] = React.useState('');
-  const [fruits, setSetups] = React.useState([]);
+  const [selectedSetup, setSetup] = React.useState('');
+  const [setups, setSetups] = React.useState([]);
 
-  // Simulate fetching data dynamically (e.g., from a file, API, or IPC call)
+  // // Simulate fetching data dynamically (e.g., from a file, API, or IPC call)
+  // React.useEffect(() => {
+  //   const setupList = ['setup1', 'setup2', 'setup3', 'setup4', 'setup5'];
+  //   setSetups(setupList);
+  // }, []);
+
   React.useEffect(() => {
-    const setupList = ['setup1', 'setup2', 'setup3', 'setup4', 'setup5'];
-    setSetups(setupList);
-  }, []);
+    async function loadFiles() {
+      try {
+        const rootPath = 'F:/SteamLibrary/steamapps/common/Le Mans Ultimate/UserData/player/Settings';
+        const filesByFolders = await window.electronAPI.getFolderFileMap(rootPath);
+        console.log(filesByFolders);
+        setSetups(filesByFolders);
+      } catch (error) {
+        console.error('Failed to load files:', error);
+      }
+    }
+    loadFiles();
+  }, []);  
 
   const handleChange = (event) => {
     setSetup(event.target.value);
@@ -134,18 +148,42 @@ function SetupSelector() {
 
   return (
     <Box sx={{ minWidth: 200 }}>
-      <FormControl fullWidth size="small">
+      <FormControl sx={{ width: '400px' }} size="small">
         <InputLabel>Selected setup</InputLabel>
+        {/* any way to add a scrollbar? */}
         <Select
-          value={fruit}
+          value={selectedSetup}
           label="Selected setup"
           onChange={handleChange}
+          MenuProps={{
+            PaperProps: {
+              style: {
+                maxHeight: 300,
+                overflowY: 'auto'
+              }
+            }
+          }}
         >
-          {fruits.map((item) => (
+          {/* {setups.map((item) => (
+            // display without file extension
+            // display track name before setup name, i.e. Bahrain/HYMO Q dev -- including layouts (which are in separate folders)
             <MenuItem key={item} value={item.toLowerCase()}>
               {item}
             </MenuItem>
-          ))}
+          ))} */}
+          {Object.entries(setups).map(([track, files]) => [
+            // make subheader text bold
+            <ListSubheader key={track}>{track}</ListSubheader>,
+            files.map((file) => {
+              const setupName = file.replace(/\.[^/.]+$/, "");
+              const value = `${track}/${setupName}`;
+              return (
+                <MenuItem key={value} value={value}>
+                  {value}
+                </MenuItem>
+              );
+            }),
+          ])}        
         </Select>
       </FormControl>
     </Box>

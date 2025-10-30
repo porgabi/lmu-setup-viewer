@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -34,6 +35,46 @@ function createWindow() {
     event.sender.send('reply-from-main', reply);
   });
 }
+
+// ipcMain.handle('get-files-in-folder', async (event, folderPath) => {
+//   try {
+//     const files = await fs.promises.readdir(folderPath); // returns only folders without the files within them
+//     const svmFiles = files.filter((file) => file.endsWith('.svm')); // filter for setup files here or include folders too?
+//     console.log(svmFiles); //
+//     return files; // return dictionary where keys are folder names and values are file names
+//   } catch (err) {
+//     console.error('Error reading directory:', err);
+//     return [];
+//   }
+// });
+
+ipcMain.handle('get-folder-file-map', async (event, rootPath) => {
+  try {
+    const result = {};
+    const entries = await fs.promises.readdir(rootPath, { withFileTypes: true });
+
+    for (const entry of entries) {
+      // filter out bogus folders -- needs a list
+      if (entry.isDirectory()) {
+        const folderPath = path.join(rootPath, entry.name);
+        const files = await fs.promises.readdir(folderPath, { withFileTypes: true });
+
+        // Filter only files (ignore nested folders, if any)
+        const fileNames = files
+          .filter((f) => f.isFile() && f.name.endsWith('.svm'))
+          .map((f) => f.name);
+
+        // could also add flags to track names
+        result[entry.name] = fileNames;
+      }
+    }
+
+    return result;
+  } catch (err) {
+    console.error('Error reading directories:', err);
+    return {};
+  }
+});
 
 // Create window once Electron is ready
 app.whenReady().then(createWindow);
