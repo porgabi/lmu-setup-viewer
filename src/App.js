@@ -1,107 +1,3 @@
-// import logo from './logo.svg';
-// import './App.css';
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
-
-
-
-
-
-
-// import React, { useEffect, useState } from 'react';
-// import './App.css';
-
-// function App() {
-//   const [reply, setReply] = useState('');
-
-//   useEffect(() => {
-//     // Listen for reply from main process
-//     window.electronAPI.onReply((data) => {
-//       setReply(data);
-//     });
-//   }, []);
-
-//   const handleClick = () => {
-//     // Send message to main process
-//     window.electronAPI.sendMessage('Hello from React!');
-//   };
-
-//   return (
-//     <div className="App">
-//       <h1>React + Electron IPC Demo</h1>
-//       <button onClick={handleClick}>Send Message to Main</button>
-//       <p><strong>Reply from Main:</strong> {reply}</p>
-//     </div>
-//   );
-// }
-
-// export default App;
-
-
-
-
-
-// import React from 'react';
-// import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-// import Home from './views/Home';
-// import Settings from './views/Settings';
-// import About from './views/About';
-
-// function App() {
-//   const navStyle = {
-//     display: 'flex',
-//     gap: '1rem',
-//     padding: '1rem',
-//     borderBottom: '1px solid #ccc',
-//     backgroundColor: '#f9f9f9',
-//   };
-
-//   return (
-//     <Router>
-//       <div>
-//         <nav style={navStyle}>
-//           <Link to="/">Home</Link>
-//           <Link to="/settings">Settings</Link>
-//           <Link to="/about">About</Link>
-//         </nav>
-
-//         <Routes>
-//           <Route path="/" element={<Home />} />
-//           <Route path="/settings" element={<Settings />} />
-//           <Route path="/about" element={<About />} />
-//         </Routes>
-//       </div>
-//     </Router>
-//   );
-// }
-
-// export default App;
-
-
-
-
-
 import * as React from 'react';
 import { Box, FormControl, InputLabel, Select, ListSubheader, MenuItem, Tabs, Tab } from '@mui/material';
 import ChassisAndAero from './views/ChassisAndAero';
@@ -109,6 +5,7 @@ import Dampers from './views/Dampers';
 import Powertrain from './views/Powertrain';
 import WheelsAndBrakes from './views/WheelsAndBrakes';
 import Suspension from './views/Suspension';
+import SetupViewer from './components/SetupViewer';
 
 // A component to show content per tab.
 function TabPanel({ children, value, index }) {
@@ -120,8 +17,7 @@ function TabPanel({ children, value, index }) {
 }
 
 // A component to select a setup from a list of setups.
-function SetupSelector() {
-  const [selectedSetup, setSetup] = React.useState('');
+function SetupSelector({ selectedSetup, onSelect }) {
   const [setups, setSetups] = React.useState([]);
 
   // // Simulate fetching data dynamically (e.g., from a file, API, or IPC call)
@@ -145,7 +41,7 @@ function SetupSelector() {
   }, []);  
 
   const handleChange = (event) => {
-    setSetup(event.target.value);
+    onSelect(event.target.value);
   };
 
   return (
@@ -196,6 +92,7 @@ function SetupSelector() {
 
 export default function App() {
   const [value, setValue] = React.useState(0);
+  const [selectedSetup, setSelectedSetup] = React.useState('');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -205,7 +102,7 @@ export default function App() {
     <Box sx={{ width: '100%' }}>
       {/* make a custom component for this similar to TabPanel */}
       <p>Select setups to view/compare. Dropdown selector? Or something better? (show them side-by-side if there are 2 selected)</p>
-      <SetupSelector />
+      <SetupSelector selectedSetup={selectedSetup} onSelect={setSelectedSetup} />
       <Tabs
         value={value}
         onChange={handleChange}
@@ -222,6 +119,7 @@ export default function App() {
       </Tabs>
 
       <TabPanel value={value} index={0}>
+        <SetupViewer selectedSetup={selectedSetup} />
         <Powertrain />
       </TabPanel>
       <TabPanel value={value} index={1}>
