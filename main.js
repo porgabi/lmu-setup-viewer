@@ -48,6 +48,17 @@ function createWindow() {
 //   }
 // });
 
+ipcMain.handle('read-file', async (event, filePath) => {
+  try {
+    console.log(filePath);
+    const data = await fs.promises.readFile(filePath, 'utf-8');
+    return data;
+  } catch (err) {
+    console.error('Error reading file:', err);
+    return null;
+  }
+});
+
 ipcMain.handle('get-folder-file-map', async (event, rootPath) => {
   try {
     const result = {};

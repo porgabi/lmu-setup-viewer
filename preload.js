@@ -5,4 +5,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
   sendMessage: (message) => ipcRenderer.send('message-from-renderer', message),
   onReply: (callback) => ipcRenderer.on('reply-from-main', (_, data) => callback(data)),
   getFolderFileMap: (folderPath) => ipcRenderer.invoke('get-folder-file-map', folderPath),
+  readFile: (filePath) => ipcRenderer.invoke('read-file', filePath),
 });
