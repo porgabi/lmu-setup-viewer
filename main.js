@@ -1,4 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const windowStateKeeper = require('electron-window-state');
@@ -10,7 +11,7 @@ function createWindow() {
     defaultHeight: 1000,
     maximize: true,
   });
-
+  
   const mainWindow = new BrowserWindow({
     x: mainWindowState.x,
     y: mainWindowState.y,
@@ -26,31 +27,60 @@ function createWindow() {
       nodeIntegration: false,
     },
   });
+  
+
 
   mainWindowState.manage(mainWindow);
-
+  
   // Detect whether we’re in development or production
   const isDev = !app.isPackaged;
-
+  
   // Load the correct URL depending on mode
   const startUrl = isDev
-    ? 'http://localhost:3000'
-    : `file://${path.join(__dirname, 'build', 'index.html')}`;
-
+  ? 'http://localhost:3000'
+  : `file://${path.join(__dirname, 'build', 'index.html')}`;
+  
   mainWindow.loadURL(startUrl);
 
   // Optional: open DevTools automatically in dev mode
-//   if (isDev) {
-//     mainWindow.webContents.openDevTools();
-//   }
-
-  // Handle messages from renderer (IPC example)
-  ipcMain.on('message-from-renderer', (event, message) => {
-    console.log('Received from React:', message);
-    const reply = `Main process got your message: "${message}"`;
-    event.sender.send('reply-from-main', reply);
-  });
+  //   if (isDev) {
+    //     mainWindow.webContents.openDevTools();
+    //   }
 }
+  
+  
+const Store = require('electron-store');
+let store;
+  
+// Create window once Electron is ready
+app.whenReady().then(() => {
+  store = new Store.default();
+
+  ipcMain.handle('get-lmu-path', () => {
+    return store.get('lmuPath') || null;
+  });
+
+  ipcMain.handle('set-lmu-path', async (event) => {
+    const result = await dialog.showOpenDialog({
+      properties: ['openDirectory'],
+    });
+
+    if (!result.canceled && result.filePaths.length > 0) {
+      const selectedPath = result.filePaths[0];
+      store.set('lmuPath', selectedPath);
+      return selectedPath;
+    }
+
+    return null;
+  });
+
+  console.log('🔍 Preload path:', path.join(__dirname, 'preload.js'));
+
+
+  createWindow();
+});
+
+
 
 ipcMain.handle('read-file', async (event, filePath) => {
   try {
@@ -90,9 +120,6 @@ ipcMain.handle('get-folder-file-map', async (event, rootPath) => {
     return {};
   }
 });
-
-// Create window once Electron is ready
-app.whenReady().then(createWindow);
 
 // macOS behavior
 app.on('activate', () => {

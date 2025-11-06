@@ -18,33 +18,66 @@ function TabPanel({ children, value, index }) {
 // A component to select a setup from a list of setups.
 function SetupSelector({ selectedSetup, onSelect }) {
   const [setups, setSetups] = React.useState([]);
+  const [lmuPath, setLmuPath] = React.useState('');
 
-  // // Simulate fetching data dynamically (e.g., from a file, API, or IPC call)
   // React.useEffect(() => {
-  //   const setupList = ['setup1', 'setup2', 'setup3', 'setup4', 'setup5'];
-  //   setSetups(setupList);
-  // }, []);
+  //   async function loadFiles() {
+  //     try {
+  //       const rootPath = 'F:/SteamLibrary/steamapps/common/Le Mans Ultimate/UserData/player/Settings';
+  //       const filesByFolders = await window.electronAPI.getFolderFileMap(rootPath);
+  //       console.log(filesByFolders);
+  //       setSetups(filesByFolders);
+  //     } catch (error) {
+  //       console.error('Failed to load files:', error);
+  //     }
+  //   }
+  //   loadFiles();
+  // }, []);  
+
+  // const handleChange = (event) => {
+  //   onSelect(event.target.value);
+  // };
 
   React.useEffect(() => {
-    async function loadFiles() {
-      try {
-        const rootPath = 'F:/SteamLibrary/steamapps/common/Le Mans Ultimate/UserData/player/Settings';
-        const filesByFolders = await window.electronAPI.getFolderFileMap(rootPath);
-        console.log(filesByFolders);
+    async function initLmuPath() {
+      if (!window?.electronAPI?.getLmuPath) {
+        console.warn('electronAPI unavailable');
+        return;
+      }
+
+      let savedPath = await window.electronAPI.getLmuPath();
+      if (savedPath) {
+        setLmuPath(savedPath);
+        const filesByFolders = await window.electronAPI.getFolderFileMap(savedPath + '/UserData/player/Settings');
         setSetups(filesByFolders);
-      } catch (error) {
-        console.error('Failed to load files:', error);
       }
     }
-    loadFiles();
-  }, []);  
+
+    initLmuPath();
+  }, []);
 
   const handleChange = (event) => {
     onSelect(event.target.value);
   };
 
+  const handleChangeLmuPath = async () => {
+      if (!window?.electronAPI?.getLmuPath) {
+        console.warn('electronAPI unavailable');
+        return;
+      }
+    
+    const newPath = await window.electronAPI.setLmuPath();
+    if (newPath) {
+      setLmuPath(newPath);
+      const filesByFolders = await window.electronAPI.getFolderFileMap(newPath + '/UserData/player/Settings');
+      setSetups(filesByFolders);
+    }
+  };
+
   return (
     <Box sx={{ minWidth: 200 }}>
+      <p>Current root path: {lmuPath || '(not set)'}</p>
+      <button onClick={handleChangeLmuPath}>Change LMU Folder</button>
       <FormControl sx={{ width: '400px' }} size="small">
         <InputLabel>Selected setup</InputLabel>
         <Select
