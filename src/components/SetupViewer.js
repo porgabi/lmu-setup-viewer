@@ -9,8 +9,8 @@ export default function SetupViewer({ selectedSetup }) {
 
     const loadContent = async () => {
       try {
-        const rootPath = 'F:/SteamLibrary/steamapps/common/Le Mans Ultimate/UserData/player/Settings';
-        const fullPath = `${rootPath}/${selectedSetup}.svm`;
+        const rootPath = await window.electronAPI.getLmuPath();
+        const fullPath = `${rootPath}/UserData/player/Settings/${selectedSetup}.svm`;
         const content = await window.electronAPI.readFile(fullPath);
         setFileContent(content);
       } catch (error) {
@@ -23,6 +23,7 @@ export default function SetupViewer({ selectedSetup }) {
   }, [selectedSetup]);
 
   return (
+    // also display car name
     <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.100', borderRadius: 2 }}>
       {selectedSetup ? (
         <>

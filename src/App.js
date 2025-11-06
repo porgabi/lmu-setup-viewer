@@ -20,24 +20,6 @@ function SetupSelector({ selectedSetup, onSelect }) {
   const [setups, setSetups] = React.useState([]);
   const [lmuPath, setLmuPath] = React.useState('');
 
-  // React.useEffect(() => {
-  //   async function loadFiles() {
-  //     try {
-  //       const rootPath = 'F:/SteamLibrary/steamapps/common/Le Mans Ultimate/UserData/player/Settings';
-  //       const filesByFolders = await window.electronAPI.getFolderFileMap(rootPath);
-  //       console.log(filesByFolders);
-  //       setSetups(filesByFolders);
-  //     } catch (error) {
-  //       console.error('Failed to load files:', error);
-  //     }
-  //   }
-  //   loadFiles();
-  // }, []);  
-
-  // const handleChange = (event) => {
-  //   onSelect(event.target.value);
-  // };
-
   React.useEffect(() => {
     async function initLmuPath() {
       if (!window?.electronAPI?.getLmuPath) {
@@ -76,6 +58,7 @@ function SetupSelector({ selectedSetup, onSelect }) {
 
   return (
     <Box sx={{ minWidth: 200 }}>
+      <p>Select setups to view/compare.</p>
       <p>Current root path: {lmuPath || '(not set)'}</p>
       <button onClick={handleChangeLmuPath}>Change LMU Folder</button>
       <FormControl sx={{ width: '400px' }} size="small">
@@ -131,7 +114,6 @@ export default function App() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <p>Select setups to view/compare. Dropdown selector? Or something better? (show them side-by-side if there are 2 selected)</p>
       <SetupSelector selectedSetup={selectedSetup} onSelect={setSelectedSetup} />
       <Tabs
         value={value}

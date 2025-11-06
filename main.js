@@ -1,4 +1,3 @@
-
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
@@ -27,8 +26,6 @@ function createWindow() {
       nodeIntegration: false,
     },
   });
-  
-
 
   mainWindowState.manage(mainWindow);
   
@@ -47,7 +44,6 @@ function createWindow() {
     //     mainWindow.webContents.openDevTools();
     //   }
 }
-  
   
 const Store = require('electron-store');
 let store;
@@ -74,13 +70,8 @@ app.whenReady().then(() => {
     return null;
   });
 
-  console.log('🔍 Preload path:', path.join(__dirname, 'preload.js'));
-
-
   createWindow();
 });
-
-
 
 ipcMain.handle('read-file', async (event, filePath) => {
   try {
