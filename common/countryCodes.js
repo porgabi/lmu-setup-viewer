@@ -1,0 +1,16 @@
+module.exports = {
+  'Bahrain': 'BH',
+  'Circuit Of The Americas': 'US',
+  'Fuji': 'JP',
+  'Fuji_Cl': 'JP',
+  'Imola': 'IT',
+  'Interlagos': 'BR',
+  'Lemans': 'FR',
+  'Monza': 'IT',
+  'Portimao': 'PT',
+  'Qatar': 'QA',
+  'Sebring': 'US',
+  'Silverstone': 'GB',
+  'Spa': 'BE',
+  'Spa_Endce': 'BE', 
+};
