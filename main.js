@@ -1,7 +1,9 @@
+
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const windowStateKeeper = require('electron-window-state');
+const COUNTRY_CODES = require('./common/countryCodes');
 
 function createWindow() {
   // Load previous state or use default values.
@@ -18,7 +20,7 @@ function createWindow() {
     height: mainWindowState.height,
     minWidth: 1400,
     minHeight: 1000,
-    title: 'Setup Viewer',
+    title: 'LMU Setup Viewer',
     // autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -90,17 +92,19 @@ ipcMain.handle('get-folder-file-map', async (event, rootPath) => {
     const entries = await fs.promises.readdir(rootPath, { withFileTypes: true });
 
     for (const entry of entries) {
-      // filter out bogus folders -- needs a list
-      if (entry.isDirectory()) {
+      // Filter out unnecessary folders.
+      if (entry.isDirectory() && entry.name in COUNTRY_CODES) {
         const folderPath = path.join(rootPath, entry.name);
         const files = await fs.promises.readdir(folderPath, { withFileTypes: true });
 
-        // Filter only files (ignore nested folders, if any)
+        // Filter only for SVM files.
         const fileNames = files
           .filter((f) => f.isFile() && f.name.endsWith('.svm'))
           .map((f) => f.name);
 
-        // could also add flags to track names
+        const countryCode = COUNTRY_CODES[entry.name];
+        console.log(countryCode);
+
         result[entry.name] = fileNames;
       }
     }
