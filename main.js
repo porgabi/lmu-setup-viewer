@@ -18,6 +18,8 @@ function createWindow() {
     height: mainWindowState.height,
     minWidth: 1400,
     minHeight: 1000,
+    title: 'Setup Viewer',
+    // autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -49,18 +51,6 @@ function createWindow() {
     event.sender.send('reply-from-main', reply);
   });
 }
-
-// ipcMain.handle('get-files-in-folder', async (event, folderPath) => {
-//   try {
-//     const files = await fs.promises.readdir(folderPath); // returns only folders without the files within them
-//     const svmFiles = files.filter((file) => file.endsWith('.svm')); // filter for setup files here or include folders too?
-//     console.log(svmFiles); //
-//     return files; // return dictionary where keys are folder names and values are file names
-//   } catch (err) {
-//     console.error('Error reading directory:', err);
-//     return [];
-//   }
-// });
 
 ipcMain.handle('read-file', async (event, filePath) => {
   try {

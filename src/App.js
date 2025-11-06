@@ -69,7 +69,7 @@ function SetupSelector({ selectedSetup, onSelect }) {
           ))} */}
           {Object.entries(setups).map(([track, files]) => [
             // make subheader text bold -- or give it a different colored background?
-            <ListSubheader key={track} sx={{ backgroundColor: 'grey' }}>
+            <ListSubheader key={track} sx={{ backgroundColor: 'grey', textTransform: 'uppercase' }}>
               <b>{track}</b>
             </ListSubheader>,
             files.map((file) => {
@@ -108,11 +108,11 @@ export default function App() {
         variant="fullWidth"
         sx={{ borderBottom: 1, borderColor: 'divider', background: '#f5f5f5' }}
       >
-        <Tab label="Powertrain" />
-        <Tab label="Wheels & Brakes" />
-        <Tab label="Suspension" />
-        <Tab label="Dampers" />
-        <Tab label="Chassis & Aero" />
+        <Tab label="Powertrain" sx={{ fontWeight: 'bold' }} />
+        <Tab label="Wheels & Brakes" sx={{ fontWeight: 'bold' }} />
+        <Tab label="Suspension" sx={{ fontWeight: 'bold' }} />
+        <Tab label="Dampers" sx={{ fontWeight: 'bold' }} />
+        <Tab label="Chassis & Aero" sx={{ fontWeight: 'bold' }} />
       </Tabs>
 
       <TabPanel value={value} index={0}>
