@@ -1,9 +1,21 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const windowStateKeeper = require('electron-window-state');
 
 function createWindow() {
+  // Load previous state or use default values.
+  const mainWindowState = windowStateKeeper({
+    defaultWidth: 1400,
+    defaultHeight: 1000,
+    maximize: true,
+  });
+
   const mainWindow = new BrowserWindow({
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
     minWidth: 1400,
     minHeight: 1000,
     webPreferences: {
@@ -12,6 +24,8 @@ function createWindow() {
       nodeIntegration: false,
     },
   });
+
+  mainWindowState.manage(mainWindow);
 
   // Detect whether we’re in development or production
   const isDev = !app.isPackaged;
