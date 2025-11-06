@@ -17,12 +17,13 @@
 
 
 import React from 'react';
+import SetupViewer from '../components/SetupViewer';
 
-export default function Powertrain() {
+export default function Powertrain({ selectedSetup }) {
   return (
     <div>
       <h2>🏠 Powertrain</h2>
-      <p>Welcome to your Electron + React app!</p>
+        <SetupViewer selectedSetup={selectedSetup} />
     </div>
   );
 }

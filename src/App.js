@@ -5,7 +5,6 @@ import Dampers from './views/Dampers';
 import Powertrain from './views/Powertrain';
 import WheelsAndBrakes from './views/WheelsAndBrakes';
 import Suspension from './views/Suspension';
-import SetupViewer from './components/SetupViewer';
 
 // A component to show content per tab.
 function TabPanel({ children, value, index }) {
@@ -48,7 +47,6 @@ function SetupSelector({ selectedSetup, onSelect }) {
     <Box sx={{ minWidth: 200 }}>
       <FormControl sx={{ width: '400px' }} size="small">
         <InputLabel>Selected setup</InputLabel>
-        {/* any way to add a scrollbar? */}
         <Select
           value={selectedSetup}
           label="Selected setup"
@@ -71,7 +69,7 @@ function SetupSelector({ selectedSetup, onSelect }) {
           ))} */}
           {Object.entries(setups).map(([track, files]) => [
             // make subheader text bold -- or give it a different colored background?
-            <ListSubheader key={track}>
+            <ListSubheader key={track} sx={{ backgroundColor: 'grey' }}>
               <b>{track}</b>
             </ListSubheader>,
             files.map((file) => {
@@ -100,7 +98,6 @@ export default function App() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      {/* make a custom component for this similar to TabPanel */}
       <p>Select setups to view/compare. Dropdown selector? Or something better? (show them side-by-side if there are 2 selected)</p>
       <SetupSelector selectedSetup={selectedSetup} onSelect={setSelectedSetup} />
       <Tabs
@@ -119,8 +116,7 @@ export default function App() {
       </Tabs>
 
       <TabPanel value={value} index={0}>
-        <SetupViewer selectedSetup={selectedSetup} />
-        <Powertrain />
+        <Powertrain selectedSetup={selectedSetup} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <WheelsAndBrakes />
