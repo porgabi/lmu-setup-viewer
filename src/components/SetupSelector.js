@@ -40,20 +40,22 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
     filtered.forEach((setupName) => {
       const value = `${track}/${setupName}`;
       const countryCode = countryCodes?.[track];
-      const prefix = countryCode ? (
-        <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', mr: 1 }}>
-          <ReactCountryFlag
-            svg
-            countryCode={countryCode}
-            style={{ width: '1.1em', height: '1.1em' }}
-            aria-label={`${countryCode} flag`}
-          />
+      const content = (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {countryCode ? (
+            <ReactCountryFlag
+              svg
+              countryCode={countryCode}
+              style={{ width: '1.1em', height: '1.1em', display: 'block' }}
+              aria-label={`${countryCode} flag`}
+            />
+          ) : null}
+          <Box component="span">{value}</Box>
         </Box>
-      ) : null;
+      );
       items.push(
         <MenuItem key={value} value={value}>
-          {prefix}
-          {value}
+          {content}
         </MenuItem>
       );
     });
