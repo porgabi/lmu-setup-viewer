@@ -1,9 +1,6 @@
 import React from 'react';
+import SetupSectionPanel from '../components/SetupSectionPanel';
 
 export default function Suspension() {
-  return (
-    <div>
-      <h2>♨ Suspension</h2>
-    </div>
-  );
+  return <SetupSectionPanel categoryKey="suspension" />;
 }
