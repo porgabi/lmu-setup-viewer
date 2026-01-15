@@ -56,7 +56,7 @@ export function SetupProvider({ children }) {
           setupIndex: setupIndex || {},
           countryCodes: countryCodes || {},
           primarySetup: nextPrimary,
-          secondarySetup: prev.comparisonEnabled ? nextSecondary : '',
+          secondarySetup: nextSecondary,
           loadingIndex: false,
         };
       });
