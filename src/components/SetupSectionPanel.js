@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
+import ReactCountryFlag from 'react-country-flag';
 import { useSetupContext } from '../state/SetupContext';
 import { getSetupCategory } from '../domain/setupCategories';
 import { filterSectionsByKeywords } from '../domain/setupParser';
@@ -58,12 +59,44 @@ function SectionBlock({ section }) {
   );
 }
 
-function SetupColumn({ title, setupKey, data, loading, error, category }) {
+function getTrackFromSetupKey(setupKey) {
+  if (!setupKey) return '';
+  const separatorIndex = setupKey.indexOf('/');
+  if (separatorIndex === -1) return '';
+  return setupKey.slice(0, separatorIndex);
+}
+
+function renderHeading(setupKey, title, countryCodes) {
+  if (!setupKey) {
+    return title;
+  }
+
+  const track = getTrackFromSetupKey(setupKey);
+  const countryCode = track ? countryCodes?.[track] : null;
+
+  return (
+    <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+      {countryCode ? (
+        <ReactCountryFlag
+          svg
+          countryCode={countryCode}
+          style={{ width: '1.1em', height: '1.1em', display: 'block' }}
+          aria-label={`${countryCode} flag`}
+        />
+      ) : null}
+      <Box component="span">{setupKey}</Box>
+    </Box>
+  );
+}
+
+function SetupColumn({ title, setupKey, data, loading, error, category, countryCodes }) {
+  const heading = renderHeading(setupKey, title, countryCodes);
+
   if (!setupKey) {
     return (
       <Box>
         <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-          {title}
+          {heading}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Select a setup to view.
@@ -76,7 +109,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category }) {
     return (
       <Box>
         <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-          {title}: {setupKey}
+          {heading}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           Loading setup file...
@@ -89,7 +122,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category }) {
     return (
       <Box>
         <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-          {title}: {setupKey}
+          {heading}
         </Typography>
         <Typography variant="body2" color="error">
           {error}
@@ -103,7 +136,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category }) {
     return (
       <Box>
         <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-          {title}: {setupKey}
+          {heading}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           No data available for this setup.
@@ -117,7 +150,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category }) {
   return (
     <Box>
       <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-        {title}: {setupKey}
+        {heading}
       </Typography>
       {sections.length === 0 ? (
         <Typography variant="body2" color="text.secondary">
@@ -138,6 +171,7 @@ export default function SetupSectionPanel({ categoryKey }) {
     primarySetup,
     secondarySetup,
     comparisonEnabled,
+    countryCodes,
     setupFiles,
     loadingFiles,
     errors,
@@ -176,6 +210,7 @@ export default function SetupSectionPanel({ categoryKey }) {
             loading={loadingFiles[column.setupKey]}
             error={errors[column.setupKey]}
             category={category}
+            countryCodes={countryCodes}
           />
         ))}
       </Box>
