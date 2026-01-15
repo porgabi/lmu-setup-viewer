@@ -5,6 +5,7 @@ import Dampers from './views/Dampers';
 import Powertrain from './views/Powertrain';
 import WheelsAndBrakes from './views/WheelsAndBrakes';
 import Suspension from './views/Suspension';
+// import COUNTRY_CODES from '../common/countryCodes';
 
 // A component to show content per tab.
 function TabPanel({ children, value, index }) {
@@ -41,6 +42,33 @@ function SetupSelector({ selectedSetup, onSelect }) {
   const handleChange = (event) => {
     onSelect(event.target.value);
   };
+
+  const COUNTRY_CODES = {
+    'Bahrain': 'BH',
+    'Circuit Of The Americas': 'US',
+    'Fuji': 'JP',
+    'Fuji_Cl': 'JP',
+    'Imola': 'IT',
+    'Interlagos': 'BR',
+    'Lemans': 'FR',
+    'Monza': 'IT',
+    'Portimao': 'PT',
+    'Qatar': 'QA',
+    'Sebring': 'US',
+    'Silverstone': 'GB',
+    'Spa': 'BE',
+    'Spa_Endce': 'BE', 
+  };
+
+
+
+
+
+
+
+
+
+
 
   const handleChangeLmuPath = async () => {
       if (!window?.electronAPI?.getLmuPath) {
@@ -93,7 +121,7 @@ function SetupSelector({ selectedSetup, onSelect }) {
               const value = `${track}/${setupName}`;
               return (
                 <MenuItem key={value} value={value}>
-                  {value}
+                  {COUNTRY_CODES[track]} {value}
                 </MenuItem>
               );
             }),
