@@ -95,7 +95,6 @@ export function SetupProvider({ children }) {
     setState((prev) => ({
       ...prev,
       comparisonEnabled: enabled,
-      secondarySetup: enabled ? prev.secondarySetup : '',
     }));
   }, []);
 
