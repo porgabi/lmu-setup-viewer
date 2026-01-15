@@ -23,7 +23,7 @@ const theme = createTheme({
     MuiTab: {
       styleOverrides: {
         root: {
-          textTransform: 'none',
+          textTransform: 'uppercase',
           fontWeight: 600,
         },
       },
