@@ -4,21 +4,61 @@ import { useSetupContext } from '../state/SetupContext';
 import { getSetupCategory } from '../domain/setupCategories';
 import { filterSectionsByKeywords } from '../domain/setupParser';
 
+function EntriesTable({ entries }) {
+  return (
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 1.4fr)',
+        gap: 1,
+        fontFamily: 'monospace',
+        fontSize: '0.85rem',
+      }}
+    >
+      <Box sx={{ fontWeight: 700 }}>Setting</Box>
+      <Box sx={{ fontWeight: 700 }}>Value</Box>
+      <Box sx={{ fontWeight: 700 }}>Notes</Box>
+      {entries.map((entry, index) => (
+        <React.Fragment key={`${entry.key}-${index}`}>
+          <Box>{entry.key}</Box>
+          <Box>{entry.value || '-'}</Box>
+          <Box sx={{ color: 'text.secondary' }}>
+            {entry.comment ? `// ${entry.comment}` : ''}
+          </Box>
+        </React.Fragment>
+      ))}
+    </Box>
+  );
+}
+
 function SectionBlock({ section }) {
-  const content = section.lines.length ? section.lines.join('\n') : '(No entries)';
+  const hasEntries = section.entries.length > 0;
+  const hasLines = section.lines.length > 0;
+  const content = hasLines ? section.lines.join('\n') : '';
   return (
     <Box sx={{ mb: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
       <Typography variant="subtitle2" sx={{ fontWeight: 700, textTransform: 'uppercase', mb: 1 }}>
         {section.name}
       </Typography>
-      <Box component="pre" sx={{ m: 0, fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
-        {content}
-      </Box>
+      {hasEntries ? <EntriesTable entries={section.entries} /> : null}
+      {hasLines ? (
+        <Box
+          component="pre"
+          sx={{ mt: hasEntries ? 2 : 0, m: 0, fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}
+        >
+          {content}
+        </Box>
+      ) : null}
+      {!hasEntries && !hasLines ? (
+        <Typography variant="body2" color="text.secondary">
+          (No entries)
+        </Typography>
+      ) : null}
     </Box>
   );
 }
 
-function SetupColumn({ title, setupKey, data, loading, error, keywords }) {
+function SetupColumn({ title, setupKey, data, loading, error, category }) {
   if (!setupKey) {
     return (
       <Box>
@@ -72,7 +112,7 @@ function SetupColumn({ title, setupKey, data, loading, error, keywords }) {
     );
   }
 
-  const { sections, availableSections } = filterSectionsByKeywords(parsed, keywords);
+  const { sections, availableSections } = filterSectionsByKeywords(parsed, category);
 
   return (
     <Box>
@@ -135,7 +175,7 @@ export default function SetupSectionPanel({ categoryKey }) {
             data={setupFiles[column.setupKey]}
             loading={loadingFiles[column.setupKey]}
             error={errors[column.setupKey]}
-            keywords={category.keywords}
+            category={category}
           />
         ))}
       </Box>
