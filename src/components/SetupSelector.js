@@ -4,13 +4,16 @@ import {
   Button,
   FormControl,
   FormControlLabel,
+  IconButton,
   InputLabel,
   ListSubheader,
   MenuItem,
   Select,
   Switch,
+  Tooltip,
   Typography,
 } from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import ReactCountryFlag from 'react-country-flag';
 import { useSetupContext } from '../state/SetupContext';
 
@@ -100,32 +103,47 @@ export default function SetupSelector() {
     },
   };
 
+  const gamePath = lmuPath || '(not set)';
+
+  const pathTooltip = `Current game path: ${gamePath}`;
+
   return (
     <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', backgroundColor: 'background.paper' }}>
-      <Typography variant="body1">Select setups to view/compare.</Typography>
-      <Typography variant="caption" color="text.secondary">
-        Current root path: {lmuPath || '(not set)'}
-      </Typography>
-      <Box sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 1.5, alignItems: 'center' }}>
-        <Button variant="outlined" size="small" onClick={chooseLmuPath}>
-          Change LMU Folder
-        </Button>
-        <Button variant="text" size="small" onClick={refreshSetupIndex} disabled={loadingIndex}>
-          Refresh setups
-        </Button>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={comparisonEnabled}
-              onChange={(event) => setComparisonEnabled(event.target.checked)}
-              size="small"
-            />
-          }
-          label="Compare"
-        />
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center' }}>
+        <Box sx={{ minWidth: 260 }}>
+          <Typography variant="subtitle2" sx={{ fontWeight: 700, textTransform: 'uppercase' }}>
+            General configuration
+          </Typography>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            noWrap
+            sx={{ display: 'block', maxWidth: 520 }}
+          >
+            Current game path: {gamePath}
+          </Typography>
+        </Box>
+        <Tooltip title={pathTooltip} placement="top-start">
+          <Button variant="outlined" size="small" onClick={chooseLmuPath}>
+            Set LMU Folder
+          </Button>
+        </Tooltip>
       </Box>
-      <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-        <FormControl sx={{ minWidth: 320 }} size="small">
+      <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center' }}>
+        <Tooltip title="Reload setups" placement="top">
+          <span>
+            <IconButton
+              size="small"
+              onClick={refreshSetupIndex}
+              disabled={loadingIndex}
+              aria-label="Reload setups"
+              sx={{ p: 0.75 }}
+            >
+              <RefreshIcon fontSize="small" />
+            </IconButton>
+          </span>
+        </Tooltip>
+        <FormControl sx={{ minWidth: 320, flex: '1 1 320px' }} size="small">
           <InputLabel>Primary setup</InputLabel>
           <Select
             value={primarySetup}
@@ -137,8 +155,18 @@ export default function SetupSelector() {
             {buildMenuItems(setupIndex, countryCodes, secondarySetup)}
           </Select>
         </FormControl>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={comparisonEnabled}
+              onChange={(event) => setComparisonEnabled(event.target.checked)}
+              size="small"
+            />
+          }
+          label="Compare"
+        />
         {comparisonEnabled && (
-          <FormControl sx={{ minWidth: 320 }} size="small">
+          <FormControl sx={{ minWidth: 320, flex: '1 1 320px' }} size="small">
             <InputLabel>Compare with</InputLabel>
             <Select
               value={secondarySetup}
