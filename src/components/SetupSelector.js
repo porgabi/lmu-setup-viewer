@@ -11,6 +11,7 @@ import {
   Switch,
   Typography,
 } from '@mui/material';
+import ReactCountryFlag from 'react-country-flag';
 import { useSetupContext } from '../state/SetupContext';
 
 function buildMenuItems(setupIndex, countryCodes, excludeValue) {
@@ -35,7 +36,17 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
 
     filtered.forEach((setupName) => {
       const value = `${track}/${setupName}`;
-      const prefix = countryCodes?.[track] ? `${countryCodes[track]} ` : '';
+      const countryCode = countryCodes?.[track];
+      const prefix = countryCode ? (
+        <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', mr: 1 }}>
+          <ReactCountryFlag
+            svg
+            countryCode={countryCode}
+            style={{ width: '1.1em', height: '1.1em' }}
+            aria-label={`${countryCode} flag`}
+          />
+        </Box>
+      ) : null;
       items.push(
         <MenuItem key={value} value={value}>
           {prefix}
