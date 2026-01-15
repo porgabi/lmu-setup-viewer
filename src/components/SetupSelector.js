@@ -110,26 +110,11 @@ export default function SetupSelector() {
   return (
     <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', backgroundColor: 'background.paper' }}>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center' }}>
-        <Box sx={{ minWidth: 260 }}>
-          <Typography variant="subtitle2" sx={{ fontWeight: 700, textTransform: 'uppercase' }}>
-            General configuration
-          </Typography>
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            noWrap
-            sx={{ display: 'block', maxWidth: 520 }}
-          >
-            Current game path: {gamePath}
-          </Typography>
-        </Box>
         <Tooltip title={pathTooltip} placement="top-start">
           <Button variant="outlined" size="small" onClick={chooseLmuPath}>
             Set LMU Folder
           </Button>
         </Tooltip>
-      </Box>
-      <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center' }}>
         <Tooltip title="Reload setups" placement="top">
           <span>
             <IconButton
@@ -144,10 +129,10 @@ export default function SetupSelector() {
           </span>
         </Tooltip>
         <FormControl sx={{ minWidth: 320, flex: '1 1 320px' }} size="small">
-          <InputLabel>Primary setup</InputLabel>
+          <InputLabel>Setup</InputLabel>
           <Select
             value={primarySetup}
-            label="Primary setup"
+            label="Setup"
             onChange={handlePrimaryChange}
             MenuProps={menuProps}
             disabled={loadingIndex}
@@ -165,20 +150,18 @@ export default function SetupSelector() {
           }
           label="Compare"
         />
-        {comparisonEnabled && (
-          <FormControl sx={{ minWidth: 320, flex: '1 1 320px' }} size="small">
-            <InputLabel>Compare with</InputLabel>
-            <Select
-              value={secondarySetup}
-              label="Compare with"
-              onChange={handleSecondaryChange}
-              MenuProps={menuProps}
-              disabled={loadingIndex}
-            >
-              {buildMenuItems(setupIndex, countryCodes, primarySetup)}
-            </Select>
-          </FormControl>
-        )}
+        <FormControl sx={{ minWidth: 320, flex: '1 1 320px' }} size="small">
+          <InputLabel>Compared setup</InputLabel>
+          <Select
+            value={secondarySetup}
+            label="Compared setup"
+            onChange={handleSecondaryChange}
+            MenuProps={menuProps}
+            disabled={loadingIndex || !comparisonEnabled}
+          >
+            {buildMenuItems(setupIndex, countryCodes, primarySetup)}
+          </Select>
+        </FormControl>
       </Box>
     </Box>
   );
