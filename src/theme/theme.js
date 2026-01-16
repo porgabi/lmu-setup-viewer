@@ -41,7 +41,7 @@ const theme = createTheme({
         body: {
           backgroundColor: 'var(--hud-bg)',
           backgroundImage:
-            'radial-gradient(1200px 600px at 25% 0%, rgba(255, 255, 255, 0.08), transparent 60%), linear-gradient(130deg, var(--hud-blue) 0%, var(--hud-blue) 24%, rgba(0, 0, 0, 0) 24%), linear-gradient(230deg, var(--hud-red) 0%, var(--hud-red) 20%, rgba(0, 0, 0, 0) 20%)',
+            'radial-gradient(900px 520px at 0% 0%, rgba(255, 118, 92, 0.55), transparent 60%), linear-gradient(135deg, var(--hud-red) 0%, var(--hud-red) 22%, rgba(0, 0, 0, 0) 22%), linear-gradient(135deg, var(--hud-blue) 22%, var(--hud-blue) 46%, rgba(0, 0, 0, 0) 46%), radial-gradient(750px 420px at 100% 0%, rgba(120, 35, 35, 0.45), transparent 65%), linear-gradient(225deg, var(--hud-maroon) 0%, var(--hud-maroon) 18%, rgba(0, 0, 0, 0) 18%), radial-gradient(1200px 700px at 55% 25%, rgba(255, 255, 255, 0.06), transparent 60%)',
           backgroundAttachment: 'fixed',
         },
         '#root': {
@@ -70,10 +70,10 @@ const theme = createTheme({
           minHeight: 44,
           padding: '12px 16px',
           fontWeight: 600,
-          fontSize: '0.85rem',
+          fontSize: '0.95rem',
           letterSpacing: '0.12em',
           textTransform: 'uppercase',
-          color: 'rgba(255, 255, 255, 0.6)',
+          color: '#f2f4f7',
           '&.Mui-selected': {
             color: '#f2f4f7',
           },

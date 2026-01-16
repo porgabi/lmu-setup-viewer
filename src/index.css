@@ -8,8 +8,9 @@
   --hud-border-strong: rgba(255, 255, 255, 0.2);
   --hud-text: #f1f3f6;
   --hud-muted: #a7afba;
-  --hud-blue: rgba(10, 36, 65, 0.85);
-  --hud-red: rgba(110, 22, 22, 0.78);
+  --hud-blue: rgba(7, 22, 42, 0.95);
+  --hud-red: rgba(230, 40, 45, 0.9);
+  --hud-maroon: rgba(90, 20, 20, 0.72);
   --hud-accent: #e0b15b;
 }
 
@@ -26,9 +27,12 @@ body {
   font-family: 'Rajdhani', 'Bahnschrift Condensed', 'Oswald', 'Segoe UI', sans-serif;
   letter-spacing: 0.02em;
   background-color: var(--hud-bg);
-  background-image: radial-gradient(1200px 600px at 25% 0%, rgba(255, 255, 255, 0.08), transparent 60%),
-    linear-gradient(130deg, var(--hud-blue) 0%, var(--hud-blue) 24%, rgba(0, 0, 0, 0) 24%),
-    linear-gradient(230deg, var(--hud-red) 0%, var(--hud-red) 20%, rgba(0, 0, 0, 0) 20%);
+  background-image: radial-gradient(900px 520px at 0% 0%, rgba(255, 118, 92, 0.55), transparent 60%),
+    linear-gradient(135deg, var(--hud-red) 0%, var(--hud-red) 22%, rgba(0, 0, 0, 0) 22%),
+    linear-gradient(135deg, var(--hud-blue) 22%, var(--hud-blue) 46%, rgba(0, 0, 0, 0) 46%),
+    radial-gradient(750px 420px at 100% 0%, rgba(120, 35, 35, 0.45), transparent 65%),
+    linear-gradient(225deg, var(--hud-maroon) 0%, var(--hud-maroon) 18%, rgba(0, 0, 0, 0) 18%),
+    radial-gradient(1200px 700px at 55% 25%, rgba(255, 255, 255, 0.06), transparent 60%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
