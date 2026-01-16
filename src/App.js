@@ -30,9 +30,8 @@ export default function App() {
         value={value}
         onChange={handleChange}
         textColor="inherit"
-        variant="scrollable"
-        scrollButtons={false}
-        allowScrollButtonsMobile
+        variant="standard"
+        centered
         sx={{ px: 2 }}
       >
         <Tab label="Powertrain" />

@@ -68,9 +68,9 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           minHeight: 44,
-          padding: '12px 16px',
+          padding: '12px 19px',
           fontWeight: 600,
-          fontSize: '0.95rem',
+          fontSize: '1rem',
           letterSpacing: '0.12em',
           textTransform: 'uppercase',
           color: '#f2f4f7',
