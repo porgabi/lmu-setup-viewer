@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormControlLabel,
   IconButton,
@@ -9,9 +10,7 @@ import {
   ListSubheader,
   MenuItem,
   Select,
-  Switch,
   Tooltip,
-  Typography,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ReactCountryFlag from 'react-country-flag';
@@ -31,7 +30,11 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
     items.push(
       <ListSubheader
         key={`${track}-header`}
-        sx={{ backgroundColor: 'background.paper', textTransform: 'uppercase' }}
+        sx={{
+          backgroundColor: 'rgba(8, 10, 14, 0.9)',
+          textTransform: 'uppercase',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        }}
       >
         {track}
       </ListSubheader>
@@ -98,9 +101,12 @@ export default function SetupSelector() {
 
   const menuProps = {
     PaperProps: {
-      style: {
+      sx: {
         maxHeight: 320,
         overflowY: 'auto',
+        backgroundColor: 'rgba(8, 10, 14, 0.96)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(6px)',
       },
     },
   };
@@ -110,8 +116,17 @@ export default function SetupSelector() {
   const pathTooltip = `Current game path: ${gamePath}`;
 
   return (
-    <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', backgroundColor: 'background.paper' }}>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center' }}>
+    <Box
+      sx={{
+        p: 2,
+        borderBottom: 1,
+        borderColor: 'divider',
+        backgroundColor: 'rgba(7, 9, 12, 0.86)',
+        backdropFilter: 'blur(8px)',
+        boxShadow: '0 10px 24px rgba(0, 0, 0, 0.35)',
+      }}
+    >
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, alignItems: 'center' }}>
         <Tooltip title={pathTooltip} placement="top-start">
           <Button variant="outlined" size="small" onClick={chooseLmuPath}>
             Set LMU Folder
@@ -130,7 +145,7 @@ export default function SetupSelector() {
             </IconButton>
           </span>
         </Tooltip>
-        <FormControl sx={{ minWidth: 320, flex: '1 1 320px' }} size="small">
+        <FormControl sx={{ minWidth: 260, flex: '1 1 280px' }} size="small">
           <InputLabel>Setup</InputLabel>
           <Select
             value={primarySetup}
@@ -144,15 +159,20 @@ export default function SetupSelector() {
         </FormControl>
         <FormControlLabel
           control={
-            <Switch
+            <Checkbox
               checked={comparisonEnabled}
               onChange={(event) => setComparisonEnabled(event.target.checked)}
               size="small"
             />
           }
-          label="Compare"
+          label={
+            <Box component="span" sx={{ textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              Compare
+            </Box>
+          }
+          sx={{ ml: 0 }}
         />
-        <FormControl sx={{ minWidth: 320, flex: '1 1 320px' }} size="small">
+        <FormControl sx={{ minWidth: 260, flex: '1 1 280px' }} size="small">
           <InputLabel>Compared setup</InputLabel>
           <Select
             value={secondarySetup}

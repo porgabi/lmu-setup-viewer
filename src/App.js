@@ -10,9 +10,9 @@ import Suspension from './views/Suspension';
 // A component to show content per tab.
 function TabPanel({ children, value, index }) {
   return (
-    <div role="tabpanel" hidden={value !== index} style={{ padding: '2rem' }}>
+    <Box role="tabpanel" hidden={value !== index} sx={{ px: 3, py: 2.5 }}>
       {value === index && children}
-    </div>
+    </Box>
   );
 }
 
@@ -24,15 +24,16 @@ export default function App() {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', minHeight: '100vh' }}>
       <SetupSelector />
       <Tabs
         value={value}
         onChange={handleChange}
-        textColor="primary"
-        indicatorColor="primary"
-        variant="fullWidth"
-        sx={{ borderBottom: 1, borderColor: 'divider', background: '#f5f5f5' }}
+        textColor="inherit"
+        variant="scrollable"
+        scrollButtons={false}
+        allowScrollButtonsMobile
+        sx={{ px: 2 }}
       >
         <Tab label="Powertrain" />
         <Tab label="Wheels & Brakes" />

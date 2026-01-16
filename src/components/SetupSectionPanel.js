@@ -6,24 +6,60 @@ import { getSetupCategory } from '../domain/setupCategories';
 import { filterSectionsByKeywords } from '../domain/setupParser';
 
 function EntriesTable({ entries }) {
+  const rowCellSx = {
+    py: 0.5,
+    borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+  };
   return (
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 1.4fr)',
-        gap: 1,
-        fontFamily: 'monospace',
-        fontSize: '0.85rem',
+        gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 0.7fr) minmax(0, 1.2fr)',
+        columnGap: 1.5,
+        rowGap: 0,
+        fontSize: '0.9rem',
+        fontVariantNumeric: 'tabular-nums',
       }}
     >
-      <Box sx={{ fontWeight: 700 }}>Setting</Box>
-      <Box sx={{ fontWeight: 700 }}>Value</Box>
-      <Box sx={{ fontWeight: 700 }}>Notes</Box>
+      <Box
+        sx={{
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          pb: 0.5,
+          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+        }}
+      >
+        Setting
+      </Box>
+      <Box
+        sx={{
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          pb: 0.5,
+          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+          textAlign: 'right',
+        }}
+      >
+        Value
+      </Box>
+      <Box
+        sx={{
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          pb: 0.5,
+          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+        }}
+      >
+        Notes
+      </Box>
       {entries.map((entry, index) => (
         <React.Fragment key={`${entry.key}-${index}`}>
-          <Box>{entry.key}</Box>
-          <Box>{entry.value || '-'}</Box>
-          <Box sx={{ color: 'text.secondary' }}>
+          <Box sx={rowCellSx}>{entry.key}</Box>
+          <Box sx={{ ...rowCellSx, textAlign: 'right' }}>{entry.value || '-'}</Box>
+          <Box sx={{ ...rowCellSx, color: 'text.secondary' }}>
             {entry.comment ? `// ${entry.comment}` : ''}
           </Box>
         </React.Fragment>
@@ -37,15 +73,34 @@ function SectionBlock({ section }) {
   const hasLines = section.lines.length > 0;
   const content = hasLines ? section.lines.join('\n') : '';
   return (
-    <Box sx={{ mb: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
-      <Typography variant="subtitle2" sx={{ fontWeight: 700, textTransform: 'uppercase', mb: 1 }}>
+    <Box
+      sx={{
+        mb: 2,
+        p: 2,
+        bgcolor: 'rgba(8, 10, 14, 0.75)',
+        borderRadius: 2,
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        boxShadow: '0 12px 24px rgba(0, 0, 0, 0.35)',
+        backdropFilter: 'blur(6px)',
+      }}
+    >
+      <Typography
+        variant="subtitle2"
+        sx={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', mb: 1 }}
+      >
         {section.name}
       </Typography>
       {hasEntries ? <EntriesTable entries={section.entries} /> : null}
       {hasLines ? (
         <Box
           component="pre"
-          sx={{ mt: hasEntries ? 2 : 0, m: 0, fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}
+          sx={{
+            mt: hasEntries ? 2 : 0,
+            m: 0,
+            fontFamily: '"JetBrains Mono", "Consolas", "Courier New", monospace',
+            whiteSpace: 'pre-wrap',
+            color: 'text.secondary',
+          }}
         >
           {content}
         </Box>
@@ -95,7 +150,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category, countryC
   if (!setupKey) {
     return (
       <Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 600, letterSpacing: '0.08em' }}>
           {heading}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -108,7 +163,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category, countryC
   if (loading) {
     return (
       <Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 600, letterSpacing: '0.08em' }}>
           {heading}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -121,7 +176,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category, countryC
   if (error) {
     return (
       <Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 600, letterSpacing: '0.08em' }}>
           {heading}
         </Typography>
         <Typography variant="body2" color="error">
@@ -135,7 +190,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category, countryC
   if (!parsed) {
     return (
       <Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 600, letterSpacing: '0.08em' }}>
           {heading}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -149,7 +204,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category, countryC
 
   return (
     <Box>
-      <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+      <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, letterSpacing: '0.08em' }}>
         {heading}
       </Typography>
       {sections.length === 0 ? (
