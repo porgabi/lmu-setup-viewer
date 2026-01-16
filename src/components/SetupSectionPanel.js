@@ -121,13 +121,38 @@ function getTrackFromSetupKey(setupKey) {
   return setupKey.slice(0, separatorIndex);
 }
 
+function splitSetupKey(setupKey) {
+  if (!setupKey) {
+    return { track: '', setupName: '' };
+  }
+  const separatorIndex = setupKey.indexOf('/');
+  if (separatorIndex === -1) {
+    return { track: '', setupName: setupKey };
+  }
+  return {
+    track: setupKey.slice(0, separatorIndex),
+    setupName: setupKey.slice(separatorIndex + 1),
+  };
+}
+
 function renderHeading(setupKey, title, countryCodes) {
   if (!setupKey) {
     return title;
   }
 
-  const track = getTrackFromSetupKey(setupKey);
+  const { track, setupName } = splitSetupKey(setupKey);
   const countryCode = track ? countryCodes?.[track] : null;
+  const label = track ? (
+    <Box component="span">
+      <Box component="span">{track}</Box>
+      <Box component="span" sx={{ mx: 0.5 }}>
+        /
+      </Box>
+      <Box component="span">{setupName}</Box>
+    </Box>
+  ) : (
+    setupKey
+  );
 
   return (
     <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
@@ -139,7 +164,7 @@ function renderHeading(setupKey, title, countryCodes) {
           aria-label={`${countryCode} flag`}
         />
       ) : null}
-      <Box component="span">{setupKey}</Box>
+      <Box component="span">{label}</Box>
     </Box>
   );
 }

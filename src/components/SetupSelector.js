@@ -53,7 +53,15 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
               aria-label={`${countryCode} flag`}
             />
           ) : null}
-          <Box component="span">{value}</Box>
+          <Box component="span">
+            <Box component="span">{track}</Box>
+            <Box component="span" sx={{ mx: 0.5 }}>
+              /
+            </Box>
+            <Box component="span" sx={{ fontWeight: 700, color: 'text.primary' }}>
+              {setupName}
+            </Box>
+          </Box>
         </Box>
       );
       items.push(
