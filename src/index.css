@@ -44,6 +44,25 @@ body {
   z-index: 1;
 }
 
+* {
+  scrollbar-color: rgba(200, 210, 225, 0.25) rgba(10, 12, 18, 0.85);
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(10, 12, 18, 0.85);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(200, 210, 225, 0.25);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(200, 210, 225, 0.45);
+}
+
 code {
   font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
 }
