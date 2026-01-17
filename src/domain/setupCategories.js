@@ -1,28 +1,30 @@
 export const setupCategories = {
   powertrain: {
     label: 'Powertrain',
-    sectionNames: ['HEADER', 'GENERAL', 'CONTROLS', 'ENGINE', 'DRIVELINE'],
-    entryKeywords: [
-      'VehicleClass',
-      'Upgrade',
-      'Fuel',
-      'VirtualEnergy',
-      'Pitstop',
-      'Steer',
-      'Brake',
-      'TC',
-      'ABS',
-      'Engine',
-      'Rev',
-      'Boost',
-      'Regeneration',
-      'Electric',
-      'Mixture',
-      'Braking',
-      'Gear',
-      'Ratio',
-      'Diff',
-      'Split',
+    sectionGroups: [
+      {
+        name: 'ENGINE',
+        labels: [
+          'Virtual Energy',
+          'Fuel Ratio',
+          'Rev Limiter',
+          'Engine Mixture',
+          'Water Radiator Cover',
+          'Oil Radiator Cover',
+        ],
+      },
+      {
+        name: 'ELECTRONICS',
+        labels: ['Onboard TC', 'TC Power Cut', 'TC Slip Angle', 'Regen Level', 'Electric Motor Map'],
+      },
+      {
+        name: 'DIFFERENTIAL',
+        labels: ['Power', 'Coast', 'Preload'],
+      },
+      {
+        name: 'GEARING',
+        labels: ['Ratio Set'],
+      },
     ],
   },
   wheelsAndBrakes: {

@@ -217,10 +217,42 @@ function SetupColumn({ title, setupKey, data, loading, error, category, countryC
     );
   }
 
-  const { sections, availableSections } = filterSectionsByKeywords(parsed, category);
-  const labeledSections = sections
-    .map(applySettingLabels)
-    .filter((section) => section.entries.length > 0 || section.lines.length > 0);
+  let availableSections = [];
+  let labeledSections = [];
+
+  if (Array.isArray(category.sectionGroups)) {
+    const labeledBySection = parsed.sections.map(applySettingLabels);
+    const entriesByLabel = new Map();
+
+    labeledBySection.forEach((section) => {
+      section.entries.forEach((entry) => {
+        const label = entry.label || entry.key;
+        if (!label) return;
+        const existing = entriesByLabel.get(label) || [];
+        existing.push(entry);
+        entriesByLabel.set(label, existing);
+      });
+    });
+
+    labeledSections = category.sectionGroups
+      .map((group) => {
+        const entries = [];
+        group.labels.forEach((label) => {
+          const matches = entriesByLabel.get(label);
+          if (matches) {
+            entries.push(...matches);
+          }
+        });
+        return { name: group.name, entries, lines: [] };
+      })
+      .filter((section) => section.entries.length > 0);
+  } else {
+    const { sections, availableSections: sectionList } = filterSectionsByKeywords(parsed, category);
+    availableSections = sectionList;
+    labeledSections = sections
+      .map(applySettingLabels)
+      .filter((section) => section.entries.length > 0 || section.lines.length > 0);
+  }
 
   return (
     <Box>
