@@ -30,6 +30,9 @@ function EntriesTable({ entries }) {
     '&:hover': {
       backgroundColor: 'rgba(255, 255, 255, 0.06)',
     },
+    '&:last-of-type': {
+      borderBottom: 'none',
+    },
   };
   return (
     <Box sx={{ fontSize: '0.9rem', fontVariantNumeric: 'tabular-nums' }}>
