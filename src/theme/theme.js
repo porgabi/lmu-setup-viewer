@@ -147,6 +147,9 @@ const theme = createTheme({
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: '#f2f4f7',
           },
+          '&.Mui-disabled .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'transparent',
+          },
         },
       },
     },
