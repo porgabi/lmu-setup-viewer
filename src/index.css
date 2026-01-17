@@ -46,7 +46,6 @@ body {
 
 * {
   scrollbar-color: rgba(200, 210, 225, 0.25) rgba(10, 12, 18, 0.85);
-  scrollbar-width: thin;
 }
 
 *::-webkit-scrollbar-track {
