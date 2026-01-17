@@ -4,6 +4,7 @@ import ReactCountryFlag from 'react-country-flag';
 import { useSetupContext } from '../state/SetupContext';
 import { getSetupCategory } from '../domain/setupCategories';
 import { filterSectionsByKeywords } from '../domain/setupParser';
+import { applySettingLabels } from '../domain/settingLabels';
 
 function EntriesTable({ entries }) {
   const rowCellSx = {
@@ -57,7 +58,7 @@ function EntriesTable({ entries }) {
       </Box>
       {entries.map((entry, index) => (
         <React.Fragment key={`${entry.key}-${index}`}>
-          <Box sx={rowCellSx}>{entry.key}</Box>
+          <Box sx={rowCellSx}>{entry.label || entry.key}</Box>
           <Box sx={{ ...rowCellSx, textAlign: 'right' }}>{entry.value || '-'}</Box>
           <Box sx={{ ...rowCellSx, color: 'text.secondary' }}>
             {entry.comment ? `// ${entry.comment}` : ''}
@@ -226,19 +227,22 @@ function SetupColumn({ title, setupKey, data, loading, error, category, countryC
   }
 
   const { sections, availableSections } = filterSectionsByKeywords(parsed, category);
+  const labeledSections = sections
+    .map(applySettingLabels)
+    .filter((section) => section.entries.length > 0 || section.lines.length > 0);
 
   return (
     <Box>
       <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, letterSpacing: '0.08em' }}>
         {heading}
       </Typography>
-      {sections.length === 0 ? (
+      {labeledSections.length === 0 ? (
         <Typography variant="body2" color="text.secondary">
           No matching sections for this category.
           {availableSections.length ? ` Available sections: ${availableSections.join(', ')}` : ''}
         </Typography>
       ) : (
-        sections.map((section) => (
+        labeledSections.map((section) => (
           <SectionBlock key={`${setupKey}-${section.name}`} section={section} />
         ))
       )}
