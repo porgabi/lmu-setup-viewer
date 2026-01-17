@@ -15,7 +15,7 @@ function EntriesTable({ entries }) {
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 0.7fr) minmax(0, 1.2fr)',
+        gridTemplateColumns: 'minmax(0, 1.6fr) minmax(0, 1fr)',
         columnGap: 1.5,
         rowGap: 0,
         fontSize: '0.9rem',
@@ -45,22 +45,10 @@ function EntriesTable({ entries }) {
       >
         Value
       </Box>
-      <Box
-        sx={{
-          fontWeight: 700,
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          pb: 0.5,
-          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
-        }}
-      >
-        Notes
-      </Box>
       {entries.map((entry, index) => (
         <React.Fragment key={`${entry.key}-${index}`}>
           <Box sx={rowCellSx}>{entry.label || entry.key}</Box>
-          <Box sx={{ ...rowCellSx, textAlign: 'right' }}>{entry.value || '-'}</Box>
-          <Box sx={{ ...rowCellSx, color: 'text.secondary' }}>
+          <Box sx={{ ...rowCellSx, textAlign: 'right', color: 'text.secondary' }}>
             {entry.comment ? `// ${entry.comment}` : ''}
           </Box>
         </React.Fragment>
