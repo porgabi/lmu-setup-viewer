@@ -127,7 +127,7 @@ function splitSetupKey(setupKey) {
   };
 }
 
-function renderHeading(setupKey, title, countryCodes) {
+function renderHeading(setupKey, title, countryCodes, carName) {
   if (!setupKey) {
     return title;
   }
@@ -156,13 +156,17 @@ function renderHeading(setupKey, title, countryCodes) {
           aria-label={`${countryCode} flag`}
         />
       ) : null}
-      <Box component="span">{label}</Box>
+      <Box component="span">
+        {label}
+        {carName ? <Box component="span" sx={{ ml: 1 }}>[{carName}]</Box> : null}
+      </Box>
     </Box>
   );
 }
 
 function SetupColumn({ title, setupKey, data, loading, error, category, countryCodes }) {
-  const heading = renderHeading(setupKey, title, countryCodes);
+  const carName = data?.parsed?.metadata?.vehicleClass;
+  const heading = renderHeading(setupKey, title, countryCodes, carName);
 
   if (!setupKey) {
     return (
