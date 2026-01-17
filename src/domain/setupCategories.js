@@ -29,8 +29,28 @@ export const setupCategories = {
   },
   wheelsAndBrakes: {
     label: 'Wheels & Brakes',
-    sectionNames: ['FRONTLEFT', 'FRONTRIGHT', 'REARLEFT', 'REARRIGHT'],
-    entryKeywords: ['Pressure', 'Brake', 'Compound', 'Tyre', 'Tire', 'Wheel'],
+    sectionGroups: [
+      {
+        name: 'FRONT LEFT',
+        labels: ['Front Left Tyre Compound', 'Front Left Tyre Pressure', 'Front Left Camber'],
+      },
+      {
+        name: 'FRONT RIGHT',
+        labels: ['Front Right Tyre Compound', 'Front Right Tyre Pressure', 'Front Right Camber'],
+      },
+      {
+        name: 'REAR LEFT',
+        labels: ['Rear Left Tyre Compound', 'Rear Left Tyre Pressure', 'Rear Left Camber'],
+      },
+      {
+        name: 'REAR RIGHT',
+        labels: ['Rear Right Tyre Compound', 'Rear Right Tyre Pressure', 'Rear Right Camber'],
+      },
+      {
+        name: 'BRAKES',
+        labels: ['Brake Bias', 'Brake Migration', 'Max Pedal Force', 'Front Brake Ducts', 'Rear Brake Ducts'],
+      },
+    ],
   },
   suspension: {
     label: 'Suspension',
