@@ -74,6 +74,26 @@ const theme = createTheme({
           letterSpacing: '0.12em',
           textTransform: 'uppercase',
           color: '#f2f4f7',
+          position: 'relative',
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            left: '50%',
+            bottom: 6,
+            width: 5,
+            height: 2,
+            backgroundColor: '#f2f4f7',
+            boxShadow: '0 0 10px rgba(255, 255, 255, 0.6)',
+            opacity: 0,
+            transform: 'translateX(-50%)',
+            transition: 'opacity 0.15s ease',
+          },
+          '&:hover::after': {
+            opacity: 1,
+          },
+          '&.Mui-selected:hover::after': {
+            opacity: 0,
+          },
           '&.Mui-selected': {
             color: '#f2f4f7',
           },
