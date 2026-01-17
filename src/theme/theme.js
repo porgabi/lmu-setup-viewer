@@ -41,8 +41,11 @@ const theme = createTheme({
         body: {
           backgroundColor: 'var(--hud-bg)',
           backgroundImage:
-            'radial-gradient(900px 520px at 0% 0%, rgba(255, 118, 92, 0.55), transparent 60%), linear-gradient(135deg, var(--hud-red) 0%, var(--hud-red) 22%, rgba(0, 0, 0, 0) 22%), linear-gradient(135deg, var(--hud-blue) 22%, var(--hud-blue) 46%, rgba(0, 0, 0, 0) 46%), radial-gradient(750px 420px at 100% 0%, rgba(120, 35, 35, 0.45), transparent 65%), linear-gradient(225deg, var(--hud-maroon) 0%, var(--hud-maroon) 18%, rgba(0, 0, 0, 0) 18%), radial-gradient(1200px 700px at 55% 25%, rgba(255, 255, 255, 0.06), transparent 60%)',
+            'radial-gradient(900px 520px at 0% 0%, rgba(255, 118, 92, 0.55), transparent 60%), linear-gradient(135deg, var(--hud-red) 0%, var(--hud-red) 22%, rgba(0, 0, 0, 0) 22%), linear-gradient(135deg, var(--hud-blue) 22%, var(--hud-blue) 46%, rgba(0, 0, 0, 0) 46%), radial-gradient(750px 420px at 100% 100%, rgba(120, 35, 35, 0.45), transparent 65%), linear-gradient(-225deg, transparent 0% 64%, rgba(120, 25, 25, 0.85) 100% 72%, transparent 72% 100%), radial-gradient(1200px 700px at 55% 25%, rgba(255, 255, 255, 0.06), transparent 60%)',
           backgroundAttachment: 'fixed',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '100% 100%, 100% 100%, 100% 100%, 100% 100%, 55% 100%, 100% 100%',
+          backgroundPosition: '0 0, 0 0, 0 0, 0 0, 100% 100%, 0 0',
         },
         '#root': {
           minHeight: '100vh',
