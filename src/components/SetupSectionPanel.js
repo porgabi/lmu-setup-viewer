@@ -7,52 +7,52 @@ import { filterSectionsByKeywords } from '../domain/setupParser';
 import { applySettingLabels } from '../domain/settingLabels';
 
 function EntriesTable({ entries }) {
+  const gridTemplateColumns = 'minmax(0, 1.6fr) minmax(0, 1fr)';
   const rowCellSx = {
     py: 0.5,
+    px: 0.75,
+  };
+  const headerCellSx = {
+    fontWeight: 700,
+    textTransform: 'uppercase',
+    letterSpacing: '0.08em',
+    pb: 0.5,
+    px: 0.75,
+    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+  };
+  const rowSx = {
+    display: 'grid',
+    gridTemplateColumns,
+    columnGap: 0,
+    alignItems: 'center',
     borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+    transition: 'background-color 0.15s ease',
+    '&:hover': {
+      backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    },
   };
   return (
-    <Box
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: 'minmax(0, 1.6fr) minmax(0, 1fr)',
-        columnGap: 1.5,
-        rowGap: 0,
-        fontSize: '0.9rem',
-        fontVariantNumeric: 'tabular-nums',
-      }}
-    >
+    <Box sx={{ fontSize: '0.9rem', fontVariantNumeric: 'tabular-nums' }}>
       <Box
         sx={{
-          fontWeight: 700,
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          pb: 0.5,
-          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+          display: 'grid',
+          gridTemplateColumns,
+          columnGap: 0,
         }}
       >
-        Setting
+        <Box sx={headerCellSx}>Setting</Box>
+        <Box sx={{ ...headerCellSx, textAlign: 'right' }}>Value</Box>
       </Box>
-      <Box
-        sx={{
-          fontWeight: 700,
-          textTransform: 'uppercase',
-          letterSpacing: '0.08em',
-          pb: 0.5,
-          borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
-          textAlign: 'right',
-        }}
-      >
-        Value
-      </Box>
-      {entries.map((entry, index) => (
-        <React.Fragment key={`${entry.key}-${index}`}>
-          <Box sx={rowCellSx}>{entry.label || entry.key}</Box>
-          <Box sx={{ ...rowCellSx, textAlign: 'right', color: 'text.secondary' }}>
-            {entry.comment ? `// ${entry.comment}` : ''}
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        {entries.map((entry, index) => (
+          <Box key={`${entry.key}-${index}`} sx={rowSx}>
+            <Box sx={rowCellSx}>{entry.label || entry.key}</Box>
+            <Box sx={{ ...rowCellSx, textAlign: 'right', color: 'text.secondary' }}>
+              {(entry.comment && entry.comment.trim()) || entry.value || ''}
+            </Box>
           </Box>
-        </React.Fragment>
-      ))}
+        ))}
+      </Box>
     </Box>
   );
 }
