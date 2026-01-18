@@ -142,21 +142,15 @@ export const setupCategories = {
   },
   chassisAndAero: {
     label: 'Chassis & Aero',
-    sectionNames: ['LEFTFENDER', 'RIGHTFENDER', 'FRONTWING', 'REARWING', 'BODYAERO', 'BASIC', 'GENERAL'],
-    entryKeywords: [
-      'Wing',
-      'Fender',
-      'Radiator',
-      'BrakeDuct',
-      'Downforce',
-      'Balance',
-      'Ride',
-      'Gearing',
-      'CG',
-      'Wedge',
-      'Aero',
-      'Body',
-      'Chassis',
+    sectionGroups: [
+      {
+        name: 'FRONT',
+        labels: ['Front Toe-In', 'Front Anti-Roll Bar', 'Wheel Range (Lock)', 'Front Diffuser'],
+      },
+      {
+        name: 'REAR',
+        labels: ['Rear Toe-In', 'Rear Anti-Roll Bar', 'Rear Wing'],
+      },
     ],
   },
 };
