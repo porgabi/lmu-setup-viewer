@@ -25,21 +25,23 @@ export default function App() {
 
   return (
     <Box sx={{ width: '100%', minHeight: '100vh' }}>
-      <SetupSelector />
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        textColor="inherit"
-        variant="standard"
-        centered
-        sx={{ px: 2 }}
-      >
-        <Tab label="Powertrain" />
-        <Tab label="Wheels & Brakes" />
-        <Tab label="Suspension" />
-        <Tab label="Dampers" />
-        <Tab label="Chassis & Aero" />
-      </Tabs>
+      <Box sx={{ position: 'sticky', top: 0, zIndex: 10 }}>
+        <SetupSelector />
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          textColor="inherit"
+          variant="standard"
+          centered
+          sx={{ px: 2 }}
+        >
+          <Tab label="Powertrain" />
+          <Tab label="Wheels & Brakes" />
+          <Tab label="Suspension" />
+          <Tab label="Dampers" />
+          <Tab label="Chassis & Aero" />
+        </Tabs>
+      </Box>
 
       <TabPanel value={value} index={0}>
         <Powertrain />
