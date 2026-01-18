@@ -153,7 +153,16 @@ export default function SetupSelector() {
             </IconButton>
           </span>
         </Tooltip>
-        <FormControl sx={{ minWidth: 260, flex: '1 1 280px' }} size="small">
+        <FormControl
+          sx={{
+            minWidth: 260,
+            flex: '1 1 280px',
+            '& .MuiOutlinedInput-notchedOutline legend': {
+              padding: '0 4px',
+            },
+          }}
+          size="small"
+        >
           <InputLabel>Setup</InputLabel>
           <Select
             value={primarySetup}
@@ -180,7 +189,16 @@ export default function SetupSelector() {
           }
           sx={{ ml: 0 }}
         />
-        <FormControl sx={{ minWidth: 260, flex: '1 1 280px' }} size="small">
+        <FormControl
+          sx={{
+            minWidth: 260,
+            flex: '1 1 280px',
+            '& .MuiOutlinedInput-notchedOutline legend': {
+              padding: '0 13px',
+            },
+          }}
+          size="small"
+        >
           <InputLabel>Compared setup</InputLabel>
           <Select
             value={secondarySetup}
