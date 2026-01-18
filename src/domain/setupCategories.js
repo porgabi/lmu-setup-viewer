@@ -124,6 +124,21 @@ export const setupCategories = {
         name: 'REAR 3rd SPRING',
         labels: [
           'Rear 3rd Spring Slow Bump',
+          'Rear 3rd Spring Slow Rebound',
+          'Rear 3rd Spring Fast Bump',
+          'Rear 3rd Spring Fast Rebound',
+        ],
+      },
+      {
+        name: 'REAR RIGHT',
+        labels: [
+          'Rear Right Slow Bump',
+          'Rear Right Slow Rebound',
+          'Rear Right Fast Bump',
+          'Rear Right Fast Rebound',
+        ],
+      },
+    ],
   },
   chassisAndAero: {
     label: 'Chassis & Aero',
