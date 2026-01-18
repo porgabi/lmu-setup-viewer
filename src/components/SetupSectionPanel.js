@@ -36,21 +36,11 @@ function EntriesTable({ entries }) {
   };
   return (
     <Box sx={{ fontSize: '0.9rem', fontVariantNumeric: 'tabular-nums' }}>
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns,
-          columnGap: 0,
-        }}
-      >
-        <Box sx={headerCellSx}>Setting</Box>
-        <Box sx={{ ...headerCellSx, textAlign: 'right' }}>Value</Box>
-      </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         {entries.map((entry, index) => (
           <Box key={`${entry.key}-${index}`} sx={rowSx}>
             <Box sx={rowCellSx}>{entry.label || entry.key}</Box>
-            <Box sx={{ ...rowCellSx, textAlign: 'right', color: 'text.secondary' }}>
+            <Box sx={{ ...rowCellSx, textAlign: 'right', fontWeight: 700 }}>
               {(entry.comment && entry.comment.trim()) || entry.value || ''}
             </Box>
           </Box>
