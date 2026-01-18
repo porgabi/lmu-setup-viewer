@@ -54,21 +54,31 @@ export const setupCategories = {
   },
   suspension: {
     label: 'Suspension',
-    sectionNames: ['SUSPENSION', 'FRONTLEFT', 'FRONTRIGHT', 'REARLEFT', 'REARRIGHT'],
-    entryKeywords: [
-      'Camber',
-      'Toe',
-      'Caster',
-      'RideHeight',
-      'Spring',
-      'Tender',
-      'Packer',
-      'Rubber',
-      'AntiSway',
-      'Track',
-      'TrackBar',
-      'WheelTrack',
-      'ChassisAdj',
+    sectionGroups: [
+      {
+        name: 'FRONT LEFT',
+        labels: ['Front Left Spring Rate', 'Front Left Packers', 'Front Left Ride Height'],
+      },
+      {
+        name: 'FRONT 3rd SPRING',
+        labels: ['Front 3rd Spring Rate', 'Front 3rd Packer'],
+      },
+      {
+        name: 'FRONT RIGHT',
+        labels: ['Front Right Spring Rate', 'Front Right Packers', 'Front Right Ride Height'],
+      },
+      {
+        name: 'REAR LEFT',
+        labels: ['Rear Left Spring Rate', 'Rear Left Packers', 'Rear Left Ride Height'],
+      },
+      {
+        name: 'REAR 3rd SPRING',
+        labels: ['Rear 3rd Spring Rate', 'Rear 3rd Spring Packer'],
+      },
+      {
+        name: 'REAR RIGHT',
+        labels: ['Rear Right Spring Rate', 'Rear Right Packers', 'Rear Right Ride Height'],
+      },
     ],
   },
   dampers: {
