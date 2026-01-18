@@ -56,6 +56,11 @@ function parseLine(line) {
     return { type: 'line', value: '' };
   }
 
+  const commentEntry = parseCommentEntry(trimmed);
+  if (commentEntry) {
+    return { type: 'entry', entry: commentEntry };
+  }
+
   if (trimmed.startsWith('//')) {
     return { type: 'comment', value: trimmed };
   }
@@ -80,6 +85,26 @@ function parseLine(line) {
       comment: comment || '',
       raw: line,
     },
+  };
+}
+
+function parseCommentEntry(line) {
+  if (!line.startsWith('//')) return null;
+  const rawContent = line.slice(2).trim();
+  const { content, comment } = splitInlineComment(rawContent);
+  const delimiterIndex = content.indexOf('=');
+  if (delimiterIndex === -1) {
+    return null;
+  }
+  const key = content.slice(0, delimiterIndex).trim();
+  const value = content.slice(delimiterIndex + 1).trim();
+  if (!key) return null;
+  return {
+    key,
+    value,
+    comment: comment || '',
+    raw: line,
+    commented: true,
   };
 }
 

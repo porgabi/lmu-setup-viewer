@@ -43,13 +43,26 @@ function filterSectionLines(lines, sectionName) {
 }
 
 export function applySettingLabels(section) {
-  const entries = section.entries
+  const labeledEntries = section.entries
     .map((entry) => {
       const label = getSettingLabel(entry.key, section.name);
       if (!label) return null;
       return { ...entry, label };
     })
     .filter(Boolean);
+  const byKey = new Map();
+  labeledEntries.forEach((entry) => {
+    const key = entry.key;
+    const existing = byKey.get(key);
+    if (!existing) {
+      byKey.set(key, entry);
+      return;
+    }
+    if (existing.commented && !entry.commented) {
+      byKey.set(key, entry);
+    }
+  });
+  const entries = Array.from(byKey.values());
 
   return {
     ...section,
