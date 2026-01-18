@@ -83,8 +83,47 @@ export const setupCategories = {
   },
   dampers: {
     label: 'Dampers',
-    sectionNames: ['SUSPENSION', 'FRONTLEFT', 'FRONTRIGHT', 'REARLEFT', 'REARRIGHT'],
-    entryKeywords: ['Bump', 'Rebound'],
+    sectionGroups: [
+      {
+        name: 'FRONT LEFT',
+        labels: [
+          'Front Left Slow Bump',
+          'Front Left Slow Rebound',
+          'Front Left Fast Bump',
+          'Front Left Fast Rebound',
+        ],
+      },
+      {
+        name: 'FRONT 3rd SPRING',
+        labels: [
+          'Front 3rd Spring Slow Bump',
+          'Front 3rd Spring Slow Rebound',
+          'Front 3rd Spring Fast Bump',
+          'Front 3rd Spring Fast Rebound',
+        ],
+      },
+      {
+        name: 'FRONT RIGHT',
+        labels: [
+          'Front Right Slow Bump',
+          'Front Right Slow Rebound',
+          'Front Right Fast Bump',
+          'Front Right Fast Rebound',
+        ],
+      },
+      {
+        name: 'REAR LEFT',
+        labels: [
+          'Rear Left Slow Bump',
+          'Rear Left Slow Rebound',
+          'Rear Left Fast Bump',
+          'Rear Left Fast Rebound',
+        ],
+      },
+      {
+        name: 'REAR 3rd SPRING',
+        labels: [
+          'Rear 3rd Spring Slow Bump',
   },
   chassisAndAero: {
     label: 'Chassis & Aero',
