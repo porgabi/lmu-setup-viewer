@@ -214,7 +214,17 @@ function renderHeading(setupKey, title, countryCodes, carName) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
       {carName ? (
-        <Typography variant="h6">
+        <Typography
+          variant="h3"
+          sx={{
+            color: 'transparent',
+            WebkitTextStroke: '0.6px rgba(255, 255, 255, 0.8)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+            fontWeight: 800,
+            textAlign: 'center',
+          }}
+        >
           {carName}
         </Typography>
       ) : null}
