@@ -5,6 +5,7 @@ import { useSetupContext } from '../state/SetupContext';
 import { getSetupCategory } from '../domain/setupCategories';
 import { filterSectionsByKeywords } from '../domain/setupParser';
 import { applySettingLabels } from '../domain/settingLabels';
+import { resolveCarName } from '../domain/carNames';
 
 function getDisplayValue(entry) {
   if (!entry) return '';
@@ -229,7 +230,8 @@ function renderHeading(setupKey, title, countryCodes, carName) {
 }
 
 function SetupColumn({ title, setupKey, data, loading, error, category, countryCodes }) {
-  const carName = data?.parsed?.metadata?.vehicleClass;
+  const rawCarName = data?.parsed?.metadata?.vehicleClass;
+  const carName = resolveCarName(rawCarName);
   const heading = renderHeading(setupKey, title, countryCodes, carName);
 
   if (!setupKey) {
