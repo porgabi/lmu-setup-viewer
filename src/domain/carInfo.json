@@ -1,0 +1,126 @@
+{
+  "LMP2_ELMS Oreca_07": {
+    "displayName": "Oreca 07 (ELMS)",
+    "class": "lmp2_elms"
+  },
+  "LMP2 Oreca_07": {
+    "displayName": "Oreca 07 (WEC)",
+    "class": "lmp2_wec"
+  },
+  "ELMS2025 Ginetta_G61LTP3_Evo LMP3": {
+    "displayName": "Ginetta G61-LT-P325 Evo",
+    "class": "lmp3"
+  },
+  "ELMS2025 LMP3 Ligier_JS_P325": {
+    "displayName": "Ligier JS P325",
+    "class": "lmp3"
+  },
+  "Aston_Martin_Vantage_AMR": {
+    "displayName": "Aston Martin Vantage AMR",
+    "class": "gte"
+  },
+  "GTE_Corvette_C8.R": {
+    "displayName": "Corvette C8.R GTE",
+    "class": "gte"
+  },
+  "Ferrari_488_GTE_EVO": {
+    "displayName": "Ferrari 488 GTE Evo",
+    "class": "gte"
+  },
+  "Porsche_911_RSR-19": {
+    "displayName": "Porsche 911 RSR-19",
+    "class": "gte"
+  },
+  "Ferrari_296_LMGT3": {
+    "displayName": "Ferrari 296 LMGT3",
+    "class": "lmgt3"
+  },
+  "AMR_LMGT3": {
+    "displayName": "Aston Martin Vantage AMR LMGT3",
+    "class": "lmgt3"
+  },
+  "BMW_M4_LMGT3": {
+    "displayName": "BMW M4 LMGT3",
+    "class": "lmgt3"
+  },
+  "Corvette_Z06_LMGT3R": {
+    "displayName": "Corvette Z06 LMGT3.R",
+    "class": "lmgt3"
+  },
+  "Ford_Mustang_LMGT3": {
+    "displayName": "Ford Mustang LMGT3",
+    "class": "lmgt3"
+  },
+  "Lexus_RCF_GT3": {
+    "displayName": "Lexus RCF LMGT3",
+    "class": "lmgt3"
+  },
+  "McLaren_720S_LMGT3_Evo": {
+    "displayName": "McLaren 720s LMGT3 Evo",
+    "class": "lmgt3"
+  },
+  "Mercedes_AMG_GT3": {
+    "displayName": "Mercedes-AMG LMGT3",
+    "class": "lmgt3"
+  },
+  "Porsche_911_GT3_R_LMGT3": {
+    "displayName": "Porsche 911 GT3 R LMGT3",
+    "class": "lmgt3"
+  },
+  "Lamborghini_Huracan_GT3_Evo2": {
+    "displayName": "Lamborghini Huracan LMGT3 Evo2",
+    "class": "lmgt3"
+  },
+  "Cadillac_V_lmdh": {
+    "displayName": "Cadillac V-Series.R",
+    "class": "hy"
+  },
+  "Ferrari_499P": {
+    "displayName": "Ferrari 499P",
+    "class": "hy"
+  },
+  "Glickenhaus_SGC007": {
+    "displayName": "Glickenhaus SCG007",
+    "class": "hy"
+  },
+  "Peugeot_9x8": {
+    "displayName": "Peugeot 9x8 (2023)",
+    "class": "hy"
+  },
+  "Porsche_963": {
+    "displayName": "Porsche 963",
+    "class": "hy"
+  },
+  "Toyota_GR010": {
+    "displayName": "Toyota GR010",
+    "class": "hy"
+  },
+  "Vanwall_680": {
+    "displayName": "Vanwall 680",
+    "class": "hy"
+  },
+  "Alpine_A424": {
+    "displayName": "Alpine A424",
+    "class": "hy"
+  },
+  "BMW_M_Hybrid": {
+    "displayName": "BMW M Hybrid V8",
+    "class": "hy"
+  },
+  "Isotta_TIPO6": {
+    "displayName": "Isotta Fraschini TIP06",
+    "class": "hy"
+  },
+  "Lamborghini_SC63": {
+    "displayName": "Lamborghini SC63",
+    "class": "hy"
+  },
+  "9x8 Hypercar Peugeot": {
+    "displayName": "Peugeot 9x8 (2024)",
+    "class": "hy"
+  },
+  "AstonMartin_Valkyrie": {
+    "displayName": "Aston Martin Valkyrie LMH",
+    "class": "hy"
+  }
+}

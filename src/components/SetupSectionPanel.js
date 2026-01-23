@@ -5,7 +5,7 @@ import { useSetupContext } from '../state/SetupContext';
 import { getSetupCategory } from '../domain/setupCategories';
 import { filterSectionsByKeywords } from '../domain/setupParser';
 import { applySettingLabels } from '../domain/settingLabels';
-import { resolveCarName } from '../domain/carNames';
+import { resolveCarInfo } from '../domain/carInfo';
 
 function getDisplayValue(entry) {
   if (!entry) return '';
@@ -192,7 +192,7 @@ function splitSetupKey(setupKey) {
   };
 }
 
-function renderHeading(setupKey, title, countryCodes, carName) {
+function renderHeading(setupKey, title, countryCodes, carName, carImagePath) {
   if (!setupKey) {
     return title;
   }
@@ -213,6 +213,16 @@ function renderHeading(setupKey, title, countryCodes, carName) {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
+      {carImagePath ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Box
+            component="img"
+            src={carImagePath}
+            alt={carName}
+            sx={{ width: '100%', maxWidth: 520, height: 'auto', opacity: 0.95 }}
+          />
+        </Box>
+      ) : null}
       {carName ? (
         <Typography
           variant="h3"
@@ -243,10 +253,17 @@ function renderHeading(setupKey, title, countryCodes, carName) {
   );
 }
 
+function getCarImagePath(carInfo) {
+  if (!carInfo?.class || !carInfo?.technical) return '';
+  return `/assets/cars/${carInfo.class}/${carInfo.technical}.png`;
+}
+
 function SetupColumn({ title, setupKey, data, loading, error, category, countryCodes }) {
   const rawCarName = data?.parsed?.metadata?.vehicleClass;
-  const carName = resolveCarName(rawCarName);
-  const heading = renderHeading(setupKey, title, countryCodes, carName);
+  const carInfo = resolveCarInfo(rawCarName);
+  const carName = carInfo?.displayName || '';
+  const carImagePath = getCarImagePath(carInfo);
+  const heading = renderHeading(setupKey, title, countryCodes, carName, carImagePath);
 
   if (!setupKey) {
     return (
