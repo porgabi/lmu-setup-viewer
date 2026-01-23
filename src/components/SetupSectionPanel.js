@@ -212,18 +212,22 @@ function renderHeading(setupKey, title, countryCodes, carName) {
   );
 
   return (
-    <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
-      {countryCode ? (
-        <ReactCountryFlag
-          svg
-          countryCode={countryCode}
-          style={{ width: '1.1em', height: '1.1em', display: 'block' }}
-          aria-label={`${countryCode} flag`}
-        />
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.2 }}>
+      {carName ? (
+        <Typography variant="h6">
+          {carName}
+        </Typography>
       ) : null}
-      <Box component="span">
-        {label}
-        {carName ? <Box component="span" sx={{ ml: 1 }}>[{carName}]</Box> : null}
+      <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+        {countryCode ? (
+          <ReactCountryFlag
+            svg
+            countryCode={countryCode}
+            style={{ width: '1.1em', height: '1.1em', display: 'block' }}
+            aria-label={`${countryCode} flag`}
+          />
+        ) : null}
+        <Box component="span">{label}</Box>
       </Box>
     </Box>
   );
@@ -423,9 +427,6 @@ export default function SetupSectionPanel({ categoryKey }) {
 
   return (
     <Box sx={{ mt: 2 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        {category.label}
-      </Typography>
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns }}>
         {columns.map((column) => (
           <SetupColumn
