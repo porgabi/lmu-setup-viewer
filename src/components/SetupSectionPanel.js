@@ -12,6 +12,19 @@ function getDisplayValue(entry) {
   return commentValue || entry.value || '';
 }
 
+function getCompoundColor(entry, displayValue) {
+  const label = entry?.label || entry?.key || '';
+  if (!label.toLowerCase().includes('tyre compound')) {
+    return null;
+  }
+  const normalized = (displayValue || '').toLowerCase();
+  if (normalized.includes('soft')) return '#f2f4f7';
+  if (normalized.includes('medium')) return '#FFDA0D';
+  if (normalized.includes('hard')) return '#E50B1B';
+  if (normalized.includes('wet')) return '#4BCCEC';
+  return null;
+}
+
 function buildDiffMap(primarySections, secondarySections) {
   const diffMap = new Map();
   const buildKey = (sectionName, entryKey) => `${sectionName}::${entryKey}`;
@@ -86,9 +99,22 @@ function EntriesTable({ entries, sectionName, diffMap }) {
             }}
           >
             <Box sx={rowCellSx}>{entry.label || entry.key}</Box>
-            <Box sx={{ ...rowCellSx, textAlign: 'right', fontWeight: 700 }}>
-              {getDisplayValue(entry)}
-            </Box>
+            {(() => {
+              const displayValue = getDisplayValue(entry);
+              const compoundColor = getCompoundColor(entry, displayValue);
+              return (
+                <Box
+                  sx={{
+                    ...rowCellSx,
+                    textAlign: 'right',
+                    fontWeight: 700,
+                    color: compoundColor || 'inherit',
+                  }}
+                >
+                  {displayValue}
+                </Box>
+              );
+            })()}
           </Box>
         ))}
       </Box>
