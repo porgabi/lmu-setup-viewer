@@ -6,7 +6,40 @@ import { getSetupCategory } from '../domain/setupCategories';
 import { filterSectionsByKeywords } from '../domain/setupParser';
 import { applySettingLabels } from '../domain/settingLabels';
 
-function EntriesTable({ entries }) {
+function getDisplayValue(entry) {
+  if (!entry) return '';
+  const commentValue = entry.comment && entry.comment.trim();
+  return commentValue || entry.value || '';
+}
+
+function buildDiffMap(primarySections, secondarySections) {
+  const diffMap = new Map();
+  const buildKey = (sectionName, entryKey) => `${sectionName}::${entryKey}`;
+  const addEntries = (sections, target) => {
+    sections.forEach((section) => {
+      section.entries.forEach((entry) => {
+        const key = buildKey(section.name, entry.key);
+        target.set(key, getDisplayValue(entry));
+      });
+    });
+  };
+
+  const primaryValues = new Map();
+  const secondaryValues = new Map();
+  addEntries(primarySections, primaryValues);
+  addEntries(secondarySections, secondaryValues);
+
+  const allKeys = new Set([...primaryValues.keys(), ...secondaryValues.keys()]);
+  allKeys.forEach((key) => {
+    const primaryValue = primaryValues.get(key) || '';
+    const secondaryValue = secondaryValues.get(key) || '';
+    diffMap.set(key, primaryValue !== secondaryValue);
+  });
+
+  return diffMap;
+}
+
+function EntriesTable({ entries, sectionName, diffMap }) {
   const gridTemplateColumns = 'minmax(0, 1.6fr) minmax(0, 1fr)';
   const rowCellSx = {
     py: 0.5,
@@ -34,14 +67,27 @@ function EntriesTable({ entries }) {
       borderBottom: 'none',
     },
   };
+  const diffRowSx = {
+    boxShadow: 'inset 0 0 0 1px rgba(205, 70, 70, 0.55)',
+    '&:hover': {
+      boxShadow: 'inset 0 0 0 1px rgba(205, 70, 70, 0.75)',
+    },
+  };
+  const buildKey = (entryKey) => `${sectionName}::${entryKey}`;
   return (
     <Box sx={{ fontSize: '0.9rem', fontVariantNumeric: 'tabular-nums' }}>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         {entries.map((entry, index) => (
-          <Box key={`${entry.key}-${index}`} sx={rowSx}>
+          <Box
+            key={`${entry.key}-${index}`}
+            sx={{
+              ...rowSx,
+              ...(diffMap?.get(buildKey(entry.key)) ? diffRowSx : null),
+            }}
+          >
             <Box sx={rowCellSx}>{entry.label || entry.key}</Box>
             <Box sx={{ ...rowCellSx, textAlign: 'right', fontWeight: 700 }}>
-              {(entry.comment && entry.comment.trim()) || entry.value || ''}
+              {getDisplayValue(entry)}
             </Box>
           </Box>
         ))}
@@ -50,7 +96,7 @@ function EntriesTable({ entries }) {
   );
 }
 
-function SectionBlock({ section }) {
+function SectionBlock({ section, diffMap }) {
   const hasEntries = section.entries.length > 0;
   const hasLines = section.lines.length > 0;
   const content = hasLines ? section.lines.join('\n') : '';
@@ -72,7 +118,9 @@ function SectionBlock({ section }) {
       >
         {section.name}
       </Typography>
-      {hasEntries ? <EntriesTable entries={section.entries} /> : null}
+      {hasEntries ? (
+        <EntriesTable entries={section.entries} sectionName={section.name} diffMap={diffMap} />
+      ) : null}
       {hasLines ? (
         <Box
           component="pre"
@@ -260,7 +308,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category, countryC
         </Typography>
       ) : (
         labeledSections.map((section) => (
-          <SectionBlock key={`${setupKey}-${section.name}`} section={section} />
+          <SectionBlock key={`${setupKey}-${section.name}`} section={section} diffMap={category.diffMap} />
         ))
       )}
     </Box>
@@ -296,6 +344,55 @@ export default function SetupSectionPanel({ categoryKey }) {
   const gridTemplateColumns =
     columns.length > 1 ? 'repeat(2, minmax(0, 1fr))' : 'minmax(0, 1fr)';
 
+  let diffMap = null;
+  if (comparisonEnabled && primarySetup && secondarySetup) {
+    const primaryParsed = setupFiles[primarySetup]?.parsed;
+    const secondaryParsed = setupFiles[secondarySetup]?.parsed;
+    if (primaryParsed && secondaryParsed) {
+      const primarySections = Array.isArray(category.sectionGroups)
+        ? category.sectionGroups
+            .map((group) => {
+              const entries = [];
+              primaryParsed.sections
+                .map(applySettingLabels)
+                .forEach((section) => {
+                  section.entries.forEach((entry) => {
+                    const label = entry.label || entry.key;
+                    if (group.labels.includes(label)) {
+                      entries.push(entry);
+                    }
+                  });
+                });
+              return { name: group.name, entries };
+            })
+            .filter((section) => section.entries.length > 0)
+        : filterSectionsByKeywords(primaryParsed, category).sections.map(applySettingLabels);
+
+      const secondarySections = Array.isArray(category.sectionGroups)
+        ? category.sectionGroups
+            .map((group) => {
+              const entries = [];
+              secondaryParsed.sections
+                .map(applySettingLabels)
+                .forEach((section) => {
+                  section.entries.forEach((entry) => {
+                    const label = entry.label || entry.key;
+                    if (group.labels.includes(label)) {
+                      entries.push(entry);
+                    }
+                  });
+                });
+              return { name: group.name, entries };
+            })
+            .filter((section) => section.entries.length > 0)
+        : filterSectionsByKeywords(secondaryParsed, category).sections.map(applySettingLabels);
+
+      diffMap = buildDiffMap(primarySections, secondarySections);
+    }
+  }
+
+  const categoryWithDiff = { ...category, diffMap };
+
   return (
     <Box sx={{ mt: 2 }}>
       <Typography variant="h6" sx={{ mb: 2 }}>
@@ -310,7 +407,7 @@ export default function SetupSectionPanel({ categoryKey }) {
             data={setupFiles[column.setupKey]}
             loading={loadingFiles[column.setupKey]}
             error={errors[column.setupKey]}
-            category={category}
+            category={categoryWithDiff}
             countryCodes={countryCodes}
           />
         ))}
