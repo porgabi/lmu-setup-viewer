@@ -158,8 +158,12 @@ export default function SetupSelector() {
             minWidth: 260,
             flex: '1 1 280px',
             '& .MuiOutlinedInput-notchedOutline legend': {
-              padding: '0 4px',
+              padding: 0,
             },
+            '& .MuiInputLabel-root.MuiInputLabel-shrink + .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline legend':
+              {
+                padding: '0 4px',
+              },
           }}
           size="small"
         >
@@ -194,8 +198,12 @@ export default function SetupSelector() {
             minWidth: 260,
             flex: '1 1 280px',
             '& .MuiOutlinedInput-notchedOutline legend': {
-              padding: '0 13px',
+              padding: 0,
             },
+            '& .MuiInputLabel-root.MuiInputLabel-shrink + .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline legend':
+              {
+                padding: '0 13px',
+              },
           }}
           size="small"
         >
