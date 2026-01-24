@@ -192,6 +192,78 @@ function splitSetupKey(setupKey) {
   };
 }
 
+function AutoFitCarName({ text }) {
+  const containerRef = React.useRef(null);
+  const textRef = React.useRef(null);
+  const baseSizeRef = React.useRef(null);
+  const lastSizeRef = React.useRef(null);
+  const [fontSize, setFontSize] = React.useState(null);
+
+  const fitText = React.useCallback(() => {
+    if (!text || !containerRef.current || !textRef.current) return;
+    const availableWidth = containerRef.current.clientWidth;
+    const baseSize = parseFloat(window.getComputedStyle(textRef.current).fontSize);
+    if (!baseSize) return;
+    if (!baseSizeRef.current) {
+      baseSizeRef.current = baseSize;
+    }
+    const textWidth = textRef.current.scrollWidth;
+    if (!availableWidth || !textWidth) return;
+    const ratio = availableWidth / textWidth;
+    let nextSize = baseSize;
+    if (ratio < 1) {
+      nextSize = Math.max(baseSize * ratio, 12);
+    } else if (baseSizeRef.current) {
+      nextSize = Math.min(baseSizeRef.current, baseSize * ratio);
+    }
+    const nextValue = `${nextSize.toFixed(2)}px`;
+    if (lastSizeRef.current !== nextValue) {
+      lastSizeRef.current = nextValue;
+      setFontSize(nextValue);
+    }
+  }, [text]);
+
+  React.useLayoutEffect(() => {
+    fitText();
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(() => fitText());
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [fitText]);
+
+  return (
+    <Box
+      ref={containerRef}
+      sx={{
+        width: '100%',
+        maxWidth: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        minHeight: '4em',
+      }}
+    >
+      <Typography
+        ref={textRef}
+        variant="h3"
+        sx={{
+          color: 'transparent',
+          WebkitTextStroke: '0.6px rgba(255, 255, 255, 0.8)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          fontWeight: 800,
+          textAlign: 'center',
+          whiteSpace: 'nowrap',
+          maxWidth: '100%',
+          fontSize: fontSize || undefined,
+        }}
+      >
+        {text}
+      </Typography>
+    </Box>
+  );
+}
+
 function renderHeading(setupKey, title, countryCodes, carName, carImagePath) {
   if (!setupKey) {
     return title;
@@ -219,25 +291,11 @@ function renderHeading(setupKey, title, countryCodes, carName, carImagePath) {
             component="img"
             src={carImagePath}
             alt={carName}
-            sx={{ width: '100%', maxWidth: 520, height: 'auto', opacity: 0.95 }}
+            sx={{ width: 'auto', height: 'auto', maxWidth: 'none', opacity: 0.95 }}
           />
         </Box>
       ) : null}
-      {carName ? (
-        <Typography
-          variant="h3"
-          sx={{
-            color: 'transparent',
-            WebkitTextStroke: '0.6px rgba(255, 255, 255, 0.8)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em',
-            fontWeight: 800,
-            textAlign: 'center',
-          }}
-        >
-          {carName}
-        </Typography>
-      ) : null}
+      {carName ? <AutoFitCarName text={carName} /> : null}
       <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
         {countryCode ? (
           <ReactCountryFlag
@@ -356,7 +414,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category, countryC
   }
 
   return (
-    <Box>
+    <Box sx={{ minWidth: 0 }}>
       <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, letterSpacing: '0.08em' }}>
         {heading}
       </Typography>
