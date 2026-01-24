@@ -13,6 +13,19 @@ function getDisplayValue(entry) {
   return commentValue || entry.value || '';
 }
 
+function getComparableValue(entry) {
+  const value = getDisplayValue(entry);
+  if (!value) return '';
+  const label = entry?.label || entry?.key || '';
+  if (label === 'Virtual Energy' || label === 'Fuel Ratio') {
+    return value.replace(/\s*\([^)]*\)\s*/g, '').trim();
+  }
+  if (label.toLowerCase().includes('tyre compound')) {
+    return value.replace(/^\s*\d+%\s*/g, '').trim();
+  }
+  return value;
+}
+
 function getCompoundColor(entry, displayValue) {
   const label = entry?.label || entry?.key || '';
   if (!label.toLowerCase().includes('tyre compound')) {
@@ -33,7 +46,7 @@ function buildDiffMap(primarySections, secondarySections) {
     sections.forEach((section) => {
       section.entries.forEach((entry) => {
         const key = buildKey(section.name, entry.key);
-        target.set(key, getDisplayValue(entry));
+        target.set(key, getComparableValue(entry));
       });
     });
   };
