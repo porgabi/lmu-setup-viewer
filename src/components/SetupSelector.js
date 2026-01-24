@@ -108,6 +108,7 @@ export default function SetupSelector() {
   };
 
   const menuProps = {
+    disableScrollLock: true,
     PaperProps: {
       sx: {
         maxHeight: 320,
