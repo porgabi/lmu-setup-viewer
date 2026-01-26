@@ -162,14 +162,14 @@ function EntriesTable({ entries, sectionName, diffMap }) {
   );
 }
 
-function SectionBlock({ section, diffMap }) {
+function SectionBlock({ section, diffMap, noMargin }) {
   const hasEntries = section.entries.length > 0;
   const hasLines = section.lines.length > 0;
   const content = hasLines ? section.lines.join('\n') : '';
   return (
     <Box
       sx={{
-        mb: 2,
+        mb: noMargin ? 0 : 2,
         p: 2,
         bgcolor: 'rgba(8, 10, 14, 0.75)',
         borderRadius: 2,
@@ -207,6 +207,65 @@ function SectionBlock({ section, diffMap }) {
         </Typography>
       ) : null}
     </Box>
+  );
+}
+
+function renderSections(sections, diffMap, layout, setupKey) {
+  if (!layout?.single?.length) {
+    return sections.map((section) => (
+      <SectionBlock key={`${setupKey}-${section.name}`} section={section} diffMap={diffMap} />
+    ));
+  }
+
+  const sectionsByName = new Map();
+  sections.forEach((section) => {
+    sectionsByName.set(section.name.toUpperCase(), section);
+  });
+
+  const used = new Set();
+  const rows = layout.single
+    .map((row) =>
+      row
+        .map((name) => {
+          const section = sectionsByName.get(String(name).toUpperCase());
+          if (section) {
+            used.add(section.name.toUpperCase());
+          }
+          return section;
+        })
+        .filter(Boolean)
+    )
+    .filter((row) => row.length > 0);
+
+  const leftovers = sections.filter((section) => !used.has(section.name.toUpperCase()));
+  const rowKeyBase = setupKey || 'sections';
+
+  return (
+    <>
+      {rows.map((rowSections, rowIndex) => (
+        <Box
+          key={`${rowKeyBase}-row-${rowIndex}`}
+          sx={{
+            display: 'grid',
+            gap: 2,
+            gridTemplateColumns: `repeat(${rowSections.length}, minmax(0, 1fr))`,
+            mb: rowIndex === rows.length - 1 && leftovers.length === 0 ? 0 : 2,
+          }}
+        >
+          {rowSections.map((section) => (
+            <SectionBlock
+              key={`${setupKey}-${section.name}`}
+              section={section}
+              diffMap={diffMap}
+              noMargin
+            />
+          ))}
+        </Box>
+      ))}
+      {leftovers.map((section) => (
+        <SectionBlock key={`${setupKey}-${section.name}`} section={section} diffMap={diffMap} />
+      ))}
+    </>
   );
 }
 
@@ -355,7 +414,7 @@ function getCarImagePath(carInfo) {
   return `/assets/cars/${carInfo.class}/${carInfo.technical}.png`;
 }
 
-function SetupColumn({ title, setupKey, data, loading, error, category, countryCodes }) {
+function SetupColumn({ title, setupKey, data, loading, error, category, countryCodes, layout }) {
   const rawCarName = data?.parsed?.metadata?.vehicleClass;
   const carInfo = resolveCarInfo(rawCarName);
   const carName = carInfo?.displayName || '';
@@ -439,9 +498,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category, countryC
           {availableSections.length ? ` Available sections: ${availableSections.join(', ')}` : ''}
         </Typography>
       ) : (
-        labeledSections.map((section) => (
-          <SectionBlock key={`${setupKey}-${section.name}`} section={section} diffMap={category.diffMap} />
-        ))
+        renderSections(labeledSections, category.diffMap, layout, setupKey)
       )}
     </Box>
   );
@@ -494,6 +551,7 @@ export default function SetupSectionPanel({ categoryKey }) {
   }
 
   const categoryWithDiff = { ...category, diffMap };
+  const layout = comparisonEnabled ? null : category.layout;
 
   return (
     <Box sx={{ mt: 2 }}>
@@ -508,6 +566,7 @@ export default function SetupSectionPanel({ categoryKey }) {
             error={errors[column.setupKey]}
             category={categoryWithDiff}
             countryCodes={countryCodes}
+            layout={layout}
           />
         ))}
       </Box>

@@ -1,6 +1,12 @@
 export const setupCategories = {
   powertrain: {
     label: 'Powertrain',
+    layout: {
+      single: [
+        ['ENGINE', 'DIFFERENTIAL'],
+        ['ELECTRONICS', 'GEARING'],
+      ],
+    },
     sectionGroups: [
       {
         name: 'ENGINE',
@@ -35,6 +41,13 @@ export const setupCategories = {
   },
   wheelsAndBrakes: {
     label: 'Wheels & Brakes',
+    layout: {
+      single: [
+        ['FRONT LEFT', 'FRONT RIGHT'],
+        ['REAR LEFT', 'REAR RIGHT'],
+        ['BRAKES'],
+      ],
+    },
     sectionGroups: [
       {
         name: 'FRONT LEFT',
@@ -70,6 +83,12 @@ export const setupCategories = {
   },
   suspension: {
     label: 'Suspension',
+    layout: {
+      single: [
+        ['FRONT LEFT', 'FRONT 3rd SPRING', 'FRONT RIGHT'],
+        ['REAR LEFT', 'REAR 3rd SPRING', 'REAR RIGHT'],
+      ],
+    },
     sectionGroups: [
       {
         name: 'FRONT LEFT',
@@ -105,6 +124,12 @@ export const setupCategories = {
   },
   dampers: {
     label: 'Dampers',
+    layout: {
+      single: [
+        ['FRONT LEFT', 'FRONT 3rd SPRING', 'FRONT RIGHT'],
+        ['REAR LEFT', 'REAR 3rd SPRING', 'REAR RIGHT'],
+      ],
+    },
     sectionGroups: [
       {
         name: 'FRONT LEFT',
