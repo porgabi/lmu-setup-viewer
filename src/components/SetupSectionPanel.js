@@ -16,19 +16,18 @@ function getDisplayValue(entry) {
 function getComparableValue(entry) {
   const value = getDisplayValue(entry);
   if (!value) return '';
-  const label = entry?.label || entry?.key || '';
-  if (label === 'Virtual Energy' || label === 'Fuel Ratio') {
+  const key = entry?.key || '';
+  if (key === 'VirtualEnergySetting' || key === 'FuelCapacitySetting') {
     return value.replace(/\s*\([^)]*\)\s*/g, '').trim();
   }
-  if (label.toLowerCase().includes('tyre compound')) {
+  if (key === 'CompoundSetting') {
     return value.replace(/^\s*\d+%\s*/g, '').trim();
   }
   return value;
 }
 
 function getCompoundColor(entry, displayValue) {
-  const label = entry?.label || entry?.key || '';
-  if (!label.toLowerCase().includes('tyre compound')) {
+  if (entry?.key !== 'CompoundSetting') {
     return null;
   }
   const normalized = (displayValue || '').toLowerCase();
@@ -64,6 +63,33 @@ function buildDiffMap(primarySections, secondarySections) {
   });
 
   return diffMap;
+}
+
+function buildGroupedSections(parsed, sectionGroups) {
+  const labeledBySection = parsed.sections.map(applySettingLabels);
+  return sectionGroups
+    .map((group) => {
+      const entries = [];
+      const allowedSections = group.sourceSections
+        ? new Set(group.sourceSections.map((name) => name.toUpperCase()))
+        : null;
+
+      group.keys.forEach((key) => {
+        labeledBySection.forEach((section) => {
+          if (allowedSections && !allowedSections.has(section.name.toUpperCase())) {
+            return;
+          }
+          section.entries.forEach((entry) => {
+            if (entry.key === key) {
+              entries.push(entry);
+            }
+          });
+        });
+      });
+
+      return { name: group.name, entries, lines: [] };
+    })
+    .filter((section) => section.entries.length > 0);
 }
 
 function EntriesTable({ entries, sectionName, diffMap }) {
@@ -393,31 +419,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category, countryC
   let labeledSections = [];
 
   if (Array.isArray(category.sectionGroups)) {
-    const labeledBySection = parsed.sections.map(applySettingLabels);
-    const entriesByLabel = new Map();
-
-    labeledBySection.forEach((section) => {
-      section.entries.forEach((entry) => {
-        const label = entry.label || entry.key;
-        if (!label) return;
-        const existing = entriesByLabel.get(label) || [];
-        existing.push(entry);
-        entriesByLabel.set(label, existing);
-      });
-    });
-
-    labeledSections = category.sectionGroups
-      .map((group) => {
-        const entries = [];
-        group.labels.forEach((label) => {
-          const matches = entriesByLabel.get(label);
-          if (matches) {
-            entries.push(...matches);
-          }
-        });
-        return { name: group.name, entries, lines: [] };
-      })
-      .filter((section) => section.entries.length > 0);
+    labeledSections = buildGroupedSections(parsed, category.sectionGroups);
   } else {
     const { sections, availableSections: sectionList } = filterSectionsByKeywords(parsed, category);
     availableSections = sectionList;
@@ -480,41 +482,11 @@ export default function SetupSectionPanel({ categoryKey }) {
     const secondaryParsed = setupFiles[secondarySetup]?.parsed;
     if (primaryParsed && secondaryParsed) {
       const primarySections = Array.isArray(category.sectionGroups)
-        ? category.sectionGroups
-            .map((group) => {
-              const entries = [];
-              primaryParsed.sections
-                .map(applySettingLabels)
-                .forEach((section) => {
-                  section.entries.forEach((entry) => {
-                    const label = entry.label || entry.key;
-                    if (group.labels.includes(label)) {
-                      entries.push(entry);
-                    }
-                  });
-                });
-              return { name: group.name, entries };
-            })
-            .filter((section) => section.entries.length > 0)
+        ? buildGroupedSections(primaryParsed, category.sectionGroups)
         : filterSectionsByKeywords(primaryParsed, category).sections.map(applySettingLabels);
 
       const secondarySections = Array.isArray(category.sectionGroups)
-        ? category.sectionGroups
-            .map((group) => {
-              const entries = [];
-              secondaryParsed.sections
-                .map(applySettingLabels)
-                .forEach((section) => {
-                  section.entries.forEach((entry) => {
-                    const label = entry.label || entry.key;
-                    if (group.labels.includes(label)) {
-                      entries.push(entry);
-                    }
-                  });
-                });
-              return { name: group.name, entries };
-            })
-            .filter((section) => section.entries.length > 0)
+        ? buildGroupedSections(secondaryParsed, category.sectionGroups)
         : filterSectionsByKeywords(secondaryParsed, category).sections.map(applySettingLabels);
 
       diffMap = buildDiffMap(primarySections, secondarySections);

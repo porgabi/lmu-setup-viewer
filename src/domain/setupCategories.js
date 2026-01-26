@@ -4,26 +4,32 @@ export const setupCategories = {
     sectionGroups: [
       {
         name: 'ENGINE',
-        labels: [
-          'Virtual Energy',
-          'Fuel Ratio',
-          'Rev Limiter',
-          'Engine Mixture',
-          'Water Radiator Cover',
-          'Oil Radiator Cover',
+        keys: [
+          'VirtualEnergySetting',
+          'FuelCapacitySetting',
+          'RevLimitSetting',
+          'EngineMixtureSetting',
+          'WaterRadiatorSetting',
+          'OilRadiatorSetting',
         ],
       },
       {
         name: 'ELECTRONICS',
-        labels: ['Onboard TC', 'TC Power Cut', 'TC Slip Angle', 'Regen Level', 'Electric Motor Map'],
+        keys: [
+          'TractionControlMapSetting',
+          'TCPowerCutMapSetting',
+          'TCSlipAngleMapSetting',
+          'RegenerationMapSetting',
+          'ElectricMotorMapSetting',
+        ],
       },
       {
         name: 'DIFFERENTIAL',
-        labels: ['Power', 'Coast', 'Preload'],
+        keys: ['DiffPowerSetting', 'DiffCoastSetting', 'DiffPreloadSetting'],
       },
       {
         name: 'GEARING',
-        labels: ['Ratio Set'],
+        keys: ['RatioSetSetting'],
       },
     ],
   },
@@ -32,23 +38,33 @@ export const setupCategories = {
     sectionGroups: [
       {
         name: 'FRONT LEFT',
-        labels: ['Front Left Tyre Compound', 'Front Left Tyre Pressure', 'Front Left Camber'],
+        sourceSections: ['FRONTLEFT'],
+        keys: ['CompoundSetting', 'PressureSetting', 'CamberSetting'],
       },
       {
         name: 'FRONT RIGHT',
-        labels: ['Front Right Tyre Compound', 'Front Right Tyre Pressure', 'Front Right Camber'],
+        sourceSections: ['FRONTRIGHT'],
+        keys: ['CompoundSetting', 'PressureSetting', 'CamberSetting'],
       },
       {
         name: 'REAR LEFT',
-        labels: ['Rear Left Tyre Compound', 'Rear Left Tyre Pressure', 'Rear Left Camber'],
+        sourceSections: ['REARLEFT'],
+        keys: ['CompoundSetting', 'PressureSetting', 'CamberSetting'],
       },
       {
         name: 'REAR RIGHT',
-        labels: ['Rear Right Tyre Compound', 'Rear Right Tyre Pressure', 'Rear Right Camber'],
+        sourceSections: ['REARRIGHT'],
+        keys: ['CompoundSetting', 'PressureSetting', 'CamberSetting'],
       },
       {
         name: 'BRAKES',
-        labels: ['Brake Bias', 'Brake Migration', 'Max Pedal Force', 'Front Brake Ducts', 'Rear Brake Ducts'],
+        keys: [
+          'RearBrakeSetting',
+          'BrakeMigrationSetting',
+          'BrakePressureSetting',
+          'BrakeDuctSetting',
+          'BrakeDuctRearSetting',
+        ],
       },
     ],
   },
@@ -57,27 +73,33 @@ export const setupCategories = {
     sectionGroups: [
       {
         name: 'FRONT LEFT',
-        labels: ['Front Left Spring Rate', 'Front Left Packers', 'Front Left Ride Height'],
+        sourceSections: ['FRONTLEFT'],
+        keys: ['SpringSetting', 'PackerSetting', 'RideHeightSetting'],
       },
       {
         name: 'FRONT 3rd SPRING',
-        labels: ['Front 3rd Spring Rate', 'Front 3rd Packer'],
+        sourceSections: ['SUSPENSION'],
+        keys: ['Front3rdSpringSetting', 'Front3rdPackerSetting'],
       },
       {
         name: 'FRONT RIGHT',
-        labels: ['Front Right Spring Rate', 'Front Right Packers', 'Front Right Ride Height'],
+        sourceSections: ['FRONTRIGHT'],
+        keys: ['SpringSetting', 'PackerSetting', 'RideHeightSetting'],
       },
       {
         name: 'REAR LEFT',
-        labels: ['Rear Left Spring Rate', 'Rear Left Packers', 'Rear Left Ride Height'],
+        sourceSections: ['REARLEFT'],
+        keys: ['SpringSetting', 'PackerSetting', 'RideHeightSetting'],
       },
       {
         name: 'REAR 3rd SPRING',
-        labels: ['Rear 3rd Spring Rate', 'Rear 3rd Spring Packer'],
+        sourceSections: ['SUSPENSION'],
+        keys: ['Rear3rdSpringSetting', 'Rear3rdPackerSetting'],
       },
       {
         name: 'REAR RIGHT',
-        labels: ['Rear Right Spring Rate', 'Rear Right Packers', 'Rear Right Ride Height'],
+        sourceSections: ['REARRIGHT'],
+        keys: ['SpringSetting', 'PackerSetting', 'RideHeightSetting'],
       },
     ],
   },
@@ -86,57 +108,43 @@ export const setupCategories = {
     sectionGroups: [
       {
         name: 'FRONT LEFT',
-        labels: [
-          'Front Left Slow Bump',
-          'Front Left Slow Rebound',
-          'Front Left Fast Bump',
-          'Front Left Fast Rebound',
-        ],
+        sourceSections: ['FRONTLEFT'],
+        keys: ['SlowBumpSetting', 'SlowReboundSetting', 'FastBumpSetting', 'FastReboundSetting'],
       },
       {
         name: 'FRONT 3rd SPRING',
-        labels: [
-          'Front 3rd Spring Slow Bump',
-          'Front 3rd Spring Slow Rebound',
-          'Front 3rd Spring Fast Bump',
-          'Front 3rd Spring Fast Rebound',
+        sourceSections: ['SUSPENSION'],
+        keys: [
+          'Front3rdSlowBumpSetting',
+          'Front3rdSlowReboundSetting',
+          'Front3rdFastBumpSetting',
+          'Front3rdFastReboundSetting',
         ],
       },
       {
         name: 'FRONT RIGHT',
-        labels: [
-          'Front Right Slow Bump',
-          'Front Right Slow Rebound',
-          'Front Right Fast Bump',
-          'Front Right Fast Rebound',
-        ],
+        sourceSections: ['FRONTRIGHT'],
+        keys: ['SlowBumpSetting', 'SlowReboundSetting', 'FastBumpSetting', 'FastReboundSetting'],
       },
       {
         name: 'REAR LEFT',
-        labels: [
-          'Rear Left Slow Bump',
-          'Rear Left Slow Rebound',
-          'Rear Left Fast Bump',
-          'Rear Left Fast Rebound',
-        ],
+        sourceSections: ['REARLEFT'],
+        keys: ['SlowBumpSetting', 'SlowReboundSetting', 'FastBumpSetting', 'FastReboundSetting'],
       },
       {
         name: 'REAR 3rd SPRING',
-        labels: [
-          'Rear 3rd Spring Slow Bump',
-          'Rear 3rd Spring Slow Rebound',
-          'Rear 3rd Spring Fast Bump',
-          'Rear 3rd Spring Fast Rebound',
+        sourceSections: ['SUSPENSION'],
+        keys: [
+          'Rear3rdSlowBumpSetting',
+          'Rear3rdSlowReboundSetting',
+          'Rear3rdFastBumpSetting',
+          'Rear3rdFastReboundSetting',
         ],
       },
       {
         name: 'REAR RIGHT',
-        labels: [
-          'Rear Right Slow Bump',
-          'Rear Right Slow Rebound',
-          'Rear Right Fast Bump',
-          'Rear Right Fast Rebound',
-        ],
+        sourceSections: ['REARRIGHT'],
+        keys: ['SlowBumpSetting', 'SlowReboundSetting', 'FastBumpSetting', 'FastReboundSetting'],
       },
     ],
   },
@@ -145,11 +153,11 @@ export const setupCategories = {
     sectionGroups: [
       {
         name: 'FRONT',
-        labels: ['Front Toe-In', 'Front Anti-Roll Bar', 'Wheel Range (Lock)', 'Front Diffuser'],
+        keys: ['FrontToeInSetting', 'FrontAntiSwaySetting', 'SteerLockSetting', 'FWSetting'],
       },
       {
         name: 'REAR',
-        labels: ['Rear Toe-In', 'Rear Anti-Roll Bar', 'Rear Wing'],
+        keys: ['RearToeInSetting', 'RearAntiSwaySetting', 'RWSetting'],
       },
     ],
   },
