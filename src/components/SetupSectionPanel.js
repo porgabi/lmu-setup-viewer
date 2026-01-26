@@ -122,6 +122,7 @@ function EntriesTable({ entries, sectionName, diffMap }) {
   };
   const diffRowSx = {
     boxShadow: 'inset 0 0 0 1px rgba(205, 70, 70, 0.55)',
+    borderRadius: 2,
     '&:hover': {
       boxShadow: 'inset 0 0 0 1px rgba(205, 70, 70, 0.75)',
     },
