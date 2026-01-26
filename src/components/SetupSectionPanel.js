@@ -554,7 +554,7 @@ export default function SetupSectionPanel({ categoryKey }) {
   const layout = comparisonEnabled ? null : category.layout;
 
   return (
-    <Box sx={{ mt: 2 }}>
+    <Box>
       <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns }}>
         {columns.map((column) => (
           <SetupColumn
