@@ -128,7 +128,7 @@ function EntriesTable({ entries, sectionName, diffMap }) {
   };
   const buildKey = (entryKey) => `${sectionName}::${entryKey}`;
   return (
-    <Box sx={{ fontSize: '0.9rem', fontVariantNumeric: 'tabular-nums' }}>
+    <Box sx={{ fontSize: '1.0rem', fontVariantNumeric: 'tabular-nums' }}>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         {entries.map((entry, index) => (
           <Box
@@ -179,7 +179,7 @@ function SectionBlock({ section, diffMap, noMargin }) {
       }}
     >
       <Typography
-        variant="subtitle2"
+        variant="subtitle1"
         sx={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', mb: 1 }}
       >
         {section.name}
