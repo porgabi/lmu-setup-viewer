@@ -32,7 +32,9 @@ function isSetupValid(setupKey, setupIndex) {
   if (!setupKey) return false;
   const { track, setupName } = splitSetupKey(setupKey);
   if (!track || !setupName) return false;
-  return Array.isArray(setupIndex?.[track]) && setupIndex[track].includes(setupName);
+  const setups = setupIndex?.[track];
+  if (!Array.isArray(setups)) return false;
+  return setups.some((entry) => (typeof entry === 'string' ? entry === setupName : entry?.name === setupName));
 }
 
 export function SetupProvider({ children }) {

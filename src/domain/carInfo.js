@@ -5,6 +5,7 @@ const entries = Object.entries(carInfo)
     technical,
     displayName: info.displayName,
     class: info.class,
+    brand: info.brand,
     length: technical.length,
   }))
   .sort((a, b) => b.length - a.length);

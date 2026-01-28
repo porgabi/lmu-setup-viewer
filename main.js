@@ -69,9 +69,24 @@ async function buildSetupIndex(settingsPath) {
       const files = await fs.promises.readdir(folderPath, { withFileTypes: true });
 
       // Filter only for SVM files.
-      const setupNames = files
-        .filter((file) => file.isFile() && file.name.endsWith('.svm'))
-        .map((file) => path.parse(file.name).name);
+      const setupFiles = files.filter((file) => file.isFile() && file.name.endsWith('.svm'));
+      const setupNames = await Promise.all(
+        setupFiles.map(async (file) => {
+          const name = path.parse(file.name).name;
+          const fullPath = path.join(folderPath, file.name);
+          let carTechnicalName = '';
+          try {
+            const data = await fs.promises.readFile(fullPath, 'utf-8');
+            const match = data.match(/VehicleClassSetting\s*=\s*"([^"]+)"/);
+            if (match && match[1]) {
+              carTechnicalName = match[1].trim();
+            }
+          } catch (error) {
+            console.warn(`Failed to read setup file ${fullPath}`, error);
+          }
+          return { name, carTechnicalName };
+        })
+      );
 
       if (setupNames.length > 0) {
         result[entry.name] = setupNames;

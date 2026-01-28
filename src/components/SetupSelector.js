@@ -15,12 +15,90 @@ import {
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ReactCountryFlag from 'react-country-flag';
 import { useSetupContext } from '../state/SetupContext';
+import { resolveCarInfo } from '../domain/carInfo';
+
+function splitSetupKey(setupKey) {
+  if (!setupKey) return { track: '', setupName: '' };
+  const separatorIndex = setupKey.indexOf('/');
+  if (separatorIndex === -1) {
+    return { track: '', setupName: setupKey };
+  }
+  return {
+    track: setupKey.slice(0, separatorIndex),
+    setupName: setupKey.slice(separatorIndex + 1),
+  };
+}
+
+function getSetupEntry(setupIndex, track, setupName) {
+  const setups = setupIndex?.[track];
+  if (!Array.isArray(setups)) return null;
+  const match = setups.find((setup) => {
+    if (typeof setup === 'string') {
+      return setup === setupName;
+    }
+    return setup?.name === setupName;
+  });
+  if (!match) return null;
+  if (typeof match === 'string') {
+    return { name: match, carTechnicalName: '' };
+  }
+  return match;
+}
+
+function renderSetupValue(value, setupIndex, countryCodes) {
+  if (!value) return '';
+  const { track, setupName } = splitSetupKey(value);
+  if (!track || !setupName) return value;
+  const entry = getSetupEntry(setupIndex, track, setupName);
+  const carTechnicalName = entry?.carTechnicalName;
+  const carInfo = resolveCarInfo(carTechnicalName);
+  const brand = carInfo?.brand;
+  const brandIconPath = brand ? `/assets/brands/${brand}.png` : '';
+  const countryCode = countryCodes?.[track];
+
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      {countryCode ? (
+        <ReactCountryFlag
+          svg
+          countryCode={countryCode}
+          style={{ width: '1.1em', height: '1.1em', display: 'block' }}
+          aria-label={`${countryCode} flag`}
+        />
+      ) : null}
+      <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center' }}>
+        <Box component="span">{track}</Box>
+        <Box component="span" sx={{ mx: 0.5 }}>
+          /
+        </Box>
+        {brandIconPath ? (
+          <Box
+            component="img"
+            src={brandIconPath}
+            alt=""
+            aria-hidden
+            onError={(event) => {
+              event.currentTarget.style.display = 'none';
+            }}
+            sx={{ height: '1em', width: 'auto', mr: 0.5, display: 'inline-block' }}
+          />
+        ) : null}
+        <Box component="span" sx={{ fontWeight: 700, color: 'text.primary' }}>
+          {setupName}
+        </Box>
+      </Box>
+    </Box>
+  );
+}
 
 function buildMenuItems(setupIndex, countryCodes, excludeValue) {
   const items = [];
 
   Object.entries(setupIndex).forEach(([track, setups]) => {
-    const filtered = setups.filter((setupName) => {
+    if (!Array.isArray(setups)) return;
+    const filtered = setups.filter((setup) => {
+      const setupName = typeof setup === 'string' ? setup : setup?.name;
+      if (!setupName) return false;
       const value = `${track}/${setupName}`;
       return value !== excludeValue;
     });
@@ -40,7 +118,13 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
       </ListSubheader>
     );
 
-    filtered.forEach((setupName) => {
+    filtered.forEach((setup) => {
+      const setupName = typeof setup === 'string' ? setup : setup?.name;
+      if (!setupName) return;
+      const carTechnicalName = typeof setup === 'string' ? '' : setup?.carTechnicalName;
+      const carInfo = resolveCarInfo(carTechnicalName);
+      const brand = carInfo?.brand;
+      const brandIconPath = brand ? `/assets/brands/${brand}.png` : '';
       const value = `${track}/${setupName}`;
       const countryCode = countryCodes?.[track];
       const content = (
@@ -53,11 +137,23 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
               aria-label={`${countryCode} flag`}
             />
           ) : null}
-          <Box component="span">
+          <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center' }}>
             <Box component="span">{track}</Box>
             <Box component="span" sx={{ mx: 0.5 }}>
               /
             </Box>
+            {brandIconPath ? (
+              <Box
+                component="img"
+                src={brandIconPath}
+                alt=""
+                aria-hidden
+                onError={(event) => {
+                  event.currentTarget.style.display = 'none';
+                }}
+                sx={{ height: '1em', width: 'auto', mr: 0.5, display: 'inline-block' }}
+              />
+            ) : null}
             <Box component="span" sx={{ fontWeight: 700, color: 'text.primary' }}>
               {setupName}
             </Box>
@@ -175,6 +271,7 @@ export default function SetupSelector() {
             onChange={handlePrimaryChange}
             MenuProps={menuProps}
             disabled={loadingIndex}
+            renderValue={(value) => renderSetupValue(value, setupIndex, countryCodes)}
           >
             {buildMenuItems(setupIndex, countryCodes, secondarySetup)}
           </Select>
@@ -215,6 +312,7 @@ export default function SetupSelector() {
             onChange={handleSecondaryChange}
             MenuProps={menuProps}
             disabled={loadingIndex || !comparisonEnabled}
+            renderValue={(value) => renderSetupValue(value, setupIndex, countryCodes)}
           >
             {buildMenuItems(setupIndex, countryCodes, primarySetup)}
           </Select>

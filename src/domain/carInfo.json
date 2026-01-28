@@ -1,126 +1,157 @@
 {
   "LMP2_ELMS Oreca_07": {
     "displayName": "Oreca 07 (ELMS)",
-    "class": "lmp2_elms"
+    "class": "lmp2_elms",
+    "brand": "lmp2"
   },
   "LMP2 Oreca_07": {
     "displayName": "Oreca 07 (WEC)",
-    "class": "lmp2_wec"
+    "class": "lmp2_wec",
+    "brand": "lmp2"
   },
   "ELMS2025 Ginetta_G61LTP3_Evo LMP3": {
     "displayName": "Ginetta G61-LT-P325 Evo",
-    "class": "lmp3"
+    "class": "lmp3",
+    "brand": "ginetta"
   },
   "ELMS2025 LMP3 Ligier_JS_P325": {
     "displayName": "Ligier JS P325",
-    "class": "lmp3"
+    "class": "lmp3",
+    "brand": "ligier"
   },
   "Aston_Martin_Vantage_AMR": {
     "displayName": "Aston Martin Vantage AMR",
-    "class": "gte"
+    "class": "gte",
+    "brand": "aston"
   },
   "GTE_Corvette_C8.R": {
     "displayName": "Corvette C8.R GTE",
-    "class": "gte"
+    "class": "gte",
+    "brand": "corvette"
   },
   "Ferrari_488_GTE_EVO": {
     "displayName": "Ferrari 488 GTE Evo",
-    "class": "gte"
+    "class": "gte",
+    "brand": "ferrari"
   },
   "Porsche_911_RSR-19": {
     "displayName": "Porsche 911 RSR-19",
-    "class": "gte"
+    "class": "gte",
+    "brand": "porsche"
   },
   "Ferrari_296_LMGT3": {
     "displayName": "Ferrari 296 LMGT3",
-    "class": "lmgt3"
+    "class": "lmgt3",
+    "brand": "ferrari"
   },
   "AMR_LMGT3": {
     "displayName": "Aston Martin Vantage AMR LMGT3",
-    "class": "lmgt3"
+    "class": "lmgt3",
+    "brand": "aston"
   },
   "BMW_M4_LMGT3": {
     "displayName": "BMW M4 LMGT3",
-    "class": "lmgt3"
+    "class": "lmgt3",
+    "brand": "bmw"
   },
   "Corvette_Z06_LMGT3R": {
     "displayName": "Corvette Z06 LMGT3.R",
-    "class": "lmgt3"
+    "class": "lmgt3",
+    "brand": "corvette"
   },
   "Ford_Mustang_LMGT3": {
     "displayName": "Ford Mustang LMGT3",
-    "class": "lmgt3"
+    "class": "lmgt3",
+    "brand": "ford"
   },
   "Lexus_RCF_GT3": {
     "displayName": "Lexus RCF LMGT3",
-    "class": "lmgt3"
+    "class": "lmgt3",
+    "brand": "lexus"
   },
   "McLaren_720S_LMGT3_Evo": {
     "displayName": "McLaren 720s LMGT3 Evo",
-    "class": "lmgt3"
+    "class": "lmgt3",
+    "brand": "mclaren"
   },
   "Mercedes_AMG_GT3": {
     "displayName": "Mercedes-AMG LMGT3",
-    "class": "lmgt3"
+    "class": "lmgt3",
+    "brand": "mercedes"
   },
   "Porsche_911_GT3_R_LMGT3": {
     "displayName": "Porsche 911 GT3 R LMGT3",
-    "class": "lmgt3"
+    "class": "lmgt3",
+    "brand": "porsche"
   },
   "Lamborghini_Huracan_GT3_Evo2": {
     "displayName": "Lamborghini Huracan LMGT3 Evo2",
-    "class": "lmgt3"
+    "class": "lmgt3",
+    "brand": "lamborghini"
   },
   "Cadillac_V_lmdh": {
     "displayName": "Cadillac V-Series.R",
-    "class": "hy"
+    "class": "hy",
+    "brand": "cadillac"
   },
   "Ferrari_499P": {
     "displayName": "Ferrari 499P",
-    "class": "hy"
+    "class": "hy",
+    "brand": "ferrari"
   },
   "Glickenhaus_SGC007": {
     "displayName": "Glickenhaus SCG007",
-    "class": "hy"
+    "class": "hy",
+    "brand": "glickenhaus"
   },
   "Peugeot_9x8": {
     "displayName": "Peugeot 9x8 (2023)",
-    "class": "hy"
+    "class": "hy",
+    "brand": "peugeot"
   },
   "Porsche_963": {
     "displayName": "Porsche 963",
-    "class": "hy"
+    "class": "hy",
+    "brand": "porsche"
   },
   "Toyota_GR010": {
     "displayName": "Toyota GR010",
-    "class": "hy"
+    "class": "hy",
+    "brand": "toyota"
   },
   "Vanwall_680": {
     "displayName": "Vanwall 680",
-    "class": "hy"
+    "class": "hy",
+    "brand": "vanwall"
   },
   "Alpine_A424": {
     "displayName": "Alpine A424",
-    "class": "hy"
+    "class": "hy",
+    "brand": "alpine"
   },
   "BMW_M_Hybrid": {
     "displayName": "BMW M Hybrid V8",
-    "class": "hy"
+    "class": "hy",
+    "brand": "bmw"
   },
   "Isotta_TIPO6": {
     "displayName": "Isotta Fraschini TIP06",
-    "class": "hy"
+    "class": "hy",
+    "brand": "isotta"
   },
   "Lamborghini_SC63": {
     "displayName": "Lamborghini SC63",
-    "class": "hy"
+    "class": "hy",
+    "brand": "lamborghini"
   },
   "9x8 Hypercar Peugeot": {
     "displayName": "Peugeot 9x8 (2024)",
-    "class": "hy"
+    "class": "hy",
+    "brand": "peugeot"
   },
   "AstonMartin_Valkyrie": {
     "displayName": "Aston Martin Valkyrie LMH",
-    "class": "hy"
+    "class": "hy",
+    "brand": "aston"
   }
 }
