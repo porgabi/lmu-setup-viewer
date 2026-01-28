@@ -363,7 +363,7 @@ function AutoFitCarName({ text }) {
   );
 }
 
-function renderHeading(setupKey, title, countryCodes, carName, carImagePath) {
+function renderHeading(setupKey, title, countryCodes, carName, carImagePath, brandIconPath) {
   if (!setupKey) {
     return title;
   }
@@ -376,6 +376,18 @@ function renderHeading(setupKey, title, countryCodes, carName, carImagePath) {
       <Box component="span" sx={{ mx: 0.5 }}>
         /
       </Box>
+      {brandIconPath ? (
+        <Box
+          component="img"
+          src={brandIconPath}
+          alt=""
+          aria-hidden
+          onError={(event) => {
+            event.currentTarget.style.display = 'none';
+          }}
+          sx={{ height: '1em', width: 'auto', mr: 0.5, display: 'inline-block', verticalAlign: 'middle' }}
+        />
+      ) : null}
       <Box component="span">{setupName}</Box>
     </Box>
   ) : (
@@ -420,7 +432,15 @@ function SetupColumn({ title, setupKey, data, loading, error, category, countryC
   const carInfo = resolveCarInfo(rawCarName);
   const carName = carInfo?.displayName || '';
   const carImagePath = getCarImagePath(carInfo);
-  const heading = renderHeading(setupKey, title, countryCodes, carName, carImagePath);
+  const brandIconPath = carInfo?.brand ? `/assets/brands/${carInfo.brand}.png` : '';
+  const heading = renderHeading(
+    setupKey,
+    title,
+    countryCodes,
+    carName,
+    carImagePath,
+    brandIconPath,
+  );
 
   if (!setupKey) {
     return (
