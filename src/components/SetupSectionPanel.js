@@ -378,15 +378,29 @@ function renderHeading(setupKey, title, countryCodes, carName, carImagePath, bra
       </Box>
       {brandIconPath ? (
         <Box
-          component="img"
-          src={brandIconPath}
-          alt=""
-          aria-hidden
-          onError={(event) => {
-            event.currentTarget.style.display = 'none';
+          component="span"
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '1.4em',
+            height: '1em',
+            mr: 0.5,
+            flex: '0 0 1.4em',
+            verticalAlign: 'middle',
           }}
-          sx={{ height: '1em', width: 'auto', mr: 0.5, display: 'inline-block', verticalAlign: 'middle' }}
-        />
+        >
+          <Box
+            component="img"
+            src={brandIconPath}
+            alt=""
+            aria-hidden
+            onError={(event) => {
+              event.currentTarget.style.display = 'none';
+            }}
+            sx={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', display: 'block' }}
+          />
+        </Box>
       ) : null}
       <Box component="span">{setupName}</Box>
     </Box>

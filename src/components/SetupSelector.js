@@ -73,15 +73,28 @@ function renderSetupValue(value, setupIndex, countryCodes) {
         </Box>
         {brandIconPath ? (
           <Box
-            component="img"
-            src={brandIconPath}
-            alt=""
-            aria-hidden
-            onError={(event) => {
-              event.currentTarget.style.display = 'none';
+            component="span"
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '1.4em',
+              height: '1em',
+              mr: 0.5,
+              flex: '0 0 1.4em',
             }}
-            sx={{ height: '1em', width: 'auto', mr: 0.5, display: 'inline-block' }}
-          />
+          >
+            <Box
+              component="img"
+              src={brandIconPath}
+              alt=""
+              aria-hidden
+              onError={(event) => {
+                event.currentTarget.style.display = 'none';
+              }}
+              sx={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', display: 'block' }}
+            />
+          </Box>
         ) : null}
         <Box component="span" sx={{ fontWeight: 700, color: 'text.primary' }}>
           {setupName}
@@ -144,15 +157,33 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
             </Box>
             {brandIconPath ? (
               <Box
-                component="img"
-                src={brandIconPath}
-                alt=""
-                aria-hidden
-                onError={(event) => {
-                  event.currentTarget.style.display = 'none';
+                component="span"
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '1.4em',
+                  height: '1em',
+                  mr: 0.5,
+                  flex: '0 0 1.4em',
                 }}
-                sx={{ height: '1em', width: 'auto', mr: 0.5, display: 'inline-block' }}
-              />
+              >
+                <Box
+                  component="img"
+                  src={brandIconPath}
+                  alt=""
+                  aria-hidden
+                  onError={(event) => {
+                    event.currentTarget.style.display = 'none';
+                  }}
+                  sx={{
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain',
+                    display: 'block',
+                  }}
+                />
+              </Box>
             ) : null}
             <Box component="span" sx={{ fontWeight: 700, color: 'text.primary' }}>
               {setupName}
@@ -212,6 +243,9 @@ export default function SetupSelector() {
         backgroundColor: 'rgba(8, 10, 14, 0.96)',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         backdropFilter: 'blur(6px)',
+        '& .MuiMenuItem-root': {
+          fontSize: '0.95rem',
+        },
       },
     },
   };
@@ -254,6 +288,12 @@ export default function SetupSelector() {
           sx={{
             minWidth: 260,
             flex: '1 1 280px',
+            '& .MuiSelect-select': {
+              fontSize: '0.95rem',
+            },
+            '& .MuiInputLabel-root': {
+              fontSize: '0.9rem',
+            },
             '& .MuiOutlinedInput-notchedOutline legend': {
               padding: 0,
             },
@@ -295,6 +335,12 @@ export default function SetupSelector() {
           sx={{
             minWidth: 260,
             flex: '1 1 280px',
+            '& .MuiSelect-select': {
+              fontSize: '0.95rem',
+            },
+            '& .MuiInputLabel-root': {
+              fontSize: '0.9rem',
+            },
             '& .MuiOutlinedInput-notchedOutline legend': {
               padding: 0,
             },
