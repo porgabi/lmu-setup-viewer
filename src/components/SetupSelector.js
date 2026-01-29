@@ -54,6 +54,7 @@ function renderSetupValue(value, setupIndex, countryCodes) {
   const carInfo = resolveCarInfo(carTechnicalName);
   const brand = carInfo?.brand;
   const brandIconPath = brand ? `/assets/brands/${brand}.png` : '';
+  const classIconPath = carInfo?.class ? `/assets/classes/${carInfo.class}.png` : '';
   const countryCode = countryCodes?.[track];
 
   return (
@@ -71,6 +72,31 @@ function renderSetupValue(value, setupIndex, countryCodes) {
         <Box component="span" sx={{ mx: 0.5 }}>
           /
         </Box>
+        {classIconPath ? (
+          <Box
+            component="span"
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '1.2em',
+              height: '1em',
+              mr: 0.5,
+              flex: '0 0 1.2em',
+            }}
+          >
+            <Box
+              component="img"
+              src={classIconPath}
+              alt=""
+              aria-hidden
+              onError={(event) => {
+                event.currentTarget.style.display = 'none';
+              }}
+              sx={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', display: 'block' }}
+            />
+          </Box>
+        ) : null}
         {brandIconPath ? (
           <Box
             component="span"
@@ -138,6 +164,7 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
       const carInfo = resolveCarInfo(carTechnicalName);
       const brand = carInfo?.brand;
       const brandIconPath = brand ? `/assets/brands/${brand}.png` : '';
+      const classIconPath = carInfo?.class ? `/assets/classes/${carInfo.class}.png` : '';
       const value = `${track}/${setupName}`;
       const countryCode = countryCodes?.[track];
       const content = (
@@ -155,6 +182,36 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
             <Box component="span" sx={{ mx: 0.5 }}>
               /
             </Box>
+            {classIconPath ? (
+              <Box
+                component="span"
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '1.2em',
+                  height: '1em',
+                  mr: 0.5,
+                  flex: '0 0 1.2em',
+                }}
+              >
+                <Box
+                  component="img"
+                  src={classIconPath}
+                  alt=""
+                  aria-hidden
+                  onError={(event) => {
+                    event.currentTarget.style.display = 'none';
+                  }}
+                  sx={{
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain',
+                    display: 'block',
+                  }}
+                />
+              </Box>
+            ) : null}
             {brandIconPath ? (
               <Box
                 component="span"
