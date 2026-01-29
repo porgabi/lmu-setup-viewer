@@ -16,7 +16,6 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import ReactCountryFlag from 'react-country-flag';
 import { useSetupContext } from '../state/SetupContext';
 import { resolveCarInfo } from '../domain/carInfo';
-import { getTrackLabel } from '../domain/trackNames';
 
 function splitSetupKey(setupKey) {
   if (!setupKey) return { track: '', setupName: '' };
@@ -46,7 +45,7 @@ function getSetupEntry(setupIndex, track, setupName) {
   return match;
 }
 
-function renderSetupValue(value, setupIndex, countryCodes) {
+function renderSetupValue(value, setupIndex, trackInfo) {
   if (!value) return '';
   const { track, setupName } = splitSetupKey(value);
   if (!track || !setupName) return value;
@@ -56,7 +55,9 @@ function renderSetupValue(value, setupIndex, countryCodes) {
   const brand = carInfo?.brand;
   const brandIconPath = brand ? `/assets/brands/${brand}.png` : '';
   const classIconPath = carInfo?.class ? `/assets/classes/${carInfo.class}.png` : '';
-  const countryCode = countryCodes?.[track];
+  const trackEntry = trackInfo?.[track];
+  const countryCode = trackEntry?.countryCode;
+  const trackLabel = trackEntry?.displayName || track;
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -69,7 +70,7 @@ function renderSetupValue(value, setupIndex, countryCodes) {
         />
       ) : null}
       <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center' }}>
-        <Box component="span">{getTrackLabel(track)}</Box>
+        <Box component="span">{trackLabel}</Box>
         <Box component="span" sx={{ mx: 0.5 }}>
           /
         </Box>
@@ -131,7 +132,7 @@ function renderSetupValue(value, setupIndex, countryCodes) {
   );
 }
 
-function buildMenuItems(setupIndex, countryCodes, excludeValue) {
+function buildMenuItems(setupIndex, trackInfo, excludeValue) {
   const items = [];
   const classOrder = new Map([
     ['hy', 0],
@@ -185,7 +186,7 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
         }}
       >
-        {getTrackLabel(track)}
+        {trackInfo?.[track]?.displayName || track}
       </ListSubheader>
     );
 
@@ -196,7 +197,9 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
       const brandIconPath = brand ? `/assets/brands/${brand}.png` : '';
       const classIconPath = carInfo?.class ? `/assets/classes/${carInfo.class}.png` : '';
       const value = `${track}/${setupName}`;
-      const countryCode = countryCodes?.[track];
+      const trackEntry = trackInfo?.[track];
+      const countryCode = trackEntry?.countryCode;
+      const trackLabel = trackEntry?.displayName || track;
       const content = (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           {countryCode ? (
@@ -208,7 +211,7 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
             />
           ) : null}
           <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center' }}>
-            <Box component="span">{getTrackLabel(track)}</Box>
+            <Box component="span">{trackLabel}</Box>
             <Box component="span" sx={{ mx: 0.5 }}>
               /
             </Box>
@@ -301,7 +304,7 @@ export default function SetupSelector() {
   const {
     lmuPath,
     setupIndex,
-    countryCodes,
+    trackInfo,
     primarySetup,
     secondarySetup,
     comparisonEnabled,
@@ -398,9 +401,9 @@ export default function SetupSelector() {
             onChange={handlePrimaryChange}
             MenuProps={menuProps}
             disabled={loadingIndex}
-            renderValue={(value) => renderSetupValue(value, setupIndex, countryCodes)}
+            renderValue={(value) => renderSetupValue(value, setupIndex, trackInfo)}
           >
-            {buildMenuItems(setupIndex, countryCodes, secondarySetup)}
+            {buildMenuItems(setupIndex, trackInfo, secondarySetup)}
           </Select>
         </FormControl>
         <FormControlLabel
@@ -445,9 +448,9 @@ export default function SetupSelector() {
             onChange={handleSecondaryChange}
             MenuProps={menuProps}
             disabled={loadingIndex || !comparisonEnabled}
-            renderValue={(value) => renderSetupValue(value, setupIndex, countryCodes)}
+            renderValue={(value) => renderSetupValue(value, setupIndex, trackInfo)}
           >
-            {buildMenuItems(setupIndex, countryCodes, primarySetup)}
+            {buildMenuItems(setupIndex, trackInfo, primarySetup)}
           </Select>
         </FormControl>
       </Box>

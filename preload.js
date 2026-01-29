@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   readFile: (filePath) => ipcRenderer.invoke('read-file', filePath),
   getLmuPath: () => ipcRenderer.invoke('get-lmu-path'),
   setLmuPath: () => ipcRenderer.invoke('set-lmu-path'),
-  getCountryCodes: () => ipcRenderer.invoke('get-country-codes'),
+  getTrackInfo: () => ipcRenderer.invoke('get-track-info'),
   getSetupIndex: () => ipcRenderer.invoke('get-setup-index'),
   readSetupFile: (payload) => ipcRenderer.invoke('read-setup-file', payload),
 });

@@ -7,7 +7,7 @@ const SetupContext = React.createContext(null);
 const initialState = {
   lmuPath: '',
   setupIndex: {},
-  countryCodes: {},
+  trackInfo: {},
   primarySetup: '',
   secondarySetup: '',
   comparisonEnabled: false,
@@ -43,10 +43,10 @@ export function SetupProvider({ children }) {
   const refreshSetupIndex = React.useCallback(async () => {
     setState((prev) => ({ ...prev, loadingIndex: true }));
     try {
-      const [lmuPath, setupIndex, countryCodes] = await Promise.all([
+      const [lmuPath, setupIndex, trackInfo] = await Promise.all([
         electron.getLmuPath(),
         electron.getSetupIndex(),
-        electron.getCountryCodes(),
+        electron.getTrackInfo(),
       ]);
 
       setState((prev) => {
@@ -56,7 +56,7 @@ export function SetupProvider({ children }) {
           ...prev,
           lmuPath: lmuPath || '',
           setupIndex: setupIndex || {},
-          countryCodes: countryCodes || {},
+          trackInfo: trackInfo || {},
           primarySetup: nextPrimary,
           secondarySetup: nextSecondary,
           loadingIndex: false,

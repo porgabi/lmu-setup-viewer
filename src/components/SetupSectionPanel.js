@@ -6,7 +6,6 @@ import { getSetupCategory } from '../domain/setupCategories';
 import { filterSectionsByKeywords } from '../domain/setupParser';
 import { applySettingLabels } from '../domain/settingLabels';
 import { resolveCarInfo } from '../domain/carInfo';
-import { getTrackLabel } from '../domain/trackNames';
 
 function getDisplayValue(entry) {
   if (!entry) return '';
@@ -367,7 +366,7 @@ function AutoFitCarName({ text }) {
 function renderHeading(
   setupKey,
   title,
-  countryCodes,
+  trackInfo,
   carName,
   carImagePath,
   brandIconPath,
@@ -378,10 +377,12 @@ function renderHeading(
   }
 
   const { track, setupName } = splitSetupKey(setupKey);
-  const countryCode = track ? countryCodes?.[track] : null;
+  const trackEntry = track ? trackInfo?.[track] : null;
+  const countryCode = trackEntry?.countryCode || null;
+  const trackLabel = trackEntry?.displayName || track;
   const label = track ? (
     <Box component="span">
-      <Box component="span">{getTrackLabel(track)}</Box>
+      <Box component="span">{trackLabel}</Box>
       <Box component="span" sx={{ mx: 0.5 }}>
         /
       </Box>
@@ -476,7 +477,7 @@ function getCarImagePath(carInfo) {
   return `/assets/cars/${carInfo.class}/${carInfo.technical}.png`;
 }
 
-function SetupColumn({ title, setupKey, data, loading, error, category, countryCodes, layout }) {
+function SetupColumn({ title, setupKey, data, loading, error, category, trackInfo, layout }) {
   const rawCarName = data?.parsed?.metadata?.vehicleClass;
   const carInfo = resolveCarInfo(rawCarName);
   const carName = carInfo?.displayName || '';
@@ -486,7 +487,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category, countryC
   const heading = renderHeading(
     setupKey,
     title,
-    countryCodes,
+    trackInfo,
     carName,
     carImagePath,
     brandIconPath,
@@ -581,7 +582,7 @@ export default function SetupSectionPanel({ categoryKey }) {
     primarySetup,
     secondarySetup,
     comparisonEnabled,
-    countryCodes,
+    trackInfo,
     setupFiles,
     loadingFiles,
     errors,
@@ -637,7 +638,7 @@ export default function SetupSectionPanel({ categoryKey }) {
             loading={loadingFiles[column.setupKey]}
             error={errors[column.setupKey]}
             category={categoryWithDiff}
-            countryCodes={countryCodes}
+            trackInfo={trackInfo}
             layout={layout}
           />
         ))}

@@ -15,7 +15,7 @@ export const electron = {
   setLmuPath: () => safeInvoke(electronAPI?.setLmuPath, null),
   getSetupIndex: () => safeInvoke(electronAPI?.getSetupIndex, {}),
   readSetupFile: (payload) => safeInvoke(electronAPI?.readSetupFile, null, payload),
-  getCountryCodes: () => safeInvoke(electronAPI?.getCountryCodes, {}),
+  getTrackInfo: () => safeInvoke(electronAPI?.getTrackInfo, {}),
 };
 
 export const isElectronAvailable = Boolean(electronAPI);

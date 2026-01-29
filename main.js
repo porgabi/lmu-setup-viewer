@@ -2,7 +2,10 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const windowStateKeeper = require('electron-window-state');
-const COUNTRY_CODES = require('./common/countryCodes');
+const TRACK_INFO = require('./common/trackInfo');
+
+// Use classic scrollbars so track styling can be applied consistently.
+app.commandLine.appendSwitch('disable-features', 'OverlayScrollbar');
 
 const SETTINGS_RELATIVE_PATH = path.join('UserData', 'player', 'Settings');
 
@@ -64,7 +67,7 @@ async function buildSetupIndex(settingsPath) {
 
   for (const entry of entries) {
     // Filter out unnecessary folders.
-    if (entry.isDirectory() && entry.name in COUNTRY_CODES) {
+    if (entry.isDirectory() && entry.name in TRACK_INFO) {
       const folderPath = path.join(settingsPath, entry.name);
       const files = await fs.promises.readdir(folderPath, { withFileTypes: true });
 
@@ -119,8 +122,8 @@ app.whenReady().then(() => {
     return null;
   });
 
-  ipcMain.handle('get-country-codes', () => {
-    return COUNTRY_CODES;
+  ipcMain.handle('get-track-info', () => {
+    return TRACK_INFO;
   });
 
   ipcMain.handle('get-setup-index', async () => {
