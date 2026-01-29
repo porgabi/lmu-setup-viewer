@@ -7,6 +7,7 @@ module.exports = {
   'Interlagos': 'BR',
   'Lemans': 'FR',
   'Monza': 'IT',
+  'Paulricard': 'FR',
   'Portimao': 'PT',
   'Qatar': 'QA',
   'Sebring': 'US',

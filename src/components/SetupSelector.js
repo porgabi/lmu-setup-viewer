@@ -16,6 +16,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import ReactCountryFlag from 'react-country-flag';
 import { useSetupContext } from '../state/SetupContext';
 import { resolveCarInfo } from '../domain/carInfo';
+import { getTrackLabel } from '../domain/trackNames';
 
 function splitSetupKey(setupKey) {
   if (!setupKey) return { track: '', setupName: '' };
@@ -68,7 +69,7 @@ function renderSetupValue(value, setupIndex, countryCodes) {
         />
       ) : null}
       <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center' }}>
-        <Box component="span">{track}</Box>
+        <Box component="span">{getTrackLabel(track)}</Box>
         <Box component="span" sx={{ mx: 0.5 }}>
           /
         </Box>
@@ -184,7 +185,7 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
         }}
       >
-        {track}
+        {getTrackLabel(track)}
       </ListSubheader>
     );
 
@@ -207,7 +208,7 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
             />
           ) : null}
           <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center' }}>
-            <Box component="span">{track}</Box>
+            <Box component="span">{getTrackLabel(track)}</Box>
             <Box component="span" sx={{ mx: 0.5 }}>
               /
             </Box>

@@ -6,6 +6,7 @@ import { getSetupCategory } from '../domain/setupCategories';
 import { filterSectionsByKeywords } from '../domain/setupParser';
 import { applySettingLabels } from '../domain/settingLabels';
 import { resolveCarInfo } from '../domain/carInfo';
+import { getTrackLabel } from '../domain/trackNames';
 
 function getDisplayValue(entry) {
   if (!entry) return '';
@@ -380,7 +381,7 @@ function renderHeading(
   const countryCode = track ? countryCodes?.[track] : null;
   const label = track ? (
     <Box component="span">
-      <Box component="span">{track}</Box>
+      <Box component="span">{getTrackLabel(track)}</Box>
       <Box component="span" sx={{ mx: 0.5 }}>
         /
       </Box>
