@@ -132,17 +132,48 @@ function renderSetupValue(value, setupIndex, countryCodes) {
 
 function buildMenuItems(setupIndex, countryCodes, excludeValue) {
   const items = [];
+  const classOrder = new Map([
+    ['hy', 0],
+    ['lmgt3', 1],
+    ['lmp2_elms', 2],
+    ['lmp2_wec', 3],
+    ['gte', 4],
+    ['lmp3', 5],
+  ]);
 
   Object.entries(setupIndex).forEach(([track, setups]) => {
     if (!Array.isArray(setups)) return;
-    const filtered = setups.filter((setup) => {
-      const setupName = typeof setup === 'string' ? setup : setup?.name;
-      if (!setupName) return false;
-      const value = `${track}/${setupName}`;
-      return value !== excludeValue;
-    });
+    const filtered = setups
+      .map((setup) => {
+        const setupName = typeof setup === 'string' ? setup : setup?.name;
+        if (!setupName) return null;
+        const carTechnicalName = typeof setup === 'string' ? '' : setup?.carTechnicalName;
+        const carInfo = resolveCarInfo(carTechnicalName);
+        return {
+          name: setupName,
+          carInfo,
+        };
+      })
+      .filter(Boolean)
+      .filter((setup) => {
+        const value = `${track}/${setup.name}`;
+        return value !== excludeValue;
+      });
 
     if (!filtered.length) return;
+
+    filtered.sort((a, b) => {
+      const aClass = a.carInfo?.class || '';
+      const bClass = b.carInfo?.class || '';
+      const aOrder = classOrder.has(aClass) ? classOrder.get(aClass) : classOrder.size + 1;
+      const bOrder = classOrder.has(bClass) ? classOrder.get(bClass) : classOrder.size + 1;
+      if (aOrder !== bOrder) return aOrder - bOrder;
+      const aBrand = a.carInfo?.brand || '';
+      const bBrand = b.carInfo?.brand || '';
+      const brandCompare = aBrand.localeCompare(bBrand);
+      if (brandCompare !== 0) return brandCompare;
+      return a.name.localeCompare(b.name);
+    });
 
     items.push(
       <ListSubheader
@@ -158,10 +189,8 @@ function buildMenuItems(setupIndex, countryCodes, excludeValue) {
     );
 
     filtered.forEach((setup) => {
-      const setupName = typeof setup === 'string' ? setup : setup?.name;
-      if (!setupName) return;
-      const carTechnicalName = typeof setup === 'string' ? '' : setup?.carTechnicalName;
-      const carInfo = resolveCarInfo(carTechnicalName);
+      const setupName = setup.name;
+      const carInfo = setup.carInfo;
       const brand = carInfo?.brand;
       const brandIconPath = brand ? `/assets/brands/${brand}.png` : '';
       const classIconPath = carInfo?.class ? `/assets/classes/${carInfo.class}.png` : '';
