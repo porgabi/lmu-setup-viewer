@@ -5,7 +5,7 @@ module.exports = {
   },
   'Circuit Of The Americas': {
     countryCode: 'US',
-    displayName: 'Circuit Of The Americas',
+    displayName: 'COTA',
   },
   Fuji: {
     countryCode: 'JP',
@@ -13,7 +13,7 @@ module.exports = {
   },
   Fuji_Cl: {
     countryCode: 'JP',
-    displayName: 'Fuji_Cl',
+    displayName: 'Fuji Classic',
   },
   Imola: {
     countryCode: 'IT',
@@ -25,7 +25,7 @@ module.exports = {
   },
   Lemans: {
     countryCode: 'FR',
-    displayName: 'Lemans',
+    displayName: 'Le Mans',
   },
   Monza: {
     countryCode: 'IT',
@@ -53,10 +53,10 @@ module.exports = {
   },
   Spa_Endce: {
     countryCode: 'BE',
-    displayName: 'Spa_Endce',
+    displayName: 'Spa Endurance',
   },
   Paulricard: {
     countryCode: 'FR',
-    displayName: 'Paulricard',
+    displayName: 'Paul Ricard',
   },
 };
