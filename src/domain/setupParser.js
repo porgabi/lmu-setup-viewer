@@ -96,9 +96,11 @@ function parseCommentEntry(line) {
   if (delimiterIndex === -1) {
     return null;
   }
+  
   const key = content.slice(0, delimiterIndex).trim();
   const value = content.slice(delimiterIndex + 1).trim();
   if (!key) return null;
+  
   return {
     key,
     value,

@@ -12,10 +12,12 @@ const entries = Object.entries(carInfo)
 
 export function resolveCarInfo(vehicleClass) {
   if (!vehicleClass) return null;
+  
   for (const entry of entries) {
     if (vehicleClass.includes(entry.technical)) {
       return entry;
     }
   }
+  
   return { technical: vehicleClass, displayName: vehicleClass, class: '' };
 }

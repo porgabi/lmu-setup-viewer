@@ -9,6 +9,7 @@ import { resolveCarInfo } from '../domain/carInfo';
 
 function getDisplayValue(entry) {
   if (!entry) return '';
+  
   const commentValue = entry.comment && entry.comment.trim();
   return commentValue || entry.value || '';
 }
@@ -16,13 +17,16 @@ function getDisplayValue(entry) {
 export function getComparableValue(entry) {
   const value = getDisplayValue(entry);
   if (!value) return '';
+  
   const key = entry?.key || '';
   if (key === 'VirtualEnergySetting' || key === 'FuelCapacitySetting') {
     return value.replace(/\s*\([^)]*\)\s*/g, '').trim();
   }
+  
   if (key === 'CompoundSetting') {
     return value.replace(/^\s*\d+%\s*/g, '').trim();
   }
+  
   return value;
 }
 
@@ -30,17 +34,20 @@ function getCompoundColor(entry, displayValue) {
   if (entry?.key !== 'CompoundSetting') {
     return null;
   }
+  
   const normalized = (displayValue || '').toLowerCase();
   if (normalized.includes('soft')) return '#f2f4f7';
   if (normalized.includes('medium')) return '#FFDA0D';
   if (normalized.includes('hard')) return '#E50B1B';
   if (normalized.includes('wet')) return '#4BCCEC';
+  
   return null;
 }
 
 function buildDiffMap(primarySections, secondarySections) {
   const diffMap = new Map();
   const buildKey = (sectionName, entryKey) => `${sectionName}::${entryKey}`;
+  
   const addEntries = (sections, target) => {
     sections.forEach((section) => {
       section.entries.forEach((entry) => {
@@ -67,6 +74,7 @@ function buildDiffMap(primarySections, secondarySections) {
 
 export function buildGroupedSections(parsed, sectionGroups) {
   const labeledBySection = parsed.sections.map(applySettingLabels);
+  
   return sectionGroups
     .map((group) => {
       const entries = [];
@@ -79,6 +87,7 @@ export function buildGroupedSections(parsed, sectionGroups) {
           if (allowedSections && !allowedSections.has(section.name.toUpperCase())) {
             return;
           }
+
           section.entries.forEach((entry) => {
             if (entry.key === key) {
               entries.push(entry);
@@ -98,14 +107,7 @@ function EntriesTable({ entries, sectionName, diffMap }) {
     py: 0.5,
     px: 0.75,
   };
-  const headerCellSx = {
-    fontWeight: 700,
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em',
-    pb: 0.5,
-    px: 0.75,
-    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
-  };
+
   const rowSx = {
     display: 'grid',
     gridTemplateColumns,
@@ -120,6 +122,7 @@ function EntriesTable({ entries, sectionName, diffMap }) {
       borderBottom: 'none',
     },
   };
+
   const diffRowSx = {
     boxShadow: 'inset 0 0 0 1px rgba(205, 70, 70, 0.55)',
     borderRadius: 2,
@@ -127,7 +130,9 @@ function EntriesTable({ entries, sectionName, diffMap }) {
       boxShadow: 'inset 0 0 0 1px rgba(205, 70, 70, 0.75)',
     },
   };
+
   const buildKey = (entryKey) => `${sectionName}::${entryKey}`;
+  
   return (
     <Box sx={{ fontSize: '1.0rem', fontVariantNumeric: 'tabular-nums' }}>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -167,6 +172,7 @@ function SectionBlock({ section, diffMap, noMargin }) {
   const hasEntries = section.entries.length > 0;
   const hasLines = section.lines.length > 0;
   const content = hasLines ? section.lines.join('\n') : '';
+  
   return (
     <Box
       sx={{
@@ -270,21 +276,16 @@ function renderSections(sections, diffMap, layout, setupKey) {
   );
 }
 
-function getTrackFromSetupKey(setupKey) {
-  if (!setupKey) return '';
-  const separatorIndex = setupKey.indexOf('/');
-  if (separatorIndex === -1) return '';
-  return setupKey.slice(0, separatorIndex);
-}
-
 function splitSetupKey(setupKey) {
   if (!setupKey) {
     return { track: '', setupName: '' };
   }
+
   const separatorIndex = setupKey.indexOf('/');
   if (separatorIndex === -1) {
     return { track: '', setupName: setupKey };
   }
+
   return {
     track: setupKey.slice(0, separatorIndex),
     setupName: setupKey.slice(separatorIndex + 1),
@@ -301,20 +302,26 @@ function AutoFitCarName({ text }) {
   const fitText = React.useCallback(() => {
     if (!text || !containerRef.current || !textRef.current) return;
     const availableWidth = containerRef.current.clientWidth;
+    
     const baseSize = parseFloat(window.getComputedStyle(textRef.current).fontSize);
     if (!baseSize) return;
+    
     if (!baseSizeRef.current) {
       baseSizeRef.current = baseSize;
     }
+    
     const textWidth = textRef.current.scrollWidth;
     if (!availableWidth || !textWidth) return;
-    const ratio = availableWidth / textWidth;
+    
     let nextSize = baseSize;
+
+    const ratio = availableWidth / textWidth;
     if (ratio < 1) {
       nextSize = Math.max(baseSize * ratio, 12);
     } else if (baseSizeRef.current) {
       nextSize = Math.min(baseSizeRef.current, baseSize * ratio);
     }
+
     const nextValue = `${nextSize.toFixed(2)}px`;
     if (lastSizeRef.current !== nextValue) {
       lastSizeRef.current = nextValue;
@@ -327,6 +334,7 @@ function AutoFitCarName({ text }) {
     if (!containerRef.current) return;
     const observer = new ResizeObserver(() => fitText());
     observer.observe(containerRef.current);
+    
     return () => observer.disconnect();
   }, [fitText]);
 

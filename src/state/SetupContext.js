@@ -22,6 +22,7 @@ function splitSetupKey(setupKey) {
   if (separatorIndex === -1) {
     return { track: '', setupName: setupKey };
   }
+
   return {
     track: setupKey.slice(0, separatorIndex),
     setupName: setupKey.slice(separatorIndex + 1),
@@ -30,10 +31,13 @@ function splitSetupKey(setupKey) {
 
 function isSetupValid(setupKey, setupIndex) {
   if (!setupKey) return false;
+  
   const { track, setupName } = splitSetupKey(setupKey);
   if (!track || !setupName) return false;
+  
   const setups = setupIndex?.[track];
   if (!Array.isArray(setups)) return false;
+  
   return setups.some((entry) => (typeof entry === 'string' ? entry === setupName : entry?.name === setupName));
 }
 
@@ -119,6 +123,7 @@ export function SetupProvider({ children }) {
           errors: { ...prev.errors, [setupKey]: 'Invalid setup selection.' },
         };
       });
+      
       return;
     }
 
@@ -147,6 +152,7 @@ export function SetupProvider({ children }) {
       setState((prev) => {
         const nextLoading = { ...prev.loadingFiles };
         delete nextLoading[setupKey];
+        
         return {
           ...prev,
           loadingFiles: nextLoading,
@@ -204,5 +210,6 @@ export function useSetupContext() {
   if (!context) {
     throw new Error('useSetupContext must be used within SetupProvider');
   }
+  
   return context;
 }

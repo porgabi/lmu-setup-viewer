@@ -19,10 +19,12 @@ import { resolveCarInfo } from '../domain/carInfo';
 
 function splitSetupKey(setupKey) {
   if (!setupKey) return { track: '', setupName: '' };
+  
   const separatorIndex = setupKey.indexOf('/');
   if (separatorIndex === -1) {
     return { track: '', setupName: setupKey };
   }
+
   return {
     track: setupKey.slice(0, separatorIndex),
     setupName: setupKey.slice(separatorIndex + 1),
@@ -32,23 +34,30 @@ function splitSetupKey(setupKey) {
 function getSetupEntry(setupIndex, track, setupName) {
   const setups = setupIndex?.[track];
   if (!Array.isArray(setups)) return null;
+  
   const match = setups.find((setup) => {
     if (typeof setup === 'string') {
       return setup === setupName;
     }
+
     return setup?.name === setupName;
   });
+
   if (!match) return null;
+  
   if (typeof match === 'string') {
     return { name: match, carTechnicalName: '' };
   }
+
   return match;
 }
 
 function renderSetupValue(value, setupIndex, trackInfo) {
   if (!value) return '';
+  
   const { track, setupName } = splitSetupKey(value);
   if (!track || !setupName) return value;
+  
   const entry = getSetupEntry(setupIndex, track, setupName);
   const carTechnicalName = entry?.carTechnicalName;
   const carInfo = resolveCarInfo(carTechnicalName);
@@ -134,6 +143,8 @@ function renderSetupValue(value, setupIndex, trackInfo) {
 
 function buildMenuItems(setupIndex, trackInfo, excludeValue) {
   const items = [];
+
+  // TODO: will come from app settings.
   const classOrder = new Map([
     ['hy', 0],
     ['lmgt3', 1],
@@ -145,12 +156,15 @@ function buildMenuItems(setupIndex, trackInfo, excludeValue) {
 
   Object.entries(setupIndex).forEach(([track, setups]) => {
     if (!Array.isArray(setups)) return;
+    
     const filtered = setups
       .map((setup) => {
         const setupName = typeof setup === 'string' ? setup : setup?.name;
         if (!setupName) return null;
+    
         const carTechnicalName = typeof setup === 'string' ? '' : setup?.carTechnicalName;
         const carInfo = resolveCarInfo(carTechnicalName);
+    
         return {
           name: setupName,
           carInfo,
@@ -167,13 +181,16 @@ function buildMenuItems(setupIndex, trackInfo, excludeValue) {
     filtered.sort((a, b) => {
       const aClass = a.carInfo?.class || '';
       const bClass = b.carInfo?.class || '';
+    
       const aOrder = classOrder.has(aClass) ? classOrder.get(aClass) : classOrder.size + 1;
       const bOrder = classOrder.has(bClass) ? classOrder.get(bClass) : classOrder.size + 1;
       if (aOrder !== bOrder) return aOrder - bOrder;
+    
       const aBrand = a.carInfo?.brand || '';
       const bBrand = b.carInfo?.brand || '';
       const brandCompare = aBrand.localeCompare(bBrand);
       if (brandCompare !== 0) return brandCompare;
+    
       return a.name.localeCompare(b.name);
     });
 
@@ -292,7 +309,7 @@ function buildMenuItems(setupIndex, trackInfo, excludeValue) {
   if (items.length === 0) {
     items.push(
       <MenuItem key="no-setups" value="" disabled>
-        No setups found
+        No setups found.
       </MenuItem>
     );
   }
@@ -341,7 +358,6 @@ export default function SetupSelector() {
   };
 
   const gamePath = lmuPath || '(not set)';
-
   const pathTooltip = `Current game path: ${gamePath}`;
 
   return (
