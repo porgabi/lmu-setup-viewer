@@ -13,7 +13,7 @@ function getDisplayValue(entry) {
   return commentValue || entry.value || '';
 }
 
-function getComparableValue(entry) {
+export function getComparableValue(entry) {
   const value = getDisplayValue(entry);
   if (!value) return '';
   const key = entry?.key || '';
@@ -65,7 +65,7 @@ function buildDiffMap(primarySections, secondarySections) {
   return diffMap;
 }
 
-function buildGroupedSections(parsed, sectionGroups) {
+export function buildGroupedSections(parsed, sectionGroups) {
   const labeledBySection = parsed.sections.map(applySettingLabels);
   return sectionGroups
     .map((group) => {
