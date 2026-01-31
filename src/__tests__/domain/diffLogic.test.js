@@ -1,4 +1,4 @@
-import { getComparableValue } from '../../components/SetupSectionPanel';
+import { getComparableValue } from '../../domain/setupDiff';
 
 describe('diff comparison logic', () => {
   it('strips parentheses for VirtualEnergySetting', () => {
