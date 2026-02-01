@@ -191,7 +191,13 @@ export default function SetupSelector() {
               onClick={refreshSetupIndex}
               disabled={loadingIndex}
               aria-label="Reload setups"
-              sx={{ p: 0.75 }}
+              sx={{
+                p: 0.75,
+                '&.Mui-disabled': {
+                  opacity: 1,
+                  color: 'rgba(255, 255, 255, 0.65)',
+                },
+              }}
             >
               <RefreshIcon fontSize="small" />
             </IconButton>
@@ -225,7 +231,6 @@ export default function SetupSelector() {
             onOpen={() => setPrimaryMenuOpen(true)}
             onClose={() => setPrimaryMenuOpen(false)}
             MenuProps={menuProps}
-            disabled={loadingIndex}
             renderValue={(value) => renderSetupValue(value, setupIndex, trackInfo)}
           >
             {primaryMenuItems}
@@ -274,7 +279,7 @@ export default function SetupSelector() {
             onOpen={() => setSecondaryMenuOpen(true)}
             onClose={() => setSecondaryMenuOpen(false)}
             MenuProps={menuProps}
-            disabled={loadingIndex || !comparisonEnabled}
+            disabled={!comparisonEnabled}
             renderValue={(value) => renderSetupValue(value, setupIndex, trackInfo)}
           >
             {secondaryMenuItems}
