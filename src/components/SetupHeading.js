@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import ReactCountryFlag from 'react-country-flag';
+import IconSlot from './IconSlot';
 
 function splitSetupKey(setupKey) {
   if (!setupKey) {
@@ -122,58 +123,8 @@ export default function SetupHeading({ title, setupKey, trackInfo, carInfo }) {
       <Box component="span" sx={{ mx: 0.5 }}>
         /
       </Box>
-      {classIconPath ? (
-        <Box
-          component="span"
-          sx={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '1.2em',
-            height: '1em',
-            mr: 0.5,
-            flex: '0 0 1.2em',
-            verticalAlign: 'middle',
-          }}
-        >
-          <Box
-            component="img"
-            src={classIconPath}
-            alt=""
-            aria-hidden
-            onError={(event) => {
-              event.currentTarget.style.display = 'none';
-            }}
-            sx={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', display: 'block' }}
-          />
-        </Box>
-      ) : null}
-      {brandIconPath ? (
-        <Box
-          component="span"
-          sx={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '1.4em',
-            height: '1em',
-            mr: 0.5,
-            flex: '0 0 1.4em',
-            verticalAlign: 'middle',
-          }}
-        >
-          <Box
-            component="img"
-            src={brandIconPath}
-            alt=""
-            aria-hidden
-            onError={(event) => {
-              event.currentTarget.style.display = 'none';
-            }}
-            sx={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', display: 'block' }}
-          />
-        </Box>
-      ) : null}
+      <IconSlot src={classIconPath} width="1.2em" />
+      <IconSlot src={brandIconPath} width="1.4em" />
       <Box component="span">{setupName}</Box>
     </Box>
   ) : (
