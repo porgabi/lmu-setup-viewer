@@ -199,7 +199,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category, trackInf
           {heading}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Select a setup to view.
+          Select a setup.
         </Typography>
       </Box>
     );
@@ -290,14 +290,14 @@ export default function SetupSectionPanel({ categoryKey }) {
   const category = getSetupCategory(categoryKey);
   const columns = [
     {
-      title: 'Primary',
+      title: 'Primary setup',
       setupKey: primarySetup,
     },
   ];
 
   if (comparisonEnabled) {
     columns.push({
-      title: 'Comparison',
+      title: 'Compared setup',
       setupKey: secondarySetup,
     });
   }
