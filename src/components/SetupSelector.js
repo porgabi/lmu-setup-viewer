@@ -18,7 +18,7 @@ import { buildSetupMenuData, defaultClassOrder } from '../domain/setupDisplay';
 import { renderSetupValue } from './setupDisplay';
 import SetupMenuItem from './SetupMenuItem';
 
-function buildMenuItems(setupIndex, trackInfo, excludeValue) {
+function buildMenuItems(setupIndex, trackInfo, excludeValue, showIcons) {
   // TODO: will come from app settings.
   const classOrder = defaultClassOrder;
 
@@ -51,6 +51,7 @@ function buildMenuItems(setupIndex, trackInfo, excludeValue) {
           setupName={setup.name}
           classIconPath={setup.classIconPath}
           brandIconPath={setup.brandIconPath}
+          showIcons={showIcons}
         />
       );
     });
@@ -82,6 +83,8 @@ export default function SetupSelector() {
     setSecondarySetup,
     setComparisonEnabled,
   } = useSetupContext();
+  const [primaryMenuOpen, setPrimaryMenuOpen] = React.useState(false);
+  const [secondaryMenuOpen, setSecondaryMenuOpen] = React.useState(false);
 
   const handlePrimaryChange = (event) => {
     setPrimarySetup(event.target.value);
@@ -110,12 +113,12 @@ export default function SetupSelector() {
   const gamePath = lmuPath || '(not set)';
   const pathTooltip = `Current game path: ${gamePath}`;
   const primaryMenuItems = React.useMemo(
-    () => buildMenuItems(setupIndex, trackInfo, secondarySetup),
-    [setupIndex, trackInfo, secondarySetup]
+    () => buildMenuItems(setupIndex, trackInfo, secondarySetup, primaryMenuOpen),
+    [setupIndex, trackInfo, secondarySetup, primaryMenuOpen]
   );
   const secondaryMenuItems = React.useMemo(
-    () => buildMenuItems(setupIndex, trackInfo, primarySetup),
-    [setupIndex, trackInfo, primarySetup]
+    () => buildMenuItems(setupIndex, trackInfo, primarySetup, secondaryMenuOpen),
+    [setupIndex, trackInfo, primarySetup, secondaryMenuOpen]
   );
 
   return (
@@ -173,6 +176,8 @@ export default function SetupSelector() {
             value={primarySetup}
             label="Setup"
             onChange={handlePrimaryChange}
+            onOpen={() => setPrimaryMenuOpen(true)}
+            onClose={() => setPrimaryMenuOpen(false)}
             MenuProps={menuProps}
             disabled={loadingIndex}
             renderValue={(value) => renderSetupValue(value, setupIndex, trackInfo)}
@@ -220,6 +225,8 @@ export default function SetupSelector() {
             value={secondarySetup}
             label="Compared setup"
             onChange={handleSecondaryChange}
+            onOpen={() => setSecondaryMenuOpen(true)}
+            onClose={() => setSecondaryMenuOpen(false)}
             MenuProps={menuProps}
             disabled={loadingIndex || !comparisonEnabled}
             renderValue={(value) => renderSetupValue(value, setupIndex, trackInfo)}

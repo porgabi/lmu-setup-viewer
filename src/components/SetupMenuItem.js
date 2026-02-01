@@ -11,6 +11,7 @@ export default function SetupMenuItem({
   setupName,
   classIconPath,
   brandIconPath,
+  showIcons = true,
   ...menuItemProps
 }) {
   return (
@@ -29,8 +30,8 @@ export default function SetupMenuItem({
           <Box component="span" sx={{ mx: 0.5 }}>
             /
           </Box>
-          <IconSlot src={classIconPath} width="1.2em" />
-          <IconSlot src={brandIconPath} width="1.4em" />
+          <IconSlot src={classIconPath} width="1.2em" show={showIcons} />
+          <IconSlot src={brandIconPath} width="1.4em" show={showIcons} />
           <Box component="span" sx={{ fontWeight: 700, color: 'text.primary' }}>
             {setupName}
           </Box>
