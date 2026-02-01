@@ -126,6 +126,7 @@ export default function SetupSelector() {
     () => buildMenuItems(setupIndex, trackInfo, primarySetup, secondaryMenuOpen),
     [setupIndex, trackInfo, primarySetup, secondaryMenuOpen]
   );
+  const showPathBanner = !lmuPath;
 
   return (
     <Box
@@ -138,6 +139,45 @@ export default function SetupSelector() {
         boxShadow: '0 10px 24px rgba(0, 0, 0, 0.35)',
       }}
     >
+      {showPathBanner ? (
+        <Box
+          sx={{
+            mb: 2,
+            p: 1.5,
+            borderRadius: 2,
+            border: '1px solid rgba(205, 70, 70, 0.6)',
+            boxShadow: '0 0 12px rgba(205, 70, 70, 0.45)',
+            backgroundColor: 'rgba(18, 22, 30, 0.85)',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: 1.5,
+          }}
+        >
+          <Box sx={{ flex: '1 1 auto', minWidth: 240 }}>
+            <Box sx={{ fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              LMU folder not set
+            </Box>
+            <Box sx={{ color: 'text.secondary', fontSize: '0.9rem' }}>
+              Select your LMU installation folder to load setups.
+            </Box>
+          </Box>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={chooseLmuPath}
+            sx={{
+              backgroundColor: 'rgba(255, 255, 255, 0.3)',
+              color: '#f2f4f7',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.45)',
+              },
+            }}
+          >
+            Set LMU Folder
+          </Button>
+        </Box>
+      ) : null}
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, alignItems: 'center' }}>
         <Tooltip title={pathTooltip} placement="top-start">
           <Button variant="outlined" size="small" onClick={chooseLmuPath}>
