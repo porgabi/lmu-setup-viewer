@@ -17,6 +17,7 @@ import { useSetupContext } from '../state/SetupContext';
 import { buildSetupMenuData, defaultClassOrder } from '../domain/setupDisplay';
 import { renderSetupValue } from './setupDisplay';
 import SetupMenuItem from './SetupMenuItem';
+import VirtualizedMenuList from './VirtualizedMenuList';
 
 function buildMenuItems(setupIndex, trackInfo, excludeValue, showIcons) {
   // TODO: will come from app settings.
@@ -98,15 +99,20 @@ export default function SetupSelector() {
     disableScrollLock: true,
     PaperProps: {
       sx: {
-        maxHeight: 320,
-        overflowY: 'auto',
         backgroundColor: 'rgba(8, 10, 14, 0.96)',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         backdropFilter: 'blur(6px)',
+        overflow: 'hidden',
         '& .MuiMenuItem-root': {
           fontSize: '0.95rem',
         },
       },
+    },
+    MenuListProps: {
+      component: VirtualizedMenuList,
+      maxHeight: 320,
+      rowHeight: 40,
+      overscan: 5,
     },
   };
 

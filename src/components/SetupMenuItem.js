@@ -14,8 +14,13 @@ export default function SetupMenuItem({
   showIcons = true,
   ...menuItemProps
 }) {
+  const menuItemSx = {
+    width: '100%',
+    ...(menuItemProps.sx || {}),
+  };
+
   return (
-    <MenuItem value={value} {...menuItemProps}>
+    <MenuItem value={value} {...menuItemProps} sx={menuItemSx}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         {countryCode ? (
           <ReactCountryFlag
