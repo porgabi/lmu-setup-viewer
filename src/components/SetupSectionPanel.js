@@ -8,6 +8,7 @@ import { resolveCarInfo } from '../domain/carInfo';
 import { buildDiffMap, getCompoundColor, getDisplayValue } from '../domain/setupDiff';
 import { buildGroupedSections } from '../domain/setupGrouping';
 import SetupHeading from './SetupHeading';
+import { useSettings } from '../state/SettingsContext';
 
 function EntriesTable({ entries, sectionName, diffMap }) {
   const gridTemplateColumns = 'minmax(0, 1.6fr) minmax(0, 1fr)';
@@ -284,6 +285,7 @@ export default function SetupSectionPanel({ categoryKey }) {
     loadingFiles,
     errors,
   } = useSetupContext();
+  const { settings } = useSettings();
 
   const category = getSetupCategory(categoryKey);
   const columns = [
@@ -304,7 +306,7 @@ export default function SetupSectionPanel({ categoryKey }) {
     columns.length > 1 ? 'repeat(2, minmax(0, 1fr))' : 'minmax(0, 1fr)';
 
   let diffMap = null;
-  if (comparisonEnabled && primarySetup && secondarySetup) {
+  if (comparisonEnabled && settings.diffHighlightEnabled && primarySetup && secondarySetup) {
     const primaryParsed = setupFiles[primarySetup]?.parsed;
     const secondaryParsed = setupFiles[secondarySetup]?.parsed;
     if (primaryParsed && secondaryParsed) {

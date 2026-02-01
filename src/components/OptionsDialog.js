@@ -7,11 +7,15 @@ import {
   DialogContent,
   DialogTitle,
   FormControlLabel,
+  FormControl,
+  InputLabel,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Paper,
+  Select,
+  MenuItem,
   Switch,
   Typography,
 } from '@mui/material';
@@ -67,6 +71,10 @@ export default function OptionsDialog({ open, onClose }) {
 
   const handleToggle = (key) => (event) => {
     setDraft((prev) => ({ ...prev, [key]: event.target.checked }));
+  };
+
+  const handleDropdownSizeChange = (event) => {
+    setDraft((prev) => ({ ...prev, dropdownListSize: event.target.value }));
   };
 
   const handleSave = async () => {
@@ -154,6 +162,27 @@ export default function OptionsDialog({ open, onClose }) {
             </Paper>
             <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
               Drag and drop to change the order of setups in the setup selectors.
+            </Typography>
+          </Box>
+          <Box>
+            <Typography variant="subtitle2" sx={{ mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              Setup list size
+            </Typography>
+            <FormControl size="small" fullWidth>
+              <InputLabel id="dropdown-size-label">Size</InputLabel>
+              <Select
+                labelId="dropdown-size-label"
+                value={draft.dropdownListSize}
+                label="Size"
+                onChange={handleDropdownSizeChange}
+              >
+                <MenuItem value="short">Short</MenuItem>
+                <MenuItem value="medium">Medium</MenuItem>
+                <MenuItem value="long">Long</MenuItem>
+              </Select>
+            </FormControl>
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+              Adjust the length of the lists in setup selectors.
             </Typography>
           </Box>
           <Box>

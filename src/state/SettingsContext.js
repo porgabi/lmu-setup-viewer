@@ -6,6 +6,7 @@ const SettingsContext = React.createContext(null);
 export const defaultSettings = {
   diffHighlightEnabled: true,
   dropdownSortOrder: ['hy', 'lmgt3', 'lmp2_elms', 'lmp2_wec', 'gte', 'lmp3'],
+  dropdownListSize: 'short',
   checkUpdatesOnLaunch: false,
 };
 

@@ -56,6 +56,7 @@ let store;
 const DEFAULT_SETTINGS = {
   diffHighlightEnabled: true,
   dropdownSortOrder: ['hy', 'lmgt3', 'lmp2_elms', 'lmp2_wec', 'gte', 'lmp3'],
+  dropdownListSize: 'short',
   checkUpdatesOnLaunch: false,
 };
 

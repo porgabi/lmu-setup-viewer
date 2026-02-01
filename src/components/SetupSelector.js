@@ -20,11 +20,9 @@ import { renderSetupValue } from './setupDisplay';
 import SetupMenuItem from './SetupMenuItem';
 import VirtualizedMenuList from './VirtualizedMenuList';
 import OptionsDialog from './OptionsDialog';
+import { useSettings } from '../state/SettingsContext';
 
-function buildMenuItems(setupIndex, trackInfo, excludeValue, showIcons) {
-  // TODO: will come from app settings.
-  const classOrder = defaultClassOrder;
-
+function buildMenuItems(setupIndex, trackInfo, excludeValue, showIcons, classOrder) {
   const sections = buildSetupMenuData(setupIndex, trackInfo, excludeValue, classOrder);
   const items = [];
 
@@ -86,6 +84,7 @@ export default function SetupSelector() {
     setSecondarySetup,
     setComparisonEnabled,
   } = useSetupContext();
+  const { settings } = useSettings();
   const [primaryMenuOpen, setPrimaryMenuOpen] = React.useState(false);
   const [secondaryMenuOpen, setSecondaryMenuOpen] = React.useState(false);
   const [optionsOpen, setOptionsOpen] = React.useState(false);
@@ -98,6 +97,19 @@ export default function SetupSelector() {
     setSecondarySetup(event.target.value);
   };
 
+  const classOrder = React.useMemo(() => {
+    const order = settings?.dropdownSortOrder;
+    if (!Array.isArray(order) || order.length === 0) return defaultClassOrder;
+
+    return new Map(order.map((value, index) => [value, index]));
+  }, [settings?.dropdownSortOrder]);
+
+  const menuHeightMap = {
+    short: 320,
+    medium: 500,
+    long: 800,
+  };
+  const menuMaxHeight = menuHeightMap[settings.dropdownListSize] || menuHeightMap.short;
   const menuProps = {
     disableScrollLock: true,
     PaperProps: {
@@ -113,7 +125,7 @@ export default function SetupSelector() {
     },
     MenuListProps: {
       component: VirtualizedMenuList,
-      maxHeight: 320,
+      maxHeight: menuMaxHeight,
       rowHeight: 40,
       overscan: 5,
     },
@@ -121,12 +133,12 @@ export default function SetupSelector() {
 
   const gamePath = lmuPath || '(not set)';
   const primaryMenuItems = React.useMemo(
-    () => buildMenuItems(setupIndex, trackInfo, secondarySetup, primaryMenuOpen),
-    [setupIndex, trackInfo, secondarySetup, primaryMenuOpen]
+    () => buildMenuItems(setupIndex, trackInfo, secondarySetup, primaryMenuOpen, classOrder),
+    [setupIndex, trackInfo, secondarySetup, primaryMenuOpen, classOrder]
   );
   const secondaryMenuItems = React.useMemo(
-    () => buildMenuItems(setupIndex, trackInfo, primarySetup, secondaryMenuOpen),
-    [setupIndex, trackInfo, primarySetup, secondaryMenuOpen]
+    () => buildMenuItems(setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder),
+    [setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder]
   );
   const showPathBanner = !lmuPath;
 
