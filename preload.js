@@ -8,6 +8,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getLmuPath: () => ipcRenderer.invoke('get-lmu-path'),
   setLmuPath: () => ipcRenderer.invoke('set-lmu-path'),
   getTrackInfo: () => ipcRenderer.invoke('get-track-info'),
+  getSettings: () => ipcRenderer.invoke('get-settings'),
+  setSettings: (payload) => ipcRenderer.invoke('set-settings', payload),
+  updateSettings: (payload) => ipcRenderer.invoke('update-settings', payload),
   getSetupIndex: () => ipcRenderer.invoke('get-setup-index'),
   readSetupFile: (payload) => ipcRenderer.invoke('read-setup-file', payload),
 });

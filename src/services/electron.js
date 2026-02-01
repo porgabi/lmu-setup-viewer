@@ -16,6 +16,9 @@ export const electron = {
   getSetupIndex: () => safeInvoke(electronAPI?.getSetupIndex, {}),
   readSetupFile: (payload) => safeInvoke(electronAPI?.readSetupFile, null, payload),
   getTrackInfo: () => safeInvoke(electronAPI?.getTrackInfo, {}),
+  getSettings: () => safeInvoke(electronAPI?.getSettings, {}),
+  setSettings: (payload) => safeInvoke(electronAPI?.setSettings, {}, payload),
+  updateSettings: (payload) => safeInvoke(electronAPI?.updateSettings, {}, payload),
 };
 
 export const isElectronAvailable = Boolean(electronAPI);

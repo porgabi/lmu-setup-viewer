@@ -6,6 +6,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { SetupProvider } from './state/SetupContext';
+import { SettingsProvider } from './state/SettingsContext';
 import theme from './theme/theme';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -13,9 +14,11 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <SetupProvider>
-        <App />
-      </SetupProvider>
+      <SettingsProvider>
+        <SetupProvider>
+          <App />
+        </SetupProvider>
+      </SettingsProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

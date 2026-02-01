@@ -13,11 +13,13 @@ import {
   Tooltip,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useSetupContext } from '../state/SetupContext';
 import { buildSetupMenuData, defaultClassOrder } from '../domain/setupDisplay';
 import { renderSetupValue } from './setupDisplay';
 import SetupMenuItem from './SetupMenuItem';
 import VirtualizedMenuList from './VirtualizedMenuList';
+import OptionsDialog from './OptionsDialog';
 
 function buildMenuItems(setupIndex, trackInfo, excludeValue, showIcons) {
   // TODO: will come from app settings.
@@ -86,6 +88,7 @@ export default function SetupSelector() {
   } = useSetupContext();
   const [primaryMenuOpen, setPrimaryMenuOpen] = React.useState(false);
   const [secondaryMenuOpen, setSecondaryMenuOpen] = React.useState(false);
+  const [optionsOpen, setOptionsOpen] = React.useState(false);
 
   const handlePrimaryChange = (event) => {
     setPrimarySetup(event.target.value);
@@ -117,7 +120,6 @@ export default function SetupSelector() {
   };
 
   const gamePath = lmuPath || '(not set)';
-  const pathTooltip = `Current game path: ${gamePath}`;
   const primaryMenuItems = React.useMemo(
     () => buildMenuItems(setupIndex, trackInfo, secondarySetup, primaryMenuOpen),
     [setupIndex, trackInfo, secondarySetup, primaryMenuOpen]
@@ -179,10 +181,17 @@ export default function SetupSelector() {
         </Box>
       ) : null}
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5, alignItems: 'center' }}>
-        <Tooltip title={pathTooltip} placement="top-start">
-          <Button variant="outlined" size="small" onClick={chooseLmuPath}>
-            Set LMU Folder
-          </Button>
+        <Tooltip title="Options" placement="top">
+          <span>
+            <IconButton
+              size="small"
+              onClick={() => setOptionsOpen(true)}
+              aria-label="Options"
+              sx={{ p: 0.75 }}
+            >
+              <SettingsIcon fontSize="small" />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Reload setups" placement="top">
           <span>
@@ -286,6 +295,7 @@ export default function SetupSelector() {
           </Select>
         </FormControl>
       </Box>
+      <OptionsDialog open={optionsOpen} onClose={() => setOptionsOpen(false)} />
     </Box>
   );
 }

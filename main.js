@@ -53,6 +53,11 @@ function createWindow() {
 
 const Store = require('electron-store');
 let store;
+const DEFAULT_SETTINGS = {
+  diffHighlightEnabled: true,
+  dropdownSortOrder: ['hy', 'lmgt3', 'lmp2_elms', 'lmp2_wec', 'gte', 'lmp3'],
+  checkUpdatesOnLaunch: false,
+};
 
 function getSettingsPath() {
   if (!store) return null;
@@ -124,6 +129,24 @@ app.whenReady().then(() => {
 
   ipcMain.handle('get-track-info', () => {
     return TRACK_INFO;
+  });
+
+  ipcMain.handle('get-settings', () => {
+    const stored = store.get('settings') || {};
+    return { ...DEFAULT_SETTINGS, ...stored };
+  });
+
+  ipcMain.handle('set-settings', (event, payload = {}) => {
+    const next = { ...DEFAULT_SETTINGS, ...payload };
+    store.set('settings', next);
+    return next;
+  });
+
+  ipcMain.handle('update-settings', (event, payload = {}) => {
+    const current = store.get('settings') || {};
+    const next = { ...DEFAULT_SETTINGS, ...current, ...payload };
+    store.set('settings', next);
+    return next;
   });
 
   ipcMain.handle('get-setup-index', async () => {
