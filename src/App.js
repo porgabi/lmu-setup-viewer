@@ -6,6 +6,7 @@ import Dampers from './views/Dampers';
 import Powertrain from './views/Powertrain';
 import WheelsAndBrakes from './views/WheelsAndBrakes';
 import Suspension from './views/Suspension';
+import { preloadBrandAndClassIcons } from './domain/assetPreload';
 
 // A component to show content per tab.
 function TabPanel({ children, value, index }) {
@@ -18,6 +19,10 @@ function TabPanel({ children, value, index }) {
 
 export default function App() {
   const [value, setValue] = React.useState(0);
+
+  React.useEffect(() => {
+    preloadBrandAndClassIcons();
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
