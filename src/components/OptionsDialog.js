@@ -21,6 +21,7 @@ import {
 } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { closestCenter, DndContext } from '@dnd-kit/core';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useSettings } from '../state/SettingsContext';
@@ -133,6 +134,7 @@ export default function OptionsDialog({ open, onClose }) {
             <Paper variant="outlined" sx={{ backgroundColor: 'rgba(10, 12, 18, 0.5)' }}>
               <DndContext
                 collisionDetection={closestCenter}
+                modifiers={[restrictToVerticalAxis]}
                 onDragEnd={(event) => {
                   const { active, over } = event;
                   if (!over || active.id === over.id) return;
