@@ -25,6 +25,7 @@ function createWindow() {
     minWidth: 1400,
     minHeight: 1000,
     title: 'LMU Setup Viewer',
+    show: false,
     // autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -44,6 +45,9 @@ function createWindow() {
     : `file://${path.join(__dirname, 'build', 'index.html')}`;
 
   mainWindow.loadURL(startUrl);
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
 
   // Optional: open DevTools automatically in dev mode
   // if (isDev) {
