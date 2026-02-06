@@ -1,64 +1,14 @@
 import React from 'react';
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControlLabel,
-  FormControl,
-  InputLabel,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Paper,
-  Select,
-  MenuItem,
-  Switch,
-  Typography,
-  IconButton,
-  Tooltip,
-} from '@mui/material';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { closestCenter, DndContext } from '@dnd-kit/core';
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useSettings } from '../state/SettingsContext';
 import { useSetupContext } from '../state/SetupContext';
-import IconSlot from './IconSlot';
-
-function SortableItem({ id, label, iconSrc }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.7 : 1,
-  };
-
-  return (
-    <ListItem
-      ref={setNodeRef}
-      style={style}
-      divider
-      secondaryAction={null}
-      sx={{ cursor: 'grab' }}
-      aria-label={label}
-      {...attributes}
-      {...listeners}
-    >
-      <ListItemIcon sx={{ minWidth: 32, color: 'text.secondary' }}>
-        <DragIndicatorIcon fontSize="small" />
-      </ListItemIcon>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <IconSlot src={iconSrc} width="1.6em" height="1.2em" mr={0} />
-      </Box>
-    </ListItem>
-  );
-}
+import OptionsDiffHighlightSection from './options/OptionsDiffHighlightSection';
+import OptionsFeedbackSection from './options/OptionsFeedbackSection';
+import OptionsListSizeSection from './options/OptionsListSizeSection';
+import OptionsLmuFolderSection from './options/OptionsLmuFolderSection';
+import OptionsSortingOrderSection from './options/OptionsSortingOrderSection';
+import OptionsUpdatesOnLaunchSection from './options/OptionsUpdatesOnLaunchSection';
+import OptionsUpdatesSection from './options/OptionsUpdatesSection';
 
 export default function OptionsDialog({ open, onClose }) {
   const feedbackEmail = 'support@example.com';
@@ -66,31 +16,16 @@ export default function OptionsDialog({ open, onClose }) {
   const { lmuPath, chooseLmuPath } = useSetupContext();
   const [draft, setDraft] = React.useState(settings);
   const [sortOrder, setSortOrder] = React.useState(settings.dropdownSortOrder);
-  const [emailCopied, setEmailCopied] = React.useState(false);
-  const copyTimeoutRef = React.useRef(null);
 
   React.useEffect(() => {
     if (!open) return;
 
     setDraft(settings);
     setSortOrder(settings.dropdownSortOrder);
-    setEmailCopied(false);
   }, [open, settings]);
-
-  React.useEffect(() => {
-    return () => {
-      if (copyTimeoutRef.current) {
-        clearTimeout(copyTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const handleToggle = (key) => (event) => {
     setDraft((prev) => ({ ...prev, [key]: event.target.checked }));
-  };
-
-  const handleDropdownSizeChange = (event) => {
-    setDraft((prev) => ({ ...prev, dropdownListSize: event.target.value }));
   };
 
   const handleSave = async () => {
@@ -108,161 +43,29 @@ export default function OptionsDialog({ open, onClose }) {
     onClose?.();
   };
 
-  const handleCopyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText(feedbackEmail);
-    } catch (error) {
-      const textarea = document.createElement('textarea');
-      textarea.value = feedbackEmail;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      
-      document.body.appendChild(textarea);
-      
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-    }
-
-    setEmailCopied(true);
-    if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
-    copyTimeoutRef.current = setTimeout(() => setEmailCopied(false), 1500);
-  };
-
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>Options</DialogTitle>
       <DialogContent dividers>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Box>
-            <Typography variant="subtitle2" sx={{ mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              LMU Folder
-            </Typography>
-            <Button variant="outlined" size="small" onClick={chooseLmuPath}>
-              Set LMU Folder
-            </Button>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              Current path: {lmuPath || '(not set)'}
-            </Typography>
-          </Box>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={draft.diffHighlightEnabled}
-                onChange={handleToggle('diffHighlightEnabled')}
-              />
-            }
-            label="Highlight differences"
+          <OptionsLmuFolderSection lmuPath={lmuPath} onChoose={chooseLmuPath} />
+          <OptionsDiffHighlightSection
+            checked={draft.diffHighlightEnabled}
+            onChange={handleToggle('diffHighlightEnabled')}
           />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={draft.checkUpdatesOnLaunch}
-                onChange={handleToggle('checkUpdatesOnLaunch')}
-              />
-            }
-            label="Check for updates on launch"
+          <OptionsUpdatesOnLaunchSection
+            checked={draft.checkUpdatesOnLaunch}
+            onChange={handleToggle('checkUpdatesOnLaunch')}
           />
-          <Box>
-            <Typography variant="subtitle2" sx={{ mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Setup sorting order
-            </Typography>
-            <Paper variant="outlined" sx={{ backgroundColor: 'rgba(10, 12, 18, 0.5)' }}>
-              <DndContext
-                collisionDetection={closestCenter}
-                modifiers={[restrictToVerticalAxis]}
-                onDragEnd={(event) => {
-                  const { active, over } = event;
-                  if (!over || active.id === over.id) return;
-
-                  setSortOrder((current) => {
-                    const oldIndex = current.indexOf(active.id);
-                    const newIndex = current.indexOf(over.id);
-                    if (oldIndex === -1 || newIndex === -1) return current;
-
-                    return arrayMove(current, oldIndex, newIndex);
-                  });
-                }}
-              >
-                <SortableContext items={sortOrder} strategy={verticalListSortingStrategy}>
-                  <List disablePadding>
-                    {sortOrder.map((item) => (
-                      <SortableItem
-                        key={item}
-                        id={item}
-                        label={item}
-                        iconSrc={`/assets/classes/${item}.png`}
-                      />
-                    ))}
-                  </List>
-                </SortableContext>
-              </DndContext>
-            </Paper>
-            <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
-              Drag and drop to change the order of setups in the setup selectors.
-            </Typography>
-          </Box>
-          <Box>
-            <Typography variant="subtitle2" sx={{ mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Setup list size
-            </Typography>
-            <FormControl size="small" fullWidth>
-              <InputLabel id="dropdown-size-label">Size</InputLabel>
-              <Select
-                labelId="dropdown-size-label"
-                value={draft.dropdownListSize}
-                label="Size"
-                onChange={handleDropdownSizeChange}
-              >
-                <MenuItem value="short">Short</MenuItem>
-                <MenuItem value="medium">Medium</MenuItem>
-                <MenuItem value="long">Long</MenuItem>
-              </Select>
-            </FormControl>
-            <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
-              Adjust the length of the lists in setup selectors.
-            </Typography>
-          </Box>
-          <Box>
-            <Typography variant="subtitle2" sx={{ mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Updates
-            </Typography>
-            <Button variant="outlined" size="small" disabled>
-              Check for updates
-            </Button>
-          </Box>
-          <Box>
-            <Typography variant="subtitle2" sx={{ mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Feedback
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1 }}>
-              <Typography variant="body2" color="text.secondary">
-                Got suggestions for the app or new tool ideas for LMU? Let me know at {feedbackEmail}.
-              </Typography>
-              <Box sx={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    position: 'absolute',
-                    top: '-1.2rem',
-                    right: 0,
-                    color: '#6EE783',
-                    opacity: emailCopied ? 1 : 0,
-                    transform: emailCopied ? 'translateY(-4px)' : 'translateY(0)',
-                    transition: 'opacity 150ms ease, transform 150ms ease',
-                    pointerEvents: 'none',
-                  }}
-                >
-                  Copied
-                </Typography>
-                <Tooltip title="Copy email address" placement="top">
-                  <IconButton size="small" onClick={handleCopyEmail} aria-label="Copy email address">
-                    <ContentCopyIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </Box>
-          </Box>
+          <OptionsSortingOrderSection sortOrder={sortOrder} onSortOrderChange={setSortOrder} />
+          <OptionsListSizeSection
+            value={draft.dropdownListSize}
+            onChange={(event) =>
+              setDraft((prev) => ({ ...prev, dropdownListSize: event.target.value }))
+            }
+          />
+          <OptionsUpdatesSection />
+          <OptionsFeedbackSection feedbackEmail={feedbackEmail} />
         </Box>
       </DialogContent>
       <DialogActions>
