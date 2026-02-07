@@ -5,7 +5,7 @@ import { getSetupCategory } from '../domain/setupCategories';
 import { filterSectionsByKeywords } from '../domain/setupParser';
 import { applySettingLabels } from '../domain/settingLabels';
 import { resolveCarInfo } from '../domain/carInfo';
-import { buildDiffMap, getCompoundColor, getDisplayValue } from '../domain/setupDiff';
+import { getCategoryDiffMap, getCompoundColor, getDisplayValue } from '../domain/setupDiff';
 import { buildGroupedSections } from '../domain/setupGrouping';
 import SetupHeading from './SetupHeading';
 import { useSettings } from '../state/SettingsContext';
@@ -309,17 +309,7 @@ export default function SetupSectionPanel({ categoryKey }) {
   if (comparisonEnabled && settings.diffHighlightEnabled && primarySetup && secondarySetup) {
     const primaryParsed = setupFiles[primarySetup]?.parsed;
     const secondaryParsed = setupFiles[secondarySetup]?.parsed;
-    if (primaryParsed && secondaryParsed) {
-      const primarySections = Array.isArray(category.sectionGroups)
-        ? buildGroupedSections(primaryParsed, category.sectionGroups)
-        : filterSectionsByKeywords(primaryParsed, category).sections.map(applySettingLabels);
-
-      const secondarySections = Array.isArray(category.sectionGroups)
-        ? buildGroupedSections(secondaryParsed, category.sectionGroups)
-        : filterSectionsByKeywords(secondaryParsed, category).sections.map(applySettingLabels);
-
-      diffMap = buildDiffMap(primarySections, secondarySections);
-    }
+    diffMap = getCategoryDiffMap(category, primaryParsed, secondaryParsed);
   }
 
   const categoryWithDiff = { ...category, diffMap };

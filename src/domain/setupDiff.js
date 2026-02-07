@@ -1,3 +1,7 @@
+import { filterSectionsByKeywords } from './setupParser';
+import { applySettingLabels } from './settingLabels';
+import { buildGroupedSections } from './setupGrouping';
+
 export function getDisplayValue(entry) {
   if (!entry) return '';
 
@@ -61,4 +65,29 @@ export function buildDiffMap(primarySections, secondarySections) {
   });
 
   return diffMap;
+}
+
+export function getCategoryDiffMap(category, primaryParsed, secondaryParsed) {
+  if (!primaryParsed || !secondaryParsed || !category) return null;
+
+  const primarySections = Array.isArray(category.sectionGroups)
+    ? buildGroupedSections(primaryParsed, category.sectionGroups)
+    : filterSectionsByKeywords(primaryParsed, category).sections.map(applySettingLabels);
+
+  const secondarySections = Array.isArray(category.sectionGroups)
+    ? buildGroupedSections(secondaryParsed, category.sectionGroups)
+    : filterSectionsByKeywords(secondaryParsed, category).sections.map(applySettingLabels);
+
+  return buildDiffMap(primarySections, secondarySections);
+}
+
+export function getCategoryDiffCount(category, primaryParsed, secondaryParsed) {
+  const diffMap = getCategoryDiffMap(category, primaryParsed, secondaryParsed);
+  if (!diffMap) return 0;
+
+  let count = 0;
+  diffMap.forEach((isDifferent) => {
+    if (isDifferent) count += 1;
+  });
+  return count;
 }

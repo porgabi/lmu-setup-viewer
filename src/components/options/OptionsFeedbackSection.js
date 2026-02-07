@@ -42,7 +42,7 @@ export default function OptionsFeedbackSection({ feedbackEmail }) {
       </Typography>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1 }}>
         <Typography variant="body2" color="text.secondary">
-          Got suggestions, new tool ideas for LMU, or found bugs? Let me know at {feedbackEmail}.
+          Missing a feature, want to add suggestions, or got new tool ideas for LMU? Feel free to let me know at <strong>{feedbackEmail}</strong>.
         </Typography>
         <Box sx={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
           <Typography
