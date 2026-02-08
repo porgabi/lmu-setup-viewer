@@ -54,8 +54,10 @@ export default function OptionsDialog({ open, onClose }) {
             onChange={handleToggle('diffHighlightEnabled')}
           />
           <OptionsUpdatesOnLaunchSection
-            checked={draft.checkUpdatesOnLaunch}
-            onChange={handleToggle('checkUpdatesOnLaunch')}
+            checkUpdates={draft.checkUpdatesOnLaunch}
+            onCheckUpdatesChange={handleToggle('checkUpdatesOnLaunch')}
+            minimizeToTrayOnClose={draft.minimizeToTrayOnClose}
+            onMinimizeToTrayChange={handleToggle('minimizeToTrayOnClose')}
           />
           <OptionsSortingOrderSection sortOrder={sortOrder} onSortOrderChange={setSortOrder} />
           <OptionsListSizeSection

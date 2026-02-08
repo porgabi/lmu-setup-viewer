@@ -8,6 +8,7 @@ export const defaultSettings = {
   dropdownSortOrder: ['hy', 'lmgt3', 'lmp2_elms', 'lmp2_wec', 'gte', 'lmp3'],
   dropdownListSize: 'short',
   checkUpdatesOnLaunch: false,
+  minimizeToTrayOnClose: false,
 };
 
 function mergeSettings(base, overrides) {

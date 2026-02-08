@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, Tray } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const windowStateKeeper = require('electron-window-state');
@@ -8,6 +8,55 @@ const TRACK_INFO = require('./common/trackInfo');
 app.commandLine.appendSwitch('disable-features', 'OverlayScrollbar');
 
 const SETTINGS_RELATIVE_PATH = path.join('UserData', 'player', 'Settings');
+let tray = null;
+let mainWindow = null;
+let isQuitting = false;
+
+function getTrayIconPath() {
+  const fileName = 'favicon.ico';
+  const devPath = path.join(__dirname, 'public', fileName);
+  const buildPath = path.join(__dirname, 'build', fileName);
+  return app.isPackaged ? buildPath : devPath;
+}
+
+function ensureTray() {
+  if (tray) return tray;
+
+  tray = new Tray(getTrayIconPath());
+  tray.setToolTip('LMU Setup Viewer');
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Show',
+      click: () => {
+        if (mainWindow) {
+          mainWindow.show();
+          mainWindow.focus();
+        }
+      },
+    },
+    {
+      label: 'Quit',
+      click: () => {
+        isQuitting = true;
+        app.quit();
+      },
+    },
+  ]);
+
+  tray.setContextMenu(contextMenu);
+  tray.on('click', () => {
+    if (!mainWindow) return;
+    if (mainWindow.isVisible()) {
+      mainWindow.focus();
+    } else {
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  });
+
+  return tray;
+}
 
 function createWindow() {
   // Load previous state or use default values.
@@ -17,7 +66,7 @@ function createWindow() {
     maximize: true,
   });
 
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     x: mainWindowState.x,
     y: mainWindowState.y,
     width: mainWindowState.width,
@@ -49,6 +98,17 @@ function createWindow() {
     mainWindow.show();
   });
 
+  mainWindow.on('close', (event) => {
+    if (isQuitting) return;
+
+    const settings = store?.get('settings') || {};
+    if (settings.minimizeToTrayOnClose) {
+      event.preventDefault();
+      mainWindow.hide();
+      ensureTray();
+    }
+  });
+
   // Optional: open DevTools automatically in dev mode
   // if (isDev) {
   //   mainWindow.webContents.openDevTools();
@@ -62,6 +122,7 @@ const DEFAULT_SETTINGS = {
   dropdownSortOrder: ['hy', 'lmgt3', 'lmp2_elms', 'lmp2_wec', 'gte', 'lmp3'],
   dropdownListSize: 'short',
   checkUpdatesOnLaunch: false,
+  minimizeToTrayOnClose: false,
 };
 
 function getSettingsPath() {
@@ -212,4 +273,8 @@ app.on('activate', () => {
 // Quit app when all windows are closed (except macOS)
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('before-quit', () => {
+  isQuitting = true;
 });
