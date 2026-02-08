@@ -77,6 +77,7 @@ const theme = createTheme({
           letterSpacing: 'inherit',
           textTransform: 'uppercase',
           color: '#f2f4f7',
+          opacity: 1,
           position: 'relative',
           '&::after': {
             content: '""',
