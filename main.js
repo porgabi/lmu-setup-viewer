@@ -1,6 +1,7 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu, Tray } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, Tray, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const https = require('https');
 const windowStateKeeper = require('electron-window-state');
 const TRACK_INFO = require('./common/trackInfo');
 
@@ -8,6 +9,10 @@ const TRACK_INFO = require('./common/trackInfo');
 app.commandLine.appendSwitch('disable-features', 'OverlayScrollbar');
 
 const SETTINGS_RELATIVE_PATH = path.join('UserData', 'player', 'Settings');
+const UPDATE_REPO = {
+  owner: 'github-owner',
+  repo: 'repo-link',
+};
 let tray = null;
 let mainWindow = null;
 let isQuitting = false;
@@ -56,6 +61,70 @@ function ensureTray() {
   });
 
   return tray;
+}
+
+function normalizeVersionString(input) {
+  if (!input) return null;
+  const cleaned = String(input).trim().replace(/^v/i, '');
+  const match = cleaned.match(/\d+(?:\.\d+){0,2}/);
+  if (!match) return null;
+
+  const parts = match[0].split('.');
+  while (parts.length < 3) parts.push('0');
+  return parts.join('.');
+}
+
+function compareSemver(a, b) {
+  const aParts = a.split('.').map((value) => Number(value || 0));
+  const bParts = b.split('.').map((value) => Number(value || 0));
+  for (let index = 0; index < 3; index += 1) {
+    if (aParts[index] > bParts[index]) return 1;
+    if (aParts[index] < bParts[index]) return -1;
+  }
+  return 0;
+}
+
+function fetchJson(url) {
+  return new Promise((resolve, reject) => {
+    const request = https.request(
+      url,
+      {
+        headers: {
+          Accept: 'application/vnd.github+json',
+          'User-Agent': 'LMU-Setup-Viewer',
+        },
+      },
+      (response) => {
+        let body = '';
+        response.on('data', (chunk) => {
+          body += chunk;
+        });
+        response.on('end', () => {
+          if (response.statusCode < 200 || response.statusCode >= 300) {
+            reject(new Error(`Request failed (${response.statusCode}).`));
+            return;
+          }
+          try {
+            resolve(JSON.parse(body));
+          } catch (error) {
+            reject(error);
+          }
+        });
+      }
+    );
+
+    request.on('error', reject);
+    request.end();
+  });
+}
+
+function getDownloadUrl(release) {
+  if (Array.isArray(release.assets) && release.assets.length > 0) {
+    const winAsset = release.assets.find((asset) => /\.exe$/i.test(asset.name) || /\.msi$/i.test(asset.name));
+    const selected = winAsset || release.assets[0];
+    return selected?.browser_download_url || '';
+  }
+  return release.html_url || '';
 }
 
 function createWindow() {
@@ -214,6 +283,46 @@ app.whenReady().then(() => {
     store.set('settings', next);
     return next;
   });
+
+  ipcMain.handle('check-for-updates', async () => {
+    if (!UPDATE_REPO.owner || !UPDATE_REPO.repo) {
+      return { error: 'Update repository not configured.' };
+    }
+
+    try {
+      const url = `https://api.github.com/repos/${UPDATE_REPO.owner}/${UPDATE_REPO.repo}/releases/latest`;
+      const release = await fetchJson(url);
+      const latestVersionRaw = release.tag_name || release.name;
+      const latestVersion = normalizeVersionString(latestVersionRaw);
+      const currentVersion = normalizeVersionString(app.getVersion());
+
+      if (!latestVersion || !currentVersion) {
+        return { error: 'Unable to parse version information.' };
+      }
+
+      const hasUpdate = compareSemver(latestVersion, currentVersion) > 0;
+      return {
+        hasUpdate,
+        latestVersion,
+        currentVersion,
+        url: getDownloadUrl(release),
+      };
+    } catch (error) {
+      return { error: error?.message || 'Update check failed.' };
+    }
+  });
+
+  ipcMain.handle('get-app-version', () => {
+    return app.getVersion();
+  });
+
+  ipcMain.handle('open-external', (event, url) => {
+    if (typeof url !== 'string' || !/^https?:\/\//i.test(url)) {
+      return false;
+    }
+    return shell.openExternal(url);
+  });
+
 
   ipcMain.handle('get-setup-index', async () => {
     try {

@@ -19,6 +19,9 @@ export const electron = {
   getSettings: () => safeInvoke(electronAPI?.getSettings, {}),
   setSettings: (payload) => safeInvoke(electronAPI?.setSettings, {}, payload),
   updateSettings: (payload) => safeInvoke(electronAPI?.updateSettings, {}, payload),
+  checkForUpdates: () => safeInvoke(electronAPI?.checkForUpdates, null),
+  openExternal: (url) => safeInvoke(electronAPI?.openExternal, false, url),
+  getAppVersion: () => safeInvoke(electronAPI?.getAppVersion, null),
 };
 
 export const isElectronAvailable = Boolean(electronAPI);
