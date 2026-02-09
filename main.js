@@ -18,10 +18,14 @@ let mainWindow = null;
 let isQuitting = false;
 
 function getTrayIconPath() {
-  const fileName = 'favicon.ico';
-  const devPath = path.join(__dirname, 'public', fileName);
-  const buildPath = path.join(__dirname, 'build', fileName);
-  return app.isPackaged ? buildPath : devPath;
+  const iconName = process.platform === 'win32' ? 'app.ico' : 'app.png';
+  const unpackedPath = path.join(process.resourcesPath, 'app.asar.unpacked', 'assets', 'icons', iconName);
+  if (fs.existsSync(unpackedPath)) return unpackedPath;
+
+  const packagedPath = path.join(__dirname, 'assets', 'icons', iconName);
+  if (fs.existsSync(packagedPath)) return packagedPath;
+
+  return path.join(process.cwd(), 'assets', 'icons', iconName);
 }
 
 function ensureTray() {
@@ -144,6 +148,7 @@ function createWindow() {
     minHeight: 1000,
     title: 'LMU Setup Viewer',
     show: false,
+    icon: getTrayIconPath(),
     // autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -160,9 +165,13 @@ function createWindow() {
   // Load the correct URL depending on mode
   const startUrl = isDev
     ? 'http://localhost:3000'
-    : `file://${path.join(__dirname, 'build', 'index.html')}`;
+    : null;
 
-  mainWindow.loadURL(startUrl);
+  if (isDev) {
+    mainWindow.loadURL(startUrl);
+  } else {
+    mainWindow.loadFile(path.join(__dirname, 'build', 'index.html'));
+  }
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
   });

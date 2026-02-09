@@ -1,8 +1,38 @@
 {
   "name": "lmu-setup-viewer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "main.js",
+  "homepage": "./",
   "private": true,
+  "build": {
+    "appId": "com.lmu.setupviewer",
+    "productName": "LMU Setup Viewer",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets/icons"
+    },
+    "extraMetadata": {
+      "main": "main.js"
+    },
+    "files": [
+      "build/**/*",
+      "assets/icons/**/*",
+      "main.js",
+      "preload.js",
+      "common/**/*"
+    ],
+    "asarUnpack": [
+      "assets/icons/**"
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "app.ico"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "app.png"
+    }
+  },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/modifiers": "^8.0.0",
@@ -54,6 +84,7 @@
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
+    "electron-builder": "^25.1.8",
     "electron": "^39.0.0",
     "wait-on": "^9.0.1"
   }
