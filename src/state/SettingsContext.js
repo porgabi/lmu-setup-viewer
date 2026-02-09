@@ -9,6 +9,8 @@ export const defaultSettings = {
   dropdownListSize: 'short',
   checkUpdatesOnLaunch: false,
   minimizeToTrayOnClose: false,
+  startMinimized: false,
+  alwaysOnTop: false,
   startOnLogin: false,
   zoomFactor: 1,
   donationClicks: 0,

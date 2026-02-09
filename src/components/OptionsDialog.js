@@ -10,6 +10,7 @@ import OptionsLmuFolderSection from './options/OptionsLmuFolderSection';
 import OptionsSortingOrderSection from './options/OptionsSortingOrderSection';
 import OptionsUpdatesOnLaunchSection from './options/OptionsUpdatesOnLaunchSection';
 import OptionsUpdatesSection from './options/OptionsUpdatesSection';
+import OptionsWindowSection from './options/OptionsWindowSection';
 import OptionsZoomSection from './options/OptionsZoomSection';
 
 export default function OptionsDialog({ open, onClose }) {
@@ -159,6 +160,12 @@ export default function OptionsDialog({ open, onClose }) {
                 startOnLogin={draft.startOnLogin}
                 onStartOnLoginChange={handleToggle('startOnLogin')}
                 showStartOnLogin={platform === 'win32'}
+              />
+              <OptionsWindowSection
+                startMinimized={draft.startMinimized}
+                onStartMinimizedChange={handleToggle('startMinimized')}
+                alwaysOnTop={draft.alwaysOnTop}
+                onAlwaysOnTopChange={handleToggle('alwaysOnTop')}
               />
             </Box>
             <OptionsSortingOrderSection sortOrder={sortOrder} onSortOrderChange={setSortOrder} />

@@ -136,7 +136,6 @@ function createWindow() {
   const mainWindowState = windowStateKeeper({
     defaultWidth: 1400,
     defaultHeight: 1000,
-    maximize: true,
   });
 
   mainWindow = new BrowserWindow({
@@ -173,11 +172,19 @@ function createWindow() {
     mainWindow.loadFile(path.join(__dirname, 'build', 'index.html'));
   }
   mainWindow.once('ready-to-show', () => {
-    mainWindow.show();
+    const settings = store?.get('settings') || DEFAULT_SETTINGS;
+    if (!settings.startMinimized) {
+      mainWindow.show();
+    }
   });
+
+  if (mainWindowState.isMaximized) {
+    mainWindow.maximize();
+  }
 
   const storedSettings = store?.get('settings') || DEFAULT_SETTINGS;
   applyZoomFactor(storedSettings);
+  applyAlwaysOnTop(storedSettings);
 
   mainWindow.webContents.on('zoom-changed', syncZoomFromWebContents);
   mainWindow.webContents.on('did-change-zoom-level', syncZoomFromWebContents);
@@ -207,6 +214,8 @@ const DEFAULT_SETTINGS = {
   dropdownListSize: 'short',
   checkUpdatesOnLaunch: false,
   minimizeToTrayOnClose: false,
+  startMinimized: false,
+  alwaysOnTop: false,
   startOnLogin: false,
   zoomFactor: 1,
   donationClicks: 0,
@@ -228,6 +237,11 @@ function applyLoginItemSettings(settings) {
     openAtLogin,
     path: process.execPath,
   });
+}
+
+function applyAlwaysOnTop(settings) {
+  if (!mainWindow) return;
+  mainWindow.setAlwaysOnTop(Boolean(settings?.alwaysOnTop));
 }
 
 function applyZoomFactor(settings) {
@@ -326,6 +340,7 @@ app.whenReady().then(() => {
     const next = { ...DEFAULT_SETTINGS, ...payload };
     store.set('settings', next);
     applyLoginItemSettings(next);
+    applyAlwaysOnTop(next);
     applyZoomFactor(next);
     return next;
   });
@@ -335,6 +350,7 @@ app.whenReady().then(() => {
     const next = { ...DEFAULT_SETTINGS, ...current, ...payload };
     store.set('settings', next);
     applyLoginItemSettings(next);
+    applyAlwaysOnTop(next);
     applyZoomFactor(next);
     return next;
   });
