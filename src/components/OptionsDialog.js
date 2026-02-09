@@ -21,6 +21,7 @@ export default function OptionsDialog({ open, onClose }) {
   const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
   const [updateInfo, setUpdateInfo] = React.useState(null);
   const [currentVersion, setCurrentVersion] = React.useState(null);
+  const [platform, setPlatform] = React.useState(null);
 
   React.useEffect(() => {
     if (!open) return;
@@ -35,7 +36,14 @@ export default function OptionsDialog({ open, onClose }) {
         setCurrentVersion(version);
       }
     };
+    const loadPlatform = async () => {
+      const nextPlatform = await electron.getPlatform();
+      if (!cancelled) {
+        setPlatform(nextPlatform);
+      }
+    };
     loadVersion();
+    loadPlatform();
 
     return () => {
       cancelled = true;
@@ -113,12 +121,15 @@ export default function OptionsDialog({ open, onClose }) {
               checked={draft.diffHighlightEnabled}
               onChange={handleToggle('diffHighlightEnabled')}
             />
-            <OptionsUpdatesOnLaunchSection
-              checkUpdates={draft.checkUpdatesOnLaunch}
-              onCheckUpdatesChange={handleToggle('checkUpdatesOnLaunch')}
-              minimizeToTrayOnClose={draft.minimizeToTrayOnClose}
-              onMinimizeToTrayChange={handleToggle('minimizeToTrayOnClose')}
-            />
+          <OptionsUpdatesOnLaunchSection
+            checkUpdates={draft.checkUpdatesOnLaunch}
+            onCheckUpdatesChange={handleToggle('checkUpdatesOnLaunch')}
+            minimizeToTrayOnClose={draft.minimizeToTrayOnClose}
+            onMinimizeToTrayChange={handleToggle('minimizeToTrayOnClose')}
+            startOnLogin={draft.startOnLogin}
+            onStartOnLoginChange={handleToggle('startOnLogin')}
+            showStartOnLogin={platform === 'win32'}
+          />
             <OptionsSortingOrderSection sortOrder={sortOrder} onSortOrderChange={setSortOrder} />
             <OptionsListSizeSection
               value={draft.dropdownListSize}

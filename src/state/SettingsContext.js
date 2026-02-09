@@ -9,6 +9,7 @@ export const defaultSettings = {
   dropdownListSize: 'short',
   checkUpdatesOnLaunch: false,
   minimizeToTrayOnClose: false,
+  startOnLogin: false,
 };
 
 function mergeSettings(base, overrides) {

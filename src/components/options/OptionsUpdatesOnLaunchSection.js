@@ -1,11 +1,14 @@
 import React from 'react';
-import { Box, FormControlLabel, Switch } from '@mui/material';
+import { Box, FormControlLabel, Switch, Typography } from '@mui/material';
 
 export default function OptionsUpdatesOnLaunchSection({
   checkUpdates,
   onCheckUpdatesChange,
   minimizeToTrayOnClose,
   onMinimizeToTrayChange,
+  startOnLogin,
+  onStartOnLoginChange,
+  showStartOnLogin,
 }) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
@@ -17,6 +20,17 @@ export default function OptionsUpdatesOnLaunchSection({
         control={<Switch checked={minimizeToTrayOnClose} onChange={onMinimizeToTrayChange} />}
         label="Minimize to tray on close"
       />
+      {showStartOnLogin ? (
+        <Box>
+          <FormControlLabel
+            control={<Switch checked={startOnLogin} onChange={onStartOnLoginChange} />}
+            label="Start with Windows"
+          />
+          <Typography variant="caption" color="text.secondary" sx={{ ml: 0, display: 'block' }}>
+            Note: the executable must stay in the same location for this to keep working.
+          </Typography>
+        </Box>
+      ) : null}
     </Box>
   );
 }

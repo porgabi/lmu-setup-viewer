@@ -201,6 +201,7 @@ const DEFAULT_SETTINGS = {
   dropdownListSize: 'short',
   checkUpdatesOnLaunch: false,
   minimizeToTrayOnClose: false,
+  startOnLogin: false,
 };
 
 function getSettingsPath() {
@@ -208,6 +209,15 @@ function getSettingsPath() {
   const rootPath = store.get('lmuPath');
   if (!rootPath) return null;
   return path.join(rootPath, SETTINGS_RELATIVE_PATH);
+}
+
+function applyLoginItemSettings(settings) {
+  if (process.platform !== 'win32') return;
+  const openAtLogin = Boolean(settings?.startOnLogin);
+  app.setLoginItemSettings({
+    openAtLogin,
+    path: process.execPath,
+  });
 }
 
 async function buildSetupIndex(settingsPath) {
@@ -283,6 +293,7 @@ app.whenReady().then(() => {
   ipcMain.handle('set-settings', (event, payload = {}) => {
     const next = { ...DEFAULT_SETTINGS, ...payload };
     store.set('settings', next);
+    applyLoginItemSettings(next);
     return next;
   });
 
@@ -290,7 +301,12 @@ app.whenReady().then(() => {
     const current = store.get('settings') || {};
     const next = { ...DEFAULT_SETTINGS, ...current, ...payload };
     store.set('settings', next);
+    applyLoginItemSettings(next);
     return next;
+  });
+
+  ipcMain.handle('get-platform', () => {
+    return process.platform;
   });
 
   ipcMain.handle('check-for-updates', async () => {
