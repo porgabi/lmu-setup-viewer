@@ -1,4 +1,5 @@
 import carInfo from './carInfo.json';
+import { getAssetPath } from './assetPaths';
 
 let preloaded = false;
 
@@ -15,8 +16,12 @@ export function preloadBrandAndClassIcons() {
 
   preloaded = true;
 
-  const brandSources = getUniqueValues('brand').map((brand) => `/assets/brands/${brand}.png`);
-  const classSources = getUniqueValues('class').map((carClass) => `/assets/classes/${carClass}.png`);
+  const brandSources = getUniqueValues('brand').map((brand) =>
+    getAssetPath(`assets/brands/${brand}.png`)
+  );
+  const classSources = getUniqueValues('class').map((carClass) =>
+    getAssetPath(`assets/classes/${carClass}.png`)
+  );
   const sources = [...brandSources, ...classSources];
 
   sources.forEach((src) => {

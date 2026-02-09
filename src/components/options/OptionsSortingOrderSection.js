@@ -13,6 +13,7 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import IconSlot from '../IconSlot';
+import { getAssetPath } from '../../domain/assetPaths';
 
 function SortableItem({ id, label, iconSrc }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
@@ -73,7 +74,7 @@ export default function OptionsSortingOrderSection({ sortOrder, onSortOrderChang
                   key={item}
                   id={item}
                   label={item}
-                  iconSrc={`/assets/classes/${item}.png`}
+                  iconSrc={getAssetPath(`assets/classes/${item}.png`)}
                 />
               ))}
             </List>

@@ -1,4 +1,5 @@
 import { resolveCarInfo } from './carInfo';
+import { getAssetPath } from './assetPaths';
 
 export function splitSetupKey(setupKey) {
   if (!setupKey) return { track: '', setupName: '' };
@@ -36,8 +37,8 @@ export function getSetupEntry(setupIndex, track, setupName) {
 
 export function getSetupDisplayAssets(carInfo) {
   const brand = carInfo?.brand;
-  const brandIconPath = brand ? `/assets/brands/${brand}.png` : '';
-  const classIconPath = carInfo?.class ? `/assets/classes/${carInfo.class}.png` : '';
+  const brandIconPath = brand ? getAssetPath(`assets/brands/${brand}.png`) : '';
+  const classIconPath = carInfo?.class ? getAssetPath(`assets/classes/${carInfo.class}.png`) : '';
   return { brandIconPath, classIconPath };
 }
 

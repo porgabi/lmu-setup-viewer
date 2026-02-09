@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import ReactCountryFlag from 'react-country-flag';
 import IconSlot from './IconSlot';
+import { getAssetPath } from '../domain/assetPaths';
 
 function splitSetupKey(setupKey) {
   if (!setupKey) {
@@ -100,7 +101,7 @@ function AutoFitCarName({ text }) {
 
 function getCarImagePath(carInfo) {
   if (!carInfo?.class || !carInfo?.technical) return '';
-  return `/assets/cars/${carInfo.class}/${carInfo.technical}.png`;
+  return getAssetPath(`assets/cars/${carInfo.class}/${carInfo.technical}.png`);
 }
 
 export default function SetupHeading({ title, setupKey, trackInfo, carInfo }) {
@@ -114,8 +115,8 @@ export default function SetupHeading({ title, setupKey, trackInfo, carInfo }) {
   const trackLabel = trackEntry?.displayName || track;
   const carName = carInfo?.displayName || '';
   const carImagePath = getCarImagePath(carInfo);
-  const classIconPath = carInfo?.class ? `/assets/classes/${carInfo.class}.png` : '';
-  const brandIconPath = carInfo?.brand ? `/assets/brands/${carInfo.brand}.png` : '';
+  const classIconPath = carInfo?.class ? getAssetPath(`assets/classes/${carInfo.class}.png`) : '';
+  const brandIconPath = carInfo?.brand ? getAssetPath(`assets/brands/${carInfo.brand}.png`) : '';
 
   const label = track ? (
     <Box component="span">
