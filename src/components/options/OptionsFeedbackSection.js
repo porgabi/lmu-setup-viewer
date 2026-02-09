@@ -40,33 +40,64 @@ export default function OptionsFeedbackSection({ feedbackEmail }) {
       <Typography variant="subtitle2" sx={{ mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
         Feedback
       </Typography>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1 }}>
-        <Typography variant="body2" color="text.secondary">
-          Missing a feature, want to add suggestions, or got new tool ideas for LMU? Feel free to let me know at <strong>{feedbackEmail}</strong>.
-        </Typography>
-        <Box sx={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
-          <Typography
-            variant="caption"
+      <Typography variant="body2" color="text.secondary">
+        Missing a feature, want to add suggestions, or got new tool ideas for LMU? Feel free to let me know at{' '}
+        <Box
+          component="span"
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 0.5,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <Box
+            component="a"
+            href={`mailto:${feedbackEmail}`}
             sx={{
-              position: 'absolute',
-              top: '-1.2rem',
-              right: 0,
-              color: '#6EE783',
-              opacity: emailCopied ? 1 : 0,
-              transform: emailCopied ? 'translateY(-4px)' : 'translateY(0)',
-              transition: 'opacity 150ms ease, transform 150ms ease',
-              pointerEvents: 'none',
+              color: '#bcd7ff',
+              textDecoration: 'underline',
+              textUnderlineOffset: '2px',
+              '&:hover': {
+                color: '#e0ecff',
+              },
             }}
           >
-            Copied
-          </Typography>
-          <Tooltip title="Copy email address" placement="top">
-            <IconButton size="small" onClick={handleCopyEmail} aria-label="Copy email address">
-              <ContentCopyIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
+            {feedbackEmail}
+          </Box>
+          .
+          <Box component="span" sx={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
+            <Typography
+              variant="caption"
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '100%',
+                ml: 0.4,
+                transform: emailCopied ? 'translateY(-50%) translateX(4px)' : 'translateY(-50%) translateX(0)',
+                color: '#6EE783',
+                opacity: emailCopied ? 1 : 0,
+                transition: 'opacity 150ms ease, transform 150ms ease',
+                pointerEvents: 'none',
+              }}
+            >
+              Copied
+            </Typography>
+            <Tooltip title="Copy email address" placement="top">
+              <Box component="span">
+                <IconButton
+                  size="small"
+                  onClick={handleCopyEmail}
+                  aria-label="Copy email address"
+                  sx={{ p: 0.2 }}
+                >
+                  <ContentCopyIcon fontSize="inherit" sx={{ fontSize: '0.8rem' }} />
+                </IconButton>
+              </Box>
+            </Tooltip>
+          </Box>
         </Box>
-      </Box>
+      </Typography>
     </Box>
   );
 }
