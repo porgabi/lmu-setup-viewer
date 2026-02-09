@@ -149,7 +149,7 @@ function createWindow() {
     title: 'LMU Setup Viewer',
     show: false,
     icon: getTrayIconPath(),
-    // autoHideMenuBar: true,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
