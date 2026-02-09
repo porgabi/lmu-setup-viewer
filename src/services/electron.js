@@ -23,6 +23,8 @@ export const electron = {
   openExternal: (url) => safeInvoke(electronAPI?.openExternal, false, url),
   getAppVersion: () => safeInvoke(electronAPI?.getAppVersion, null),
   getPlatform: () => safeInvoke(electronAPI?.getPlatform, null),
+  onZoomFactorChanged: (callback) => electronAPI?.onZoomFactorChanged?.(callback),
+  getZoomFactor: () => safeInvoke(electronAPI?.getZoomFactor, null),
 };
 
 export const isElectronAvailable = Boolean(electronAPI);

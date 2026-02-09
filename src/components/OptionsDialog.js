@@ -10,6 +10,7 @@ import OptionsLmuFolderSection from './options/OptionsLmuFolderSection';
 import OptionsSortingOrderSection from './options/OptionsSortingOrderSection';
 import OptionsUpdatesOnLaunchSection from './options/OptionsUpdatesOnLaunchSection';
 import OptionsUpdatesSection from './options/OptionsUpdatesSection';
+import OptionsZoomSection from './options/OptionsZoomSection';
 
 export default function OptionsDialog({ open, onClose }) {
   const feedbackEmail = 'support@example.com';
@@ -49,6 +50,34 @@ export default function OptionsDialog({ open, onClose }) {
       cancelled = true;
     };
   }, [open, settings]);
+
+  React.useEffect(() => {
+    if (!open) return undefined;
+    let cancelled = false;
+    let timerId = null;
+
+    const pollZoom = async () => {
+      const zoomFactor = await electron.getZoomFactor();
+      if (cancelled) return;
+      if (zoomFactor == null) {
+        timerId = setTimeout(pollZoom, 600);
+        return;
+      }
+      const current = Number(draft.zoomFactor || 1);
+      if (Math.abs(current - zoomFactor) >= 0.001) {
+        setDraft((prev) => ({ ...prev, zoomFactor }));
+        updateSettings({ zoomFactor });
+      }
+      timerId = setTimeout(pollZoom, 600);
+    };
+
+    pollZoom();
+
+    return () => {
+      cancelled = true;
+      if (timerId) clearTimeout(timerId);
+    };
+  }, [open, draft.zoomFactor, updateSettings]);
 
   const handleToggle = (key) => (event) => {
     setDraft((prev) => ({ ...prev, [key]: event.target.checked }));
@@ -131,12 +160,19 @@ export default function OptionsDialog({ open, onClose }) {
             showStartOnLogin={platform === 'win32'}
           />
             <OptionsSortingOrderSection sortOrder={sortOrder} onSortOrderChange={setSortOrder} />
-            <OptionsListSizeSection
-              value={draft.dropdownListSize}
-              onChange={(event) =>
-                setDraft((prev) => ({ ...prev, dropdownListSize: event.target.value }))
-              }
-            />
+          <OptionsListSizeSection
+            value={draft.dropdownListSize}
+            onChange={(event) =>
+              setDraft((prev) => ({ ...prev, dropdownListSize: event.target.value }))
+            }
+          />
+          <OptionsZoomSection
+            zoomFactor={draft.zoomFactor}
+            onZoomChange={(nextZoom) => {
+              setDraft((prev) => ({ ...prev, zoomFactor: nextZoom }));
+              updateSettings({ zoomFactor: nextZoom });
+            }}
+          />
           <OptionsUpdatesSection
             onCheckUpdates={handleCheckUpdates}
             checking={checkingUpdates}

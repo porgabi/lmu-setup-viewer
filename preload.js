@@ -15,6 +15,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   openExternal: (url) => ipcRenderer.invoke('open-external', url),
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
   getPlatform: () => ipcRenderer.invoke('get-platform'),
+  getZoomFactor: () => ipcRenderer.invoke('get-zoom-factor'),
   getSetupIndex: () => ipcRenderer.invoke('get-setup-index'),
   readSetupFile: (payload) => ipcRenderer.invoke('read-setup-file', payload),
+  onZoomFactorChanged: (callback) => {
+    const handler = (_event, zoomFactor) => callback(zoomFactor);
+    ipcRenderer.on('zoom-factor-changed', handler);
+    return () => ipcRenderer.removeListener('zoom-factor-changed', handler);
+  },
 });

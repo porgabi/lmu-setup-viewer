@@ -176,6 +176,12 @@ function createWindow() {
     mainWindow.show();
   });
 
+  const storedSettings = store?.get('settings') || DEFAULT_SETTINGS;
+  applyZoomFactor(storedSettings);
+
+  mainWindow.webContents.on('zoom-changed', syncZoomFromWebContents);
+  mainWindow.webContents.on('did-change-zoom-level', syncZoomFromWebContents);
+
   mainWindow.on('close', (event) => {
     if (isQuitting) return;
 
@@ -202,6 +208,7 @@ const DEFAULT_SETTINGS = {
   checkUpdatesOnLaunch: false,
   minimizeToTrayOnClose: false,
   startOnLogin: false,
+  zoomFactor: 1,
 };
 
 function getSettingsPath() {
@@ -218,6 +225,26 @@ function applyLoginItemSettings(settings) {
     openAtLogin,
     path: process.execPath,
   });
+}
+
+function applyZoomFactor(settings) {
+  if (!mainWindow || !mainWindow.webContents) return;
+  const rawFactor = Number(settings?.zoomFactor);
+  if (Number.isNaN(rawFactor)) return;
+  const clamped = Math.min(2.5, Math.max(0.5, rawFactor));
+  mainWindow.webContents.setZoomFactor(clamped);
+}
+
+function syncZoomFromWebContents() {
+  if (!mainWindow || !mainWindow.webContents || !store) return;
+  const zoomFactor = mainWindow.webContents.getZoomFactor();
+  const current = store.get('settings') || {};
+  const currentZoom = Number(current.zoomFactor || 1);
+  if (Math.abs(currentZoom - zoomFactor) < 0.001) return;
+
+  const next = { ...DEFAULT_SETTINGS, ...current, zoomFactor };
+  store.set('settings', next);
+  mainWindow.webContents.send('zoom-factor-changed', zoomFactor);
 }
 
 async function buildSetupIndex(settingsPath) {
@@ -296,6 +323,7 @@ app.whenReady().then(() => {
     const next = { ...DEFAULT_SETTINGS, ...payload };
     store.set('settings', next);
     applyLoginItemSettings(next);
+    applyZoomFactor(next);
     return next;
   });
 
@@ -304,11 +332,17 @@ app.whenReady().then(() => {
     const next = { ...DEFAULT_SETTINGS, ...current, ...payload };
     store.set('settings', next);
     applyLoginItemSettings(next);
+    applyZoomFactor(next);
     return next;
   });
 
   ipcMain.handle('get-platform', () => {
     return process.platform;
+  });
+
+  ipcMain.handle('get-zoom-factor', () => {
+    if (!mainWindow || !mainWindow.webContents) return null;
+    return mainWindow.webContents.getZoomFactor();
   });
 
   ipcMain.handle('check-for-updates', async () => {

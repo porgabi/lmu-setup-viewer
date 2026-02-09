@@ -10,6 +10,7 @@ export const defaultSettings = {
   checkUpdatesOnLaunch: false,
   minimizeToTrayOnClose: false,
   startOnLogin: false,
+  zoomFactor: 1,
 };
 
 function mergeSettings(base, overrides) {
@@ -40,6 +41,20 @@ export function SettingsProvider({ children }) {
     return () => {
       cancelled = true;
     };
+  }, []);
+
+  React.useEffect(() => {
+    if (!electron?.onZoomFactorChanged) return undefined;
+    const unsubscribe = electron.onZoomFactorChanged((zoomFactor) => {
+      setSettingsState((prev) => {
+        const current = Number(prev.zoomFactor || 1);
+        if (Math.abs(current - zoomFactor) < 0.001) {
+          return prev;
+        }
+        return mergeSettings(prev, { zoomFactor });
+      });
+    });
+    return unsubscribe;
   }, []);
 
   const setSettings = React.useCallback(async (next) => {
