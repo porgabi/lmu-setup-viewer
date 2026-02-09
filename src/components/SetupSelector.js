@@ -31,6 +31,8 @@ function buildMenuItems(setupIndex, trackInfo, excludeValue, showIcons, classOrd
       <ListSubheader
         key={`${section.track}-header`}
         sx={{
+          width: '100%',
+          boxSizing: 'border-box',
           backgroundColor: 'rgba(8, 10, 14, 0.9)',
           textTransform: 'uppercase',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',

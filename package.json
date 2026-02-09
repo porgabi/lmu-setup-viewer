@@ -1,5 +1,5 @@
 {
-  "name": "my-electron-app",
+  "name": "lmu-setup-viewer",
   "version": "0.1.0",
   "main": "main.js",
   "private": true,
