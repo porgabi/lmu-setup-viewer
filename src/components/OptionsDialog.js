@@ -146,44 +146,46 @@ export default function OptionsDialog({ open, onClose }) {
         <DialogContent dividers>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <OptionsLmuFolderSection lmuPath={lmuPath} onChoose={chooseLmuPath} />
-            <OptionsDiffHighlightSection
-              checked={draft.diffHighlightEnabled}
-              onChange={handleToggle('diffHighlightEnabled')}
-            />
-          <OptionsUpdatesOnLaunchSection
-            checkUpdates={draft.checkUpdatesOnLaunch}
-            onCheckUpdatesChange={handleToggle('checkUpdatesOnLaunch')}
-            minimizeToTrayOnClose={draft.minimizeToTrayOnClose}
-            onMinimizeToTrayChange={handleToggle('minimizeToTrayOnClose')}
-            startOnLogin={draft.startOnLogin}
-            onStartOnLoginChange={handleToggle('startOnLogin')}
-            showStartOnLogin={platform === 'win32'}
-          />
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <OptionsDiffHighlightSection
+                checked={draft.diffHighlightEnabled}
+                onChange={handleToggle('diffHighlightEnabled')}
+              />
+              <OptionsUpdatesOnLaunchSection
+                checkUpdates={draft.checkUpdatesOnLaunch}
+                onCheckUpdatesChange={handleToggle('checkUpdatesOnLaunch')}
+                minimizeToTrayOnClose={draft.minimizeToTrayOnClose}
+                onMinimizeToTrayChange={handleToggle('minimizeToTrayOnClose')}
+                startOnLogin={draft.startOnLogin}
+                onStartOnLoginChange={handleToggle('startOnLogin')}
+                showStartOnLogin={platform === 'win32'}
+              />
+            </Box>
             <OptionsSortingOrderSection sortOrder={sortOrder} onSortOrderChange={setSortOrder} />
-          <OptionsListSizeSection
-            value={draft.dropdownListSize}
-            onChange={(event) =>
-              setDraft((prev) => ({ ...prev, dropdownListSize: event.target.value }))
-            }
-          />
-          <OptionsZoomSection
-            zoomFactor={draft.zoomFactor}
-            onZoomChange={(nextZoom) => {
-              setDraft((prev) => ({ ...prev, zoomFactor: nextZoom }));
-              updateSettings({ zoomFactor: nextZoom });
-            }}
-          />
-          <OptionsUpdatesSection
-            onCheckUpdates={handleCheckUpdates}
-            checking={checkingUpdates}
-            currentVersion={currentVersion}
-          />
+            <OptionsListSizeSection
+              value={draft.dropdownListSize}
+              onChange={(event) =>
+                setDraft((prev) => ({ ...prev, dropdownListSize: event.target.value }))
+              }
+            />
+            <OptionsZoomSection
+              zoomFactor={draft.zoomFactor}
+              onZoomChange={(nextZoom) => {
+                setDraft((prev) => ({ ...prev, zoomFactor: nextZoom }));
+                updateSettings({ zoomFactor: nextZoom });
+              }}
+            />
+            <OptionsUpdatesSection
+              onCheckUpdates={handleCheckUpdates}
+              checking={checkingUpdates}
+              currentVersion={currentVersion}
+            />
             <OptionsFeedbackSection feedbackEmail={feedbackEmail} />
           </Box>
         </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button
+        <DialogActions>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button
             onClick={handleSave}
             variant="contained"
             disabled={loadingSettings}
