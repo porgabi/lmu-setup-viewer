@@ -64,17 +64,11 @@ export function SettingsProvider({ children }) {
     return null;
   }, []);
 
-  const resetSettings = React.useCallback(async () => {
-    setSettingsState(defaultSettings);
-    await electron.setSettings(defaultSettings);
-  }, []);
-
   const value = {
     settings,
     loadingSettings,
     setSettings,
     updateSettings,
-    resetSettings,
   };
 
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;

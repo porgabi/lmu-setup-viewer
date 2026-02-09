@@ -13,7 +13,7 @@ import OptionsUpdatesSection from './options/OptionsUpdatesSection';
 
 export default function OptionsDialog({ open, onClose }) {
   const feedbackEmail = 'support@example.com';
-  const { settings, loadingSettings, updateSettings, resetSettings } = useSettings();
+  const { settings, loadingSettings, updateSettings } = useSettings();
   const { lmuPath, chooseLmuPath } = useSetupContext();
   const [draft, setDraft] = React.useState(settings);
   const [sortOrder, setSortOrder] = React.useState(settings.dropdownSortOrder);
@@ -53,11 +53,6 @@ export default function OptionsDialog({ open, onClose }) {
     };
 
     await updateSettings(next);
-    onClose?.();
-  };
-
-  const handleReset = async () => {
-    await resetSettings();
     onClose?.();
   };
 
@@ -139,12 +134,9 @@ export default function OptionsDialog({ open, onClose }) {
             <OptionsFeedbackSection feedbackEmail={feedbackEmail} />
           </Box>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleReset} color="secondary" disabled={loadingSettings}>
-            Restore Defaults
-          </Button>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button
+      <DialogActions>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button
             onClick={handleSave}
             variant="contained"
             disabled={loadingSettings}
