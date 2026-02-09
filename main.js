@@ -263,6 +263,8 @@ async function buildSetupIndex(settingsPath) {
 app.whenReady().then(() => {
   store = new Store.default();
 
+  ensureTray();
+
   ipcMain.handle('get-lmu-path', () => {
     return store.get('lmuPath') || null;
   });
