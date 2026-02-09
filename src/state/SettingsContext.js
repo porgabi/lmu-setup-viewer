@@ -11,6 +11,9 @@ export const defaultSettings = {
   minimizeToTrayOnClose: false,
   startOnLogin: false,
   zoomFactor: 1,
+  donationClicks: 0,
+  launchCount: 0,
+  donationReminderDismissed: false,
 };
 
 function mergeSettings(base, overrides) {
@@ -27,7 +30,11 @@ export function SettingsProvider({ children }) {
       try {
         const stored = await electron.getSettings();
         if (!cancelled) {
-          setSettingsState(mergeSettings(defaultSettings, stored));
+          const merged = mergeSettings(defaultSettings, stored);
+          setSettingsState(merged);
+          const nextLaunchCount = (merged.launchCount || 0) + 1;
+          await electron.updateSettings({ launchCount: nextLaunchCount });
+          setSettingsState((prev) => mergeSettings(prev, { launchCount: nextLaunchCount }));
         }
       } catch (error) {
         console.warn('Failed to load settings', error);

@@ -1,10 +1,25 @@
 import React from 'react';
-import { Box, IconButton, Tooltip, Typography } from '@mui/material';
+import { Box, Button, IconButton, Tooltip, Typography } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { electron } from '../../services/electron';
+import { useSettings } from '../../state/SettingsContext';
+import { DONATION_URL } from '../../domain/donation';
 
 export default function OptionsFeedbackSection({ feedbackEmail }) {
+  const { settings, updateSettings } = useSettings();
   const [emailCopied, setEmailCopied] = React.useState(false);
   const copyTimeoutRef = React.useRef(null);
+  const donationClicks = settings?.donationClicks || 0;
+
+  const handleDonationClick = async () => {
+    await updateSettings({ donationClicks: donationClicks + 1 });
+    if (electron?.openExternal) {
+      electron.openExternal(DONATION_URL);
+    } else {
+      window.open(DONATION_URL, '_blank', 'noopener');
+    }
+  };
 
   React.useEffect(() => {
     return () => {
@@ -38,9 +53,9 @@ export default function OptionsFeedbackSection({ feedbackEmail }) {
   return (
     <Box>
       <Typography variant="subtitle2" sx={{ mb: 0.5, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-        Feedback
+        Feedback & Support
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
         Missing a feature, want to add suggestions, or got new tool ideas for LMU? Feel free to let me know at{' '}
         <Box
           component="span"
@@ -98,6 +113,18 @@ export default function OptionsFeedbackSection({ feedbackEmail }) {
           </Box>
         </Box>
       </Typography>
+      <Typography variant="body2" color="text.secondary">
+        If you're enjoying the app and feeling generous, optional donations are also welcome.
+      </Typography>
+      <Button
+        variant="outlined"
+        size="small"
+        startIcon={<FavoriteBorderIcon />}
+        onClick={handleDonationClick}
+        sx={{ mt: 1 }}
+      >
+        Support on Ko-fi
+      </Button>
     </Box>
   );
 }

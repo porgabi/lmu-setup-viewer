@@ -209,6 +209,9 @@ const DEFAULT_SETTINGS = {
   minimizeToTrayOnClose: false,
   startOnLogin: false,
   zoomFactor: 1,
+  donationClicks: 0,
+  launchCount: 0,
+  donationReminderDismissed: false,
 };
 
 function getSettingsPath() {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Tabs, Tab, Tooltip } from '@mui/material';
+import { Box, Tabs, Tab, Tooltip, Snackbar, Button } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import SetupSelector from './components/SetupSelector';
 import ChassisAndAero from './views/ChassisAndAero';
@@ -10,8 +10,11 @@ import Suspension from './views/Suspension';
 import { preloadBrandAndClassIcons } from './domain/assetPreload';
 import { useSetupContext } from './state/SetupContext';
 import { useSettings } from './state/SettingsContext';
+import { electron } from './services/electron';
 import { getSetupCategory } from './domain/setupCategories';
 import { getCategoryDiffCount } from './domain/setupDiff';
+import SupportFloatingButton from './components/SupportFloatingButton';
+import { DONATION_URL } from './domain/donation';
 
 const TAB_DEFINITIONS = [
   { key: 'powertrain', label: 'Powertrain', Component: Powertrain },
@@ -73,7 +76,8 @@ function TabStatusLabel({ label, count, showStatus }) {
 export default function App() {
   const [value, setValue] = React.useState(0);
   const { comparisonEnabled, primarySetup, secondarySetup, setupFiles } = useSetupContext();
-  const { settings } = useSettings();
+  const { settings, updateSettings } = useSettings();
+  const [donationReminderOpen, setDonationReminderOpen] = React.useState(false);
 
   React.useEffect(() => {
     preloadBrandAndClassIcons();
@@ -118,6 +122,32 @@ export default function App() {
       diffCounts
   );
 
+  React.useEffect(() => {
+    const shouldPrompt =
+      settings.launchCount > 0 &&
+      settings.launchCount % 10 === 0 &&
+      (settings.donationClicks || 0) === 0 &&
+      !settings.donationReminderDismissed;
+    if (shouldPrompt) {
+      setDonationReminderOpen(true);
+    }
+  }, [settings.launchCount, settings.donationClicks, settings.donationReminderDismissed]);
+
+  const handleDonationClick = async () => {
+    await updateSettings({ donationClicks: (settings.donationClicks || 0) + 1 });
+    setDonationReminderOpen(false);
+    if (electron?.openExternal) {
+      electron.openExternal(DONATION_URL);
+    } else {
+      window.open(DONATION_URL, '_blank', 'noopener');
+    }
+  };
+
+  const handleDismissReminder = async () => {
+    await updateSettings({ donationReminderDismissed: true });
+    setDonationReminderOpen(false);
+  };
+
   return (
     <Box sx={{ width: '100%', minHeight: '100vh' }}>
       <Box sx={{ position: 'sticky', top: 0, zIndex: 10 }}>
@@ -153,6 +183,51 @@ export default function App() {
           </TabPanel>
         );
       })}
+      <SupportFloatingButton />
+      <Snackbar
+        open={donationReminderOpen}
+        onClose={(event, reason) => {
+          if (reason === 'clickaway') {
+            return;
+          }
+          setDonationReminderOpen(false);
+        }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        style={{ top: 130, right: 10, left: 'auto', bottom: 'auto' }}
+        ContentProps={{
+          sx: {
+            borderRadius: 2,
+            border: '1px solid rgba(205, 70, 70, 0.6)',
+            boxShadow: '0 0 12px rgba(205, 70, 70, 0.45)',
+            backgroundColor: 'rgba(18, 22, 30, 0.85)',
+            backdropFilter: 'blur(8px)',
+            color: '#f2f4f7',
+            fontWeight: 500,
+          },
+        }}
+        message="Enjoying the app? Optional donations are available."
+        action={
+          <>
+            <Button
+              color="secondary"
+              size="small"
+              onClick={handleDonationClick}
+              sx={{
+                backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                color: '#f2f4f7',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.45)',
+                },
+              }}
+            >
+              Support
+            </Button>
+            <Button color="inherit" size="small" onClick={handleDismissReminder}>
+              Don’t show again
+            </Button>
+          </>
+        }
+      />
     </Box>
   );
 }

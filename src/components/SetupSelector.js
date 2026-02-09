@@ -21,6 +21,7 @@ import SetupMenuItem from './SetupMenuItem';
 import VirtualizedMenuList from './VirtualizedMenuList';
 import OptionsDialog from './OptionsDialog';
 import { useSettings } from '../state/SettingsContext';
+import { electron } from '../services/electron';
 
 function buildMenuItems(setupIndex, trackInfo, excludeValue, showIcons, classOrder) {
   const sections = buildSetupMenuData(setupIndex, trackInfo, excludeValue, classOrder);
@@ -86,7 +87,7 @@ export default function SetupSelector() {
     setSecondarySetup,
     setComparisonEnabled,
   } = useSetupContext();
-  const { settings } = useSettings();
+  const { settings, updateSettings } = useSettings();
   const [primaryMenuOpen, setPrimaryMenuOpen] = React.useState(false);
   const [secondaryMenuOpen, setSecondaryMenuOpen] = React.useState(false);
   const [optionsOpen, setOptionsOpen] = React.useState(false);
