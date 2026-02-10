@@ -5,6 +5,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { electron } from '../../services/electron';
 import { useSettings } from '../../state/SettingsContext';
 import { DONATION_URL } from '../../domain/donation';
+import { statusTextSx } from './statusTextStyles';
 
 export default function OptionsFeedbackSection({ feedbackEmail }) {
   const { settings, updateSettings } = useSettings();
@@ -85,15 +86,9 @@ export default function OptionsFeedbackSection({ feedbackEmail }) {
             <Typography
               variant="caption"
               sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '100%',
+                ...statusTextSx,
                 ml: 0.4,
-                transform: emailCopied ? 'translateY(-50%) translateX(4px)' : 'translateY(-50%) translateX(0)',
-                color: '#6EE783',
                 opacity: emailCopied ? 1 : 0,
-                transition: 'opacity 150ms ease, transform 150ms ease',
-                pointerEvents: 'none',
               }}
             >
               Copied

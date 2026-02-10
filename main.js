@@ -124,11 +124,6 @@ function fetchJson(url) {
 }
 
 function getDownloadUrl(release) {
-  if (Array.isArray(release.assets) && release.assets.length > 0) {
-    const winAsset = release.assets.find((asset) => /\.exe$/i.test(asset.name) || /\.msi$/i.test(asset.name));
-    const selected = winAsset || release.assets[0];
-    return selected?.browser_download_url || '';
-  }
   return release.html_url || '';
 }
 
@@ -387,6 +382,7 @@ app.whenReady().then(() => {
         latestVersion,
         currentVersion,
         url: getDownloadUrl(release),
+        notes: typeof release.body === 'string' ? release.body : '',
       };
     } catch (error) {
       return { error: error?.message || 'Update check failed.' };
