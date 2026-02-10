@@ -44,6 +44,93 @@ function isSetupValid(setupKey, setupIndex) {
 export function SetupProvider({ children }) {
   const [state, setState] = React.useState(initialState);
 
+  const setPrimarySetup = React.useCallback((setupKey) => {
+    setState((prev) => ({ ...prev, primarySetup: setupKey }));
+  }, []);
+
+  const setSecondarySetup = React.useCallback((setupKey) => {
+    setState((prev) => ({ ...prev, secondarySetup: setupKey }));
+  }, []);
+
+  const setComparisonEnabled = React.useCallback((enabled) => {
+    setState((prev) => ({
+      ...prev,
+      comparisonEnabled: enabled,
+    }));
+  }, []);
+
+  const loadSetupFile = React.useCallback(async (setupKey, options = {}) => {
+    if (!setupKey) return;
+    const silent = Boolean(options.silent);
+
+    if (!silent) {
+      setState((prev) => ({
+        ...prev,
+        loadingFiles: { ...prev.loadingFiles, [setupKey]: true },
+      }));
+    }
+
+    const { track, setupName } = splitSetupKey(setupKey);
+    if (!track || !setupName) {
+      if (!silent) {
+        setState((prev) => {
+          const nextLoading = { ...prev.loadingFiles };
+          delete nextLoading[setupKey];
+          return {
+            ...prev,
+            loadingFiles: nextLoading,
+            errors: { ...prev.errors, [setupKey]: 'Invalid setup selection.' },
+          };
+        });
+      }
+      
+      return;
+    }
+
+    try {
+      const raw = await electron.readSetupFile({ track, setupName });
+      const parsed = parseSetup(raw);
+      if (silent && (!raw || !parsed)) {
+        return;
+      }
+      setState((prev) => {
+        const nextState = {
+          ...prev,
+          setupFiles: { ...prev.setupFiles, [setupKey]: { raw, parsed } },
+        };
+
+        if (!silent) {
+          const nextLoading = { ...prev.loadingFiles };
+          delete nextLoading[setupKey];
+          const nextErrors = { ...prev.errors };
+          if (!raw) {
+            nextErrors[setupKey] = 'Unable to load setup file.';
+          } else {
+            delete nextErrors[setupKey];
+          }
+          nextState.loadingFiles = nextLoading;
+          nextState.errors = nextErrors;
+        }
+
+        return nextState;
+      });
+    } catch (error) {
+      console.error('Failed to read setup file', error);
+      if (!silent) {
+        setState((prev) => {
+          const nextLoading = { ...prev.loadingFiles };
+          delete nextLoading[setupKey];
+          
+          return {
+            ...prev,
+            loadingFiles: nextLoading,
+            errors: { ...prev.errors, [setupKey]: 'Failed to read setup file.' },
+          };
+        });
+      }
+    }
+  }, []);
+
   const refreshSetupIndex = React.useCallback(async () => {
     setState((prev) => ({ ...prev, loadingIndex: true }));
     try {
@@ -53,9 +140,13 @@ export function SetupProvider({ children }) {
         electron.getTrackInfo(),
       ]);
 
+      let nextPrimaryKey = '';
+      let nextSecondaryKey = '';
       setState((prev) => {
         const nextPrimary = isSetupValid(prev.primarySetup, setupIndex) ? prev.primarySetup : '';
         const nextSecondary = isSetupValid(prev.secondarySetup, setupIndex) ? prev.secondarySetup : '';
+        nextPrimaryKey = nextPrimary;
+        nextSecondaryKey = nextSecondary;
         return {
           ...prev,
           lmuPath: lmuPath || '',
@@ -66,11 +157,18 @@ export function SetupProvider({ children }) {
           loadingIndex: false,
         };
       });
+
+      if (nextPrimaryKey) {
+        loadSetupFile(nextPrimaryKey, { silent: true });
+      }
+      if (nextSecondaryKey) {
+        loadSetupFile(nextSecondaryKey, { silent: true });
+      }
     } catch (error) {
       console.error('Failed to refresh setup index', error);
       setState((prev) => ({ ...prev, loadingIndex: false }));
     }
-  }, []);
+  }, [loadSetupFile]);
 
   const chooseLmuPath = React.useCallback(async () => {
     const newPath = await electron.setLmuPath();
@@ -88,79 +186,6 @@ export function SetupProvider({ children }) {
 
     refreshSetupIndex();
   }, [refreshSetupIndex]);
-
-  const setPrimarySetup = React.useCallback((setupKey) => {
-    setState((prev) => ({ ...prev, primarySetup: setupKey }));
-  }, []);
-
-  const setSecondarySetup = React.useCallback((setupKey) => {
-    setState((prev) => ({ ...prev, secondarySetup: setupKey }));
-  }, []);
-
-  const setComparisonEnabled = React.useCallback((enabled) => {
-    setState((prev) => ({
-      ...prev,
-      comparisonEnabled: enabled,
-    }));
-  }, []);
-
-  const loadSetupFile = React.useCallback(async (setupKey) => {
-    if (!setupKey) return;
-
-    setState((prev) => ({
-      ...prev,
-      loadingFiles: { ...prev.loadingFiles, [setupKey]: true },
-    }));
-
-    const { track, setupName } = splitSetupKey(setupKey);
-    if (!track || !setupName) {
-      setState((prev) => {
-        const nextLoading = { ...prev.loadingFiles };
-        delete nextLoading[setupKey];
-        return {
-          ...prev,
-          loadingFiles: nextLoading,
-          errors: { ...prev.errors, [setupKey]: 'Invalid setup selection.' },
-        };
-      });
-      
-      return;
-    }
-
-    try {
-      const raw = await electron.readSetupFile({ track, setupName });
-      const parsed = parseSetup(raw);
-      setState((prev) => {
-        const nextLoading = { ...prev.loadingFiles };
-        delete nextLoading[setupKey];
-        const nextErrors = { ...prev.errors };
-        if (!raw) {
-          nextErrors[setupKey] = 'Unable to load setup file.';
-        } else {
-          delete nextErrors[setupKey];
-        }
-
-        return {
-          ...prev,
-          setupFiles: { ...prev.setupFiles, [setupKey]: { raw, parsed } },
-          loadingFiles: nextLoading,
-          errors: nextErrors,
-        };
-      });
-    } catch (error) {
-      console.error('Failed to read setup file', error);
-      setState((prev) => {
-        const nextLoading = { ...prev.loadingFiles };
-        delete nextLoading[setupKey];
-        
-        return {
-          ...prev,
-          loadingFiles: nextLoading,
-          errors: { ...prev.errors, [setupKey]: 'Failed to read setup file.' },
-        };
-      });
-    }
-  }, []);
 
   React.useEffect(() => {
     refreshSetupIndex();
