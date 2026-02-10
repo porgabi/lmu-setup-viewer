@@ -72,6 +72,13 @@ function buildMenuItems(setupIndex, trackInfo, excludeValue, showIcons, classOrd
   return items;
 }
 
+function findSetupItemIndex(items, setupKey) {
+  if (!setupKey) return 0;
+  const index = items.findIndex((item) => item?.props?.value === setupKey);
+  if (index === -1) return 0;
+  return Math.max(index, 0);
+}
+
 export default function SetupSelector() {
   const {
     lmuPath,
@@ -142,6 +149,14 @@ export default function SetupSelector() {
   const secondaryMenuItems = React.useMemo(
     () => buildMenuItems(setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder),
     [setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder]
+  );
+  const primaryScrollIndex = React.useMemo(
+    () => findSetupItemIndex(primaryMenuItems, primarySetup),
+    [primaryMenuItems, primarySetup]
+  );
+  const secondaryScrollIndex = React.useMemo(
+    () => findSetupItemIndex(secondaryMenuItems, secondarySetup),
+    [secondaryMenuItems, secondarySetup]
   );
   const showPathBanner = !lmuPath;
 
@@ -254,7 +269,13 @@ export default function SetupSelector() {
             onChange={handlePrimaryChange}
             onOpen={() => setPrimaryMenuOpen(true)}
             onClose={() => setPrimaryMenuOpen(false)}
-            MenuProps={menuProps}
+            MenuProps={{
+              ...menuProps,
+              MenuListProps: {
+                ...menuProps.MenuListProps,
+                initialScrollIndex: primaryScrollIndex,
+              },
+            }}
             renderValue={(value) => renderSetupValue(value, setupIndex, trackInfo)}
           >
             {primaryMenuItems}
@@ -302,7 +323,13 @@ export default function SetupSelector() {
             onChange={handleSecondaryChange}
             onOpen={() => setSecondaryMenuOpen(true)}
             onClose={() => setSecondaryMenuOpen(false)}
-            MenuProps={menuProps}
+            MenuProps={{
+              ...menuProps,
+              MenuListProps: {
+                ...menuProps.MenuListProps,
+                initialScrollIndex: secondaryScrollIndex,
+              },
+            }}
             disabled={!comparisonEnabled}
             renderValue={(value) => renderSetupValue(value, setupIndex, trackInfo)}
           >
