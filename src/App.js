@@ -40,7 +40,7 @@ function TabStatusLabel({ label, count, showStatus }) {
 
   const hasDiffs = count > 0;
   const badgeText = count > 99 ? '99+' : String(count);
-  const tooltipTitle = hasDiffs ? `${count} differences in section` : 'No differences in section';
+  const tooltipTitle = hasDiffs ? `${count} difference(s) in section` : 'No difference(s) in section';
 
   return (
     <Box component="span" sx={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
