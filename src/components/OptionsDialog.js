@@ -33,6 +33,7 @@ export default function OptionsDialog({ open, onClose }) {
   const [showChangelog, setShowChangelog] = React.useState(false);
   const [currentVersion, setCurrentVersion] = React.useState(null);
   const [platform, setPlatform] = React.useState(null);
+  const launchUpdateCheckRef = React.useRef(false);
 
   React.useEffect(() => {
     if (!open) return;
@@ -60,6 +61,38 @@ export default function OptionsDialog({ open, onClose }) {
       cancelled = true;
     };
   }, [open, settings]);
+
+  React.useEffect(() => {
+    if (loadingSettings) return;
+    if (!settings.checkUpdatesOnLaunch) return;
+    if (launchUpdateCheckRef.current) return;
+
+    launchUpdateCheckRef.current = true;
+
+    const runCheck = async () => {
+      if (checkingUpdates) return;
+      setCheckingUpdates(true);
+      setShowChangelog(false);
+      try {
+        const result = await electron.checkForUpdates();
+        if (!result || result.error || !result.hasUpdate) return;
+        setUpdateInfo({
+          status: 'available',
+          latestVersion: result.latestVersion,
+          currentVersion: result.currentVersion,
+          url: result.url,
+          notes: result.notes,
+        });
+        setUpdateDialogOpen(true);
+      } catch (error) {
+        console.warn('Update check on launch failed', error);
+      } finally {
+        setCheckingUpdates(false);
+      }
+    };
+
+    runCheck();
+  }, [checkingUpdates, loadingSettings, settings.checkUpdatesOnLaunch]);
 
   React.useEffect(() => {
     if (!open) return undefined;
