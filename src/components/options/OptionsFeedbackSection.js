@@ -116,7 +116,18 @@ export default function OptionsFeedbackSection({ feedbackEmail }) {
         size="small"
         startIcon={<FavoriteBorderIcon />}
         onClick={handleDonationClick}
-        sx={{ mt: 1 }}
+        sx={{
+          mt: 1,
+          borderColor: 'rgba(205, 70, 70, 0.7)',
+          color: '#f2f4f7',
+          boxShadow: '0 0 12px rgba(205, 70, 70, 0.45)',
+          backgroundColor: 'rgba(18, 22, 30, 0.55)',
+          '&:hover': {
+            borderColor: 'rgba(205, 70, 70, 0.95)',
+            boxShadow: '0 0 14px rgba(205, 70, 70, 0.6)',
+            backgroundColor: 'rgba(18, 22, 30, 0.7)',
+          },
+        }}
       >
         Support on Ko-fi
       </Button>
