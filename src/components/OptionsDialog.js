@@ -1,5 +1,13 @@
 import React from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from '@mui/material';
 import { useSettings } from '../state/SettingsContext';
 import { useSetupContext } from '../state/SetupContext';
 import { electron } from '../services/electron';
@@ -22,6 +30,7 @@ export default function OptionsDialog({ open, onClose }) {
   const [checkingUpdates, setCheckingUpdates] = React.useState(false);
   const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
   const [updateInfo, setUpdateInfo] = React.useState(null);
+  const [showChangelog, setShowChangelog] = React.useState(false);
   const [currentVersion, setCurrentVersion] = React.useState(null);
   const [platform, setPlatform] = React.useState(null);
 
@@ -99,6 +108,7 @@ export default function OptionsDialog({ open, onClose }) {
     setCheckingUpdates(true);
     const result = await electron.checkForUpdates();
     setCheckingUpdates(false);
+    setShowChangelog(false);
 
     if (!result) {
       setUpdateInfo({ status: 'error', message: 'Update check failed.' });
@@ -118,6 +128,7 @@ export default function OptionsDialog({ open, onClose }) {
         latestVersion: result.latestVersion,
         currentVersion: result.currentVersion,
         url: result.url,
+        notes: result.notes,
       });
       setUpdateDialogOpen(true);
       return;
@@ -139,6 +150,9 @@ export default function OptionsDialog({ open, onClose }) {
     }
     window.open(updateInfo.url, '_blank', 'noopener');
   };
+
+  const updateNotes = updateInfo?.notes?.trim() || '';
+  const showChangelogToggle = updateInfo?.status === 'available' && updateNotes.length > 0;
 
   return (
     <>
@@ -213,15 +227,43 @@ export default function OptionsDialog({ open, onClose }) {
           {updateInfo?.status === 'available'
             ? 'Update available'
             : updateInfo?.status === 'upToDate'
-              ? 'You are up to date'
+              ? 'App is up to date'
               : 'Update check failed'}
         </DialogTitle>
         <DialogContent dividers>
           {updateInfo?.status === 'available' ? (
-            <Typography variant="body2" color="text.secondary">
-              A newer version ({updateInfo.latestVersion}) is available. You are currently on{' '}
-              {updateInfo.currentVersion}.
-            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+              <Typography variant="body2" color="text.secondary">
+                A newer version ({updateInfo.latestVersion}) is available. Current version is{' '}
+                {updateInfo.currentVersion}.
+              </Typography>
+              {showChangelogToggle ? (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => setShowChangelog((prev) => !prev)}
+                  sx={{ alignSelf: 'flex-start' }}
+                >
+                  {showChangelog ? 'Hide release notes' : 'Show release notes'}
+                </Button>
+              ) : null}
+              {showChangelog ? (
+                <Box
+                  sx={{
+                    p: 1.5,
+                    borderRadius: 1.5,
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    maxHeight: 220,
+                    overflowY: 'auto',
+                  }}
+                >
+                  <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
+                    {updateNotes}
+                  </Typography>
+                </Box>
+              ) : null}
+            </Box>
           ) : null}
           {updateInfo?.status === 'upToDate' ? (
             <Typography variant="body2" color="text.secondary">
