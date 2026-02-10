@@ -10,9 +10,10 @@ app.commandLine.appendSwitch('disable-features', 'OverlayScrollbar');
 
 const SETTINGS_RELATIVE_PATH = path.join('UserData', 'player', 'Settings');
 const UPDATE_REPO = {
-  owner: 'github-owner',
-  repo: 'repo-link',
+  owner: 'porgabi',
+  repo: 'lmu-setup-viewer',
 };
+
 let tray = null;
 let mainWindow = null;
 let isQuitting = false;
