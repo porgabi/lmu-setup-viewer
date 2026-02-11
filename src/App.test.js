@@ -3,18 +3,21 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import App from './App';
 import { SetupProvider } from './state/SetupContext';
+import { SettingsProvider } from './state/SettingsContext';
 import theme from './theme/theme';
 
 test('renders setup selector', () => {
   render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <SetupProvider>
-        <App />
-      </SetupProvider>
+      <SettingsProvider>
+        <SetupProvider>
+          <App />
+        </SetupProvider>
+      </SettingsProvider>
     </ThemeProvider>
   );
 
-  const hint = screen.getByText(/select setups to view\/compare/i);
-  expect(hint).toBeInTheDocument();
+  const banner = screen.getByText(/lmu folder not set/i);
+  expect(banner).toBeInTheDocument();
 });

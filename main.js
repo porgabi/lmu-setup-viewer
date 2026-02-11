@@ -208,6 +208,7 @@ const DEFAULT_SETTINGS = {
   diffHighlightEnabled: true,
   dropdownSortOrder: ['hy', 'lmgt3', 'lmp2_elms', 'lmp2_wec', 'gte', 'lmp3'],
   dropdownListSize: 'short',
+  setupTableTextSize: 'compact',
   checkUpdatesOnLaunch: false,
   minimizeToTrayOnClose: false,
   startMinimized: false,

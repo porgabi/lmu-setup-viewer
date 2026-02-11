@@ -7,10 +7,11 @@ import { applySettingLabels } from '../domain/settingLabels';
 import { resolveCarInfo } from '../domain/carInfo';
 import { getCategoryDiffMap, getCompoundColor, getDisplayValue } from '../domain/setupDiff';
 import { buildGroupedSections } from '../domain/setupGrouping';
+import { getSetupTableTextSizeConfig } from '../domain/setupTableTextSize';
 import SetupHeading from './SetupHeading';
 import { useSettings } from '../state/SettingsContext';
 
-function EntriesTable({ entries, sectionName, diffMap }) {
+function EntriesTable({ entries, sectionName, diffMap, rowFontSize }) {
   const gridTemplateColumns = 'minmax(0, 1.6fr) minmax(0, 1fr)';
   const rowCellSx = {
     py: 0.5,
@@ -43,7 +44,7 @@ function EntriesTable({ entries, sectionName, diffMap }) {
   const buildKey = (entryKey) => `${sectionName}::${entryKey}`;
   
   return (
-    <Box sx={{ fontSize: '1.0rem', fontVariantNumeric: 'tabular-nums' }}>
+    <Box sx={{ fontSize: rowFontSize, fontVariantNumeric: 'tabular-nums' }}>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         {entries.map((entry, index) => (
           <Box
@@ -77,7 +78,7 @@ function EntriesTable({ entries, sectionName, diffMap }) {
   );
 }
 
-function SectionBlock({ section, diffMap, noMargin }) {
+function SectionBlock({ section, diffMap, noMargin, textSizeConfig }) {
   const hasEntries = section.entries.length > 0;
   const hasLines = section.lines.length > 0;
   const content = hasLines ? section.lines.join('\n') : '';
@@ -96,12 +97,23 @@ function SectionBlock({ section, diffMap, noMargin }) {
     >
       <Typography
         variant="subtitle1"
-        sx={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', mb: 1 }}
+        sx={{
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em',
+          mb: 1,
+          fontSize: textSizeConfig.sectionHeaderFontSize,
+        }}
       >
         {section.name}
       </Typography>
       {hasEntries ? (
-        <EntriesTable entries={section.entries} sectionName={section.name} diffMap={diffMap} />
+        <EntriesTable
+          entries={section.entries}
+          sectionName={section.name}
+          diffMap={diffMap}
+          rowFontSize={textSizeConfig.rowFontSize}
+        />
       ) : null}
       {hasLines ? (
         <Box
@@ -126,10 +138,15 @@ function SectionBlock({ section, diffMap, noMargin }) {
   );
 }
 
-function renderSections(sections, diffMap, layout, setupKey) {
+function renderSections(sections, diffMap, layout, setupKey, textSizeConfig) {
   if (!layout?.single?.length) {
     return sections.map((section) => (
-      <SectionBlock key={`${setupKey}-${section.name}`} section={section} diffMap={diffMap} />
+      <SectionBlock
+        key={`${setupKey}-${section.name}`}
+        section={section}
+        diffMap={diffMap}
+        textSizeConfig={textSizeConfig}
+      />
     ));
   }
 
@@ -174,18 +191,24 @@ function renderSections(sections, diffMap, layout, setupKey) {
               section={section}
               diffMap={diffMap}
               noMargin
+              textSizeConfig={textSizeConfig}
             />
           ))}
         </Box>
       ))}
       {leftovers.map((section) => (
-        <SectionBlock key={`${setupKey}-${section.name}`} section={section} diffMap={diffMap} />
+        <SectionBlock
+          key={`${setupKey}-${section.name}`}
+          section={section}
+          diffMap={diffMap}
+          textSizeConfig={textSizeConfig}
+        />
       ))}
     </>
   );
 }
 
-function SetupColumn({ title, setupKey, data, loading, error, category, trackInfo, layout }) {
+function SetupColumn({ title, setupKey, data, loading, error, category, trackInfo, layout, textSizeConfig }) {
   const rawCarName = data?.parsed?.metadata?.vehicleClass;
   const carInfo = resolveCarInfo(rawCarName);
   const heading = (
@@ -195,7 +218,14 @@ function SetupColumn({ title, setupKey, data, loading, error, category, trackInf
   if (!setupKey) {
     return (
       <Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, letterSpacing: '0.08em' }}>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            fontWeight: 600,
+            letterSpacing: '0.08em',
+            fontSize: textSizeConfig.columnHeaderFontSize,
+          }}
+        >
           {heading}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -208,7 +238,14 @@ function SetupColumn({ title, setupKey, data, loading, error, category, trackInf
   if (loading) {
     return (
       <Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, letterSpacing: '0.08em' }}>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            fontWeight: 600,
+            letterSpacing: '0.08em',
+            fontSize: textSizeConfig.columnHeaderFontSize,
+          }}
+        >
           {heading}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -221,7 +258,14 @@ function SetupColumn({ title, setupKey, data, loading, error, category, trackInf
   if (error) {
     return (
       <Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, letterSpacing: '0.08em' }}>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            fontWeight: 600,
+            letterSpacing: '0.08em',
+            fontSize: textSizeConfig.columnHeaderFontSize,
+          }}
+        >
           {heading}
         </Typography>
         <Typography variant="body2" color="error">
@@ -235,7 +279,14 @@ function SetupColumn({ title, setupKey, data, loading, error, category, trackInf
   if (!parsed) {
     return (
       <Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, letterSpacing: '0.08em' }}>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            fontWeight: 600,
+            letterSpacing: '0.08em',
+            fontSize: textSizeConfig.columnHeaderFontSize,
+          }}
+        >
           {heading}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -260,7 +311,15 @@ function SetupColumn({ title, setupKey, data, loading, error, category, trackInf
 
   return (
     <Box sx={{ minWidth: 0 }}>
-      <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1, letterSpacing: '0.08em' }}>
+      <Typography
+        variant="subtitle1"
+        sx={{
+          fontWeight: 600,
+          mb: 1,
+          letterSpacing: '0.08em',
+          fontSize: textSizeConfig.columnHeaderFontSize,
+        }}
+      >
         {heading}
       </Typography>
       {labeledSections.length === 0 ? (
@@ -269,7 +328,7 @@ function SetupColumn({ title, setupKey, data, loading, error, category, trackInf
           {availableSections.length ? ` Available sections: ${availableSections.join(', ')}` : ''}
         </Typography>
       ) : (
-        renderSections(labeledSections, category.diffMap, layout, setupKey)
+        renderSections(labeledSections, category.diffMap, layout, setupKey, textSizeConfig)
       )}
     </Box>
   );
@@ -286,6 +345,7 @@ export default function SetupSectionPanel({ categoryKey }) {
     errors,
   } = useSetupContext();
   const { settings } = useSettings();
+  const textSizeConfig = getSetupTableTextSizeConfig(settings.setupTableTextSize);
 
   const category = getSetupCategory(categoryKey);
   const columns = [
@@ -329,6 +389,7 @@ export default function SetupSectionPanel({ categoryKey }) {
             category={categoryWithDiff}
             trackInfo={trackInfo}
             layout={layout}
+            textSizeConfig={textSizeConfig}
           />
         ))}
       </Box>

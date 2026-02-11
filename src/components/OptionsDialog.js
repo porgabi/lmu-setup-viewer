@@ -16,13 +16,14 @@ import OptionsFeedbackSection from './options/OptionsFeedbackSection';
 import OptionsListSizeSection from './options/OptionsListSizeSection';
 import OptionsLmuFolderSection from './options/OptionsLmuFolderSection';
 import OptionsSortingOrderSection from './options/OptionsSortingOrderSection';
+import OptionsSetupTableTextSizeSection from './options/OptionsSetupTableTextSizeSection';
 import OptionsUpdatesOnLaunchSection from './options/OptionsUpdatesOnLaunchSection';
 import OptionsUpdatesSection from './options/OptionsUpdatesSection';
 import OptionsWindowSection from './options/OptionsWindowSection';
 import OptionsZoomSection from './options/OptionsZoomSection';
 
 export default function OptionsDialog({ open, onClose }) {
-  const feedbackEmail = 'support@example.com';
+  const feedbackEmail = 'lmu.setupviewer@gmail.com';
   const { settings, loadingSettings, updateSettings } = useSettings();
   const { lmuPath, chooseLmuPath } = useSetupContext();
   const [draft, setDraft] = React.useState(settings);
@@ -228,6 +229,12 @@ export default function OptionsDialog({ open, onClose }) {
                 setDraft((prev) => ({ ...prev, zoomFactor: nextZoom }));
                 updateSettings({ zoomFactor: nextZoom });
               }}
+            />
+            <OptionsSetupTableTextSizeSection
+              value={draft.setupTableTextSize}
+              onChange={(event) =>
+                setDraft((prev) => ({ ...prev, setupTableTextSize: event.target.value }))
+              }
             />
             <OptionsUpdatesSection
               onCheckUpdates={handleCheckUpdates}
