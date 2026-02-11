@@ -166,7 +166,9 @@ export default function SetupHeading({ title, setupKey, trackInfo, carInfo }) {
             aria-label={`${countryCode} flag`}
           />
         ) : null}
-        <Box component="span">{label}</Box>
+        <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', mt: '2px' }}>
+          {label}
+        </Box>
       </Box>
     </Box>
   );
