@@ -23,7 +23,7 @@ import OptionsDialog from './OptionsDialog';
 import { useSettings } from '../state/SettingsContext';
 import { electron } from '../services/electron';
 
-function buildMenuItems(setupIndex, trackInfo, excludeValue, showIcons, classOrder) {
+function buildMenu(setupIndex, trackInfo, excludeValue, showIcons, classOrder) {
   const sections = buildSetupMenuData(setupIndex, trackInfo, excludeValue, classOrder);
   const items = [];
 
@@ -69,7 +69,21 @@ function buildMenuItems(setupIndex, trackInfo, excludeValue, showIcons, classOrd
     );
   }
 
-  return items;
+  return { items, sections };
+}
+
+function buildSectionIndexItems(sections) {
+  let offset = 0;
+  return sections.map((section) => {
+    const entry = {
+      track: section.track,
+      trackLabel: section.trackLabel,
+      countryCode: section.countryCode,
+      index: offset,
+    };
+    offset += 1 + section.items.length;
+    return entry;
+  });
 }
 
 function findSetupItemIndex(items, setupKey) {
@@ -97,6 +111,12 @@ export default function SetupSelector() {
   const { settings, updateSettings } = useSettings();
   const [primaryMenuOpen, setPrimaryMenuOpen] = React.useState(false);
   const [secondaryMenuOpen, setSecondaryMenuOpen] = React.useState(false);
+  const primaryControlRef = React.useRef(null);
+  const secondaryControlRef = React.useRef(null);
+  const primarySelectRef = React.useRef(null);
+  const secondarySelectRef = React.useRef(null);
+  const [primaryMenuWidth, setPrimaryMenuWidth] = React.useState(null);
+  const [secondaryMenuWidth, setSecondaryMenuWidth] = React.useState(null);
   const [optionsOpen, setOptionsOpen] = React.useState(false);
 
   const handlePrimaryChange = (event) => {
@@ -120,36 +140,75 @@ export default function SetupSelector() {
     long: 800,
   };
   const menuMaxHeight = menuHeightMap[settings.dropdownListSize] || menuHeightMap.short;
-  const menuProps = {
-    disableScrollLock: true,
-    PaperProps: {
-      sx: {
-        backgroundColor: 'rgba(8, 10, 14, 0.96)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        backdropFilter: 'blur(6px)',
-        overflow: 'hidden',
-        '& .MuiMenuItem-root': {
-          fontSize: '0.95rem',
+  const buildMenuProps = React.useCallback(
+    (menuWidth) => {
+      const widthValue = menuWidth ? `${menuWidth}px` : undefined;
+      return {
+      disableScrollLock: true,
+      PaperProps: {
+        sx: {
+          backgroundColor: 'rgba(8, 10, 14, 0.96)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          backdropFilter: 'blur(6px)',
+          overflow: 'hidden',
+          width: widthValue,
+          minWidth: widthValue,
+          maxWidth: widthValue,
+          '& .MuiMenuItem-root': {
+            fontSize: '0.95rem',
+          },
         },
       },
+      MenuListProps: {
+        component: VirtualizedMenuList,
+        maxHeight: menuMaxHeight,
+        rowHeight: 40,
+        overscan: 5,
+      },
+    };
     },
-    MenuListProps: {
-      component: VirtualizedMenuList,
-      maxHeight: menuMaxHeight,
-      rowHeight: 40,
-      overscan: 5,
-    },
-  };
+    [menuMaxHeight]
+  );
+
+  React.useLayoutEffect(() => {
+    if (!primaryControlRef.current || typeof ResizeObserver === 'undefined') return undefined;
+    const updateWidth = () => {
+      const width = primaryControlRef.current?.getBoundingClientRect?.().width;
+      if (width) {
+        setPrimaryMenuWidth(Math.round(width));
+      }
+    };
+    updateWidth();
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(primaryControlRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  React.useLayoutEffect(() => {
+    if (!secondaryControlRef.current || typeof ResizeObserver === 'undefined') return undefined;
+    const updateWidth = () => {
+      const width = secondaryControlRef.current?.getBoundingClientRect?.().width;
+      if (width) {
+        setSecondaryMenuWidth(Math.round(width));
+      }
+    };
+    updateWidth();
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(secondaryControlRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const gamePath = lmuPath || '(not set)';
-  const primaryMenuItems = React.useMemo(
-    () => buildMenuItems(setupIndex, trackInfo, secondarySetup, primaryMenuOpen, classOrder),
+  const primaryMenu = React.useMemo(
+    () => buildMenu(setupIndex, trackInfo, secondarySetup, primaryMenuOpen, classOrder),
     [setupIndex, trackInfo, secondarySetup, primaryMenuOpen, classOrder]
   );
-  const secondaryMenuItems = React.useMemo(
-    () => buildMenuItems(setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder),
+  const secondaryMenu = React.useMemo(
+    () => buildMenu(setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder),
     [setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder]
   );
+  const primaryMenuItems = primaryMenu.items;
+  const secondaryMenuItems = secondaryMenu.items;
   const primaryScrollIndex = React.useMemo(
     () => findSetupItemIndex(primaryMenuItems, primarySetup),
     [primaryMenuItems, primarySetup]
@@ -157,6 +216,14 @@ export default function SetupSelector() {
   const secondaryScrollIndex = React.useMemo(
     () => findSetupItemIndex(secondaryMenuItems, secondarySetup),
     [secondaryMenuItems, secondarySetup]
+  );
+  const primarySectionIndexItems = React.useMemo(
+    () => buildSectionIndexItems(primaryMenu.sections),
+    [primaryMenu.sections]
+  );
+  const secondarySectionIndexItems = React.useMemo(
+    () => buildSectionIndexItems(secondaryMenu.sections),
+    [secondaryMenu.sections]
   );
   const showPathBanner = !lmuPath;
 
@@ -243,6 +310,7 @@ export default function SetupSelector() {
           </span>
         </Tooltip>
         <FormControl
+          ref={primaryControlRef}
           sx={{
             minWidth: 260,
             flex: '1 1 280px',
@@ -267,16 +335,27 @@ export default function SetupSelector() {
             value={primarySetup}
             label="Setup"
             onChange={handlePrimaryChange}
-            onOpen={() => setPrimaryMenuOpen(true)}
-            onClose={() => setPrimaryMenuOpen(false)}
-            MenuProps={{
-              ...menuProps,
-              MenuListProps: {
-                ...menuProps.MenuListProps,
-                initialScrollIndex: primaryScrollIndex,
-              },
+            onOpen={() => {
+              setPrimaryMenuOpen(true);
+              const width = primarySelectRef.current?.getBoundingClientRect?.().width;
+              if (width) {
+                setPrimaryMenuWidth(Math.round(width));
+              }
             }}
+            onClose={() => setPrimaryMenuOpen(false)}
+            MenuProps={(() => {
+              const menuProps = buildMenuProps(primaryMenuWidth);
+              return {
+                ...menuProps,
+                MenuListProps: {
+                  ...menuProps.MenuListProps,
+                  initialScrollIndex: primaryScrollIndex,
+                  sectionIndexItems: primarySectionIndexItems,
+                },
+              };
+            })()}
             renderValue={(value) => renderSetupValue(value, setupIndex, trackInfo)}
+            inputRef={primarySelectRef}
           >
             {primaryMenuItems}
           </Select>
@@ -297,6 +376,7 @@ export default function SetupSelector() {
           sx={{ ml: 0 }}
         />
         <FormControl
+          ref={secondaryControlRef}
           sx={{
             minWidth: 260,
             flex: '1 1 280px',
@@ -321,17 +401,28 @@ export default function SetupSelector() {
             value={secondarySetup}
             label="Compared setup"
             onChange={handleSecondaryChange}
-            onOpen={() => setSecondaryMenuOpen(true)}
-            onClose={() => setSecondaryMenuOpen(false)}
-            MenuProps={{
-              ...menuProps,
-              MenuListProps: {
-                ...menuProps.MenuListProps,
-                initialScrollIndex: secondaryScrollIndex,
-              },
+            onOpen={() => {
+              setSecondaryMenuOpen(true);
+              const width = secondarySelectRef.current?.getBoundingClientRect?.().width;
+              if (width) {
+                setSecondaryMenuWidth(Math.round(width));
+              }
             }}
+            onClose={() => setSecondaryMenuOpen(false)}
+            MenuProps={(() => {
+              const menuProps = buildMenuProps(secondaryMenuWidth);
+              return {
+                ...menuProps,
+                MenuListProps: {
+                  ...menuProps.MenuListProps,
+                  initialScrollIndex: secondaryScrollIndex,
+                  sectionIndexItems: secondarySectionIndexItems,
+                },
+              };
+            })()}
             disabled={!comparisonEnabled}
             renderValue={(value) => renderSetupValue(value, setupIndex, trackInfo)}
+            inputRef={secondarySelectRef}
           >
             {secondaryMenuItems}
           </Select>

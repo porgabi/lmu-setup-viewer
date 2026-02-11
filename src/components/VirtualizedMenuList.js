@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, ButtonBase, Typography } from '@mui/material';
+import ReactCountryFlag from 'react-country-flag';
 
 const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props, ref) {
   const {
@@ -8,6 +9,7 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
     rowHeight = 40,
     overscan = 4,
     initialScrollIndex,
+    sectionIndexItems = [],
     sx,
     ...rest
   } = props;
@@ -26,6 +28,22 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
   const startIndex = Math.max(0, Math.floor(scrollTop / rowHeight) - overscan);
   const endIndex = Math.min(items.length, startIndex + visibleCount + overscan * 2);
   const offsetY = startIndex * rowHeight;
+  const hasSectionIndex = sectionIndexItems.length > 0;
+
+  const scrollToIndex = React.useCallback(
+    (targetIndex) => {
+      const safeTarget = Math.min(
+        Math.max(Number(targetIndex) || 0, 0),
+        Math.max(items.length - 1, 0)
+      );
+      const nextScrollTop = safeTarget * rowHeight;
+      setScrollTop(nextScrollTop);
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTop = nextScrollTop;
+      }
+    },
+    [items.length, rowHeight]
+  );
 
   React.useEffect(() => {
     hasAppliedInitialScroll.current = false;
@@ -34,20 +52,120 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
   React.useEffect(() => {
     if (hasAppliedInitialScroll.current) return;
     if (initialScrollIndex == null || Number.isNaN(initialScrollIndex)) return;
-    const target = Math.min(
-      Math.max(Number(initialScrollIndex), 0),
-      Math.max(items.length - 1, 0)
-    );
-    const nextScrollTop = target * rowHeight;
-    setScrollTop(nextScrollTop);
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop = nextScrollTop;
-    }
+    scrollToIndex(initialScrollIndex);
     hasAppliedInitialScroll.current = true;
-  }, [initialScrollIndex, items.length, rowHeight]);
+  }, [initialScrollIndex, items.length, scrollToIndex]);
+
+  const sectionBar = hasSectionIndex ? (
+    <Box
+      sx={{
+        px: 1,
+        py: 0.75,
+        mt: 0.5,
+        minHeight: 38,
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        backgroundColor: 'rgba(8, 10, 14, 0.95)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 0.75,
+        width: '100%',
+        minWidth: 0,
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+        overflowX: 'auto',
+        overflowY: 'hidden',
+        flexWrap: 'nowrap',
+        scrollbarWidth: 'thin',
+        '&::-webkit-scrollbar': {
+          height: 6,
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: 'rgba(255, 255, 255, 0.2)',
+          borderRadius: 999,
+        },
+      }}
+      onWheel={(event) => {
+        if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+          return;
+        }
+        event.preventDefault();
+        event.currentTarget.scrollLeft += event.deltaY;
+      }}
+    >
+      {sectionIndexItems.map((section) => (
+        <ButtonBase
+          key={`section-${section.track}`}
+          onClick={() => scrollToIndex(section.index)}
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 0.5,
+            px: 1,
+            py: 0.4,
+            borderRadius: 999,
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            backgroundColor: 'rgba(255, 255, 255, 0.04)',
+            whiteSpace: 'nowrap',
+            flex: '0 0 auto',
+            '&:hover': {
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            },
+          }}
+        >
+          {section.countryCode ? (
+            <ReactCountryFlag
+              svg
+              countryCode={section.countryCode}
+              style={{ width: '1em', height: '1em', display: 'block' }}
+              aria-label={`${section.countryCode} flag`}
+            />
+          ) : null}
+          <Typography
+            variant="caption"
+            sx={{ fontWeight: 600, letterSpacing: '0.02em', fontSize: '0.85rem' }}
+          >
+            {section.trackLabel}
+          </Typography>
+        </ButtonBase>
+      ))}
+    </Box>
+  ) : null;
 
   if (items.length <= visibleCount + overscan * 2) {
     return (
+      <Box
+        sx={[
+          { maxHeight, display: 'flex', flexDirection: 'column', width: '100%', minWidth: 0 },
+          sx,
+        ]}
+      >
+        {sectionBar}
+        <Box
+          ref={(node) => {
+            scrollContainerRef.current = node;
+            if (typeof ref === 'function') {
+              ref(node);
+            } else if (ref) {
+              ref.current = node;
+            }
+          }}
+          sx={{ flex: 1, overflowY: 'auto', width: '100%', minWidth: 0 }}
+          {...rest}
+        >
+          {children}
+        </Box>
+      </Box>
+    );
+  }
+
+  return (
+    <Box
+      sx={[
+        { maxHeight, display: 'flex', flexDirection: 'column', width: '100%', minWidth: 0 },
+        sx,
+      ]}
+    >
+      {sectionBar}
       <Box
         ref={(node) => {
           scrollContainerRef.current = node;
@@ -57,38 +175,21 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
             ref.current = node;
           }
         }}
-        sx={[{ maxHeight, overflowY: 'auto' }, sx]}
+        onScroll={handleScroll}
+        sx={{ flex: 1, overflowY: 'auto', width: '100%', minWidth: 0 }}
         {...rest}
       >
-        {children}
-      </Box>
-    );
-  }
-
-  return (
-    <Box
-      ref={(node) => {
-        scrollContainerRef.current = node;
-        if (typeof ref === 'function') {
-          ref(node);
-        } else if (ref) {
-          ref.current = node;
-        }
-      }}
-      onScroll={handleScroll}
-      sx={[{ maxHeight, overflowY: 'auto' }, sx]}
-      {...rest}
-    >
-      <Box sx={{ height: totalHeight, position: 'relative' }}>
-        <Box sx={{ position: 'absolute', top: offsetY, left: 0, right: 0 }}>
-          {items.slice(startIndex, endIndex).map((child, index) => (
-            <Box
-              key={child.key ?? `${startIndex + index}`}
-              sx={{ height: rowHeight, display: 'flex', alignItems: 'center', width: '100%' }}
-            >
-              {child}
-            </Box>
-          ))}
+        <Box sx={{ height: totalHeight, position: 'relative' }}>
+          <Box sx={{ position: 'absolute', top: offsetY, left: 0, right: 0 }}>
+            {items.slice(startIndex, endIndex).map((child, index) => (
+              <Box
+                key={child.key ?? `${startIndex + index}`}
+                sx={{ height: rowHeight, display: 'flex', alignItems: 'center', width: '100%' }}
+              >
+                {child}
+              </Box>
+            ))}
+          </Box>
         </Box>
       </Box>
     </Box>
