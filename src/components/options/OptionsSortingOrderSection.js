@@ -14,6 +14,7 @@ import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } 
 import { CSS } from '@dnd-kit/utilities';
 import IconSlot from '../IconSlot';
 import { getAssetPath } from '../../domain/assetPaths';
+import { hintTextSx } from './hintTextStyles';
 
 function SortableItem({ id, label, iconSrc }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
@@ -81,7 +82,11 @@ export default function OptionsSortingOrderSection({ sortOrder, onSortOrderChang
           </SortableContext>
         </DndContext>
       </Paper>
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ ...hintTextSx, mt: 0.5, display: 'block' }}
+      >
         Drag and drop to change the order of setups in the setup selectors.
       </Typography>
     </Box>

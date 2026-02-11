@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { setupTableTextSizeOptions } from '../../domain/setupTableTextSize';
+import { hintTextSx } from './hintTextStyles';
 
 export default function OptionsSetupTableTextSizeSection({ value, onChange }) {
   return (
@@ -26,7 +27,11 @@ export default function OptionsSetupTableTextSizeSection({ value, onChange }) {
           ))}
         </Select>
       </FormControl>
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ ...hintTextSx, mt: 0.5, display: 'block' }}
+      >
         Adjust font size in setup view tables.
       </Typography>
     </Box>

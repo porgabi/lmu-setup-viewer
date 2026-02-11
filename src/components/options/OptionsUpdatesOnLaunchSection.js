@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, FormControlLabel, Switch, Typography } from '@mui/material';
+import { hintTextSx } from './hintTextStyles';
 
 export default function OptionsUpdatesOnLaunchSection({
   checkUpdates,
@@ -26,7 +27,11 @@ export default function OptionsUpdatesOnLaunchSection({
             control={<Switch checked={startOnLogin} onChange={onStartOnLoginChange} />}
             label="Start with Windows"
           />
-          <Typography variant="caption" color="text.secondary" sx={{ ml: 0, display: 'block' }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ ...hintTextSx, ml: 0, display: 'block' }}
+          >
             Note: the executable must stay in the same location for this to keep working.
           </Typography>
         </Box>

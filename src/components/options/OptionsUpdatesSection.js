@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { statusTextSx } from './statusTextStyles';
+import { hintTextSx } from './hintTextStyles';
 
 export default function OptionsUpdatesSection({ onCheckUpdates, checking, currentVersion }) {
   const [showChecking, setShowChecking] = React.useState(false);
@@ -50,7 +51,11 @@ export default function OptionsUpdatesSection({ onCheckUpdates, checking, curren
           Check for updates
         </Button>
       </Box>
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ ...hintTextSx, mt: 0.5, display: 'block' }}
+      >
         Current version: {currentVersion || 'unknown'}
       </Typography>
     </Box>

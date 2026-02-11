@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, IconButton, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { hintTextSx } from './hintTextStyles';
 
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 2.5;
@@ -46,7 +47,11 @@ export default function OptionsZoomSection({ zoomFactor, onZoomChange }) {
           <AddIcon fontSize="small" />
         </IconButton>
       </Box>
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ ...hintTextSx, mt: 0.5, display: 'block' }}
+      >
         Ctrl + / - can be used to change zoom level and Ctrl + 0 to reset to default.
       </Typography>
     </Box>

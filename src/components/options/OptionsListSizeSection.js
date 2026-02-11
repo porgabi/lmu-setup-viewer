@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { hintTextSx } from './hintTextStyles';
 
 export default function OptionsListSizeSection({ value, onChange }) {
   return (
@@ -15,7 +16,11 @@ export default function OptionsListSizeSection({ value, onChange }) {
           <MenuItem value="long">Long</MenuItem>
         </Select>
       </FormControl>
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ ...hintTextSx, mt: 0.5, display: 'block' }}
+      >
         Adjust the length of the lists in setup selectors.
       </Typography>
     </Box>

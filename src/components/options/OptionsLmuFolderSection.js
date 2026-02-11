@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
+import { hintTextSx } from './hintTextStyles';
 
 export default function OptionsLmuFolderSection({ lmuPath, onChoose }) {
   return (
@@ -11,7 +12,7 @@ export default function OptionsLmuFolderSection({ lmuPath, onChoose }) {
         <Button variant="outlined" size="small" onClick={onChoose}>
           Set LMU Folder
         </Button>
-        <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+        <Typography variant="caption" color="text.secondary" sx={{ ...hintTextSx, mt: 1 }}>
           Current path: {lmuPath || '[not set]'}
         </Typography>
       </Box>
