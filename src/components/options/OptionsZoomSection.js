@@ -76,7 +76,7 @@ export default function OptionsZoomSection({ zoomFactor, onZoomChange }) {
         color="text.secondary"
         sx={{ ...hintTextSx, mt: 0.5, display: 'block' }}
       >
-        Ctrl + / - can be used to change zoom level and Ctrl + 0 to reset to default.
+        Use Ctrl + / - to zoom and Ctrl + 0 to reset to default.
       </Typography>
     </Box>
   );
