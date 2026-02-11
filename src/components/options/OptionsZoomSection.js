@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { hintTextSx } from './hintTextStyles';
@@ -35,9 +35,33 @@ export default function OptionsZoomSection({ zoomFactor, onZoomChange }) {
         >
           <RemoveIcon fontSize="small" />
         </IconButton>
-        <Typography variant="body2" sx={{ minWidth: 56, textAlign: 'center' }}>
-          {percentLabel}
-        </Typography>
+        <Tooltip title="Reset to default" placement="top">
+          <Box
+            component="span"
+            onClick={() => onZoomChange(1)}
+            sx={{
+              cursor: 'pointer',
+              minWidth: 56,
+              textAlign: 'center',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: 30,
+              px: 0.8,
+              py: 0.2,
+              borderRadius: 2,
+              border: '1px solid transparent',
+              backgroundColor: 'transparent',
+              transition: 'background-color 150ms ease, border-color 150ms ease',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                borderColor: 'rgba(255, 255, 255, 0.35)',
+              },
+            }}
+          >
+            <Typography variant="body2">{percentLabel}</Typography>
+          </Box>
+        </Tooltip>
         <IconButton
           size="small"
           onClick={() => handleAdjust(STEP)}
