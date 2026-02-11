@@ -42,14 +42,11 @@ export function getSetupDisplayAssets(carInfo) {
   return { brandIconPath, classIconPath };
 }
 
-export const defaultClassOrder = new Map([
-  ['hy', 0],
-  ['lmgt3', 1],
-  ['lmp2_elms', 2],
-  ['lmp2_wec', 3],
-  ['gte', 4],
-  ['lmp3', 5],
-]);
+export const defaultClassOrderKeys = ['hy', 'lmgt3', 'lmp2_elms', 'lmp2_wec', 'gte', 'lmp3'];
+
+export const defaultClassOrder = new Map(
+  defaultClassOrderKeys.map((value, index) => [value, index])
+);
 
 export function sortSetupsByClassAndBrand(setups, classOrder = defaultClassOrder) {
   return setups.sort((a, b) => {
@@ -68,10 +65,18 @@ export function sortSetupsByClassAndBrand(setups, classOrder = defaultClassOrder
   });
 }
 
-export function buildSetupMenuData(setupIndex, trackInfo, excludeValue, classOrder = defaultClassOrder) {
+export function buildSetupMenuData(
+  setupIndex,
+  trackInfo,
+  excludeValue,
+  classOrder = defaultClassOrder,
+  classFilter = null
+) {
   if (!setupIndex || typeof setupIndex !== 'object') {
     return [];
   }
+
+  const filterSet = Array.isArray(classFilter) ? new Set(classFilter) : null;
 
   return Object.entries(setupIndex)
     .map(([track, setups]) => {
@@ -88,6 +93,11 @@ export function buildSetupMenuData(setupIndex, trackInfo, excludeValue, classOrd
           const carTechnicalName = typeof setup === 'string' ? '' : setup?.carTechnicalName;
           const carInfo = resolveCarInfo(carTechnicalName);
           const { brandIconPath, classIconPath } = getSetupDisplayAssets(carInfo);
+          const classKey = carInfo?.class;
+
+          if (filterSet && !filterSet.has(classKey)) {
+            return null;
+          }
 
           return {
             name: setupName,

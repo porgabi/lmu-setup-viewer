@@ -15,16 +15,27 @@ import {
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useSetupContext } from '../state/SetupContext';
-import { buildSetupMenuData, defaultClassOrder } from '../domain/setupDisplay';
+import {
+  buildSetupMenuData,
+  defaultClassOrder,
+  defaultClassOrderKeys,
+} from '../domain/setupDisplay';
 import { renderSetupValue } from './setupDisplay';
 import SetupMenuItem from './SetupMenuItem';
 import VirtualizedMenuList from './VirtualizedMenuList';
 import OptionsDialog from './OptionsDialog';
 import { useSettings } from '../state/SettingsContext';
 import { electron } from '../services/electron';
+import { getAssetPath } from '../domain/assetPaths';
 
-function buildMenu(setupIndex, trackInfo, excludeValue, showIcons, classOrder) {
-  const sections = buildSetupMenuData(setupIndex, trackInfo, excludeValue, classOrder);
+function buildMenu(setupIndex, trackInfo, excludeValue, showIcons, classOrder, classFilter) {
+  const sections = buildSetupMenuData(
+    setupIndex,
+    trackInfo,
+    excludeValue,
+    classOrder,
+    classFilter
+  );
   const items = [];
 
   sections.forEach((section) => {
@@ -127,12 +138,32 @@ export default function SetupSelector() {
     setSecondarySetup(event.target.value);
   };
 
-  const classOrder = React.useMemo(() => {
+  const classOrderKeys = React.useMemo(() => {
     const order = settings?.dropdownSortOrder;
-    if (!Array.isArray(order) || order.length === 0) return defaultClassOrder;
-
-    return new Map(order.map((value, index) => [value, index]));
+    if (!Array.isArray(order) || order.length === 0) return defaultClassOrderKeys;
+    return order;
   }, [settings?.dropdownSortOrder]);
+  const classOrder = React.useMemo(() => {
+    return new Map(classOrderKeys.map((value, index) => [value, index]));
+  }, [classOrderKeys]);
+  const classFilter = React.useMemo(() => {
+    return Array.isArray(settings?.classFilter) ? settings.classFilter : classOrderKeys;
+  }, [settings?.classFilter]);
+  const classFilterItems = React.useMemo(() => {
+    const selected = new Set(classFilter);
+    return classOrderKeys.map((classKey) => ({
+      key: classKey,
+      label: classKey,
+      icon: getAssetPath(`assets/classes/${classKey}.png`),
+      checked: selected.has(classKey),
+    }));
+  }, [classFilter, classOrderKeys]);
+  const handleClassFilterChange = React.useCallback(
+    (next) => {
+      updateSettings({ classFilter: next });
+    },
+    [updateSettings]
+  );
 
   const menuHeightMap = {
     short: 320,
@@ -200,12 +231,14 @@ export default function SetupSelector() {
 
   const gamePath = lmuPath || '(not set)';
   const primaryMenu = React.useMemo(
-    () => buildMenu(setupIndex, trackInfo, secondarySetup, primaryMenuOpen, classOrder),
-    [setupIndex, trackInfo, secondarySetup, primaryMenuOpen, classOrder]
+    () =>
+      buildMenu(setupIndex, trackInfo, secondarySetup, primaryMenuOpen, classOrder, classFilter),
+    [setupIndex, trackInfo, secondarySetup, primaryMenuOpen, classOrder, classFilter]
   );
   const secondaryMenu = React.useMemo(
-    () => buildMenu(setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder),
-    [setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder]
+    () =>
+      buildMenu(setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder, classFilter),
+    [setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder, classFilter]
   );
   const primaryMenuItems = primaryMenu.items;
   const secondaryMenuItems = secondaryMenu.items;
@@ -351,6 +384,8 @@ export default function SetupSelector() {
                   ...menuProps.MenuListProps,
                   initialScrollIndex: primaryScrollIndex,
                   sectionIndexItems: primarySectionIndexItems,
+                  classFilterItems,
+                  onClassFilterChange: handleClassFilterChange,
                 },
               };
             })()}
@@ -417,6 +452,8 @@ export default function SetupSelector() {
                   ...menuProps.MenuListProps,
                   initialScrollIndex: secondaryScrollIndex,
                   sectionIndexItems: secondarySectionIndexItems,
+                  classFilterItems,
+                  onClassFilterChange: handleClassFilterChange,
                 },
               };
             })()}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, ButtonBase, Typography } from '@mui/material';
+import { Box, ButtonBase, Checkbox, Typography } from '@mui/material';
 import ReactCountryFlag from 'react-country-flag';
 
 const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props, ref) {
@@ -10,6 +10,8 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
     overscan = 4,
     initialScrollIndex,
     sectionIndexItems = [],
+    classFilterItems = [],
+    onClassFilterChange,
     sx,
     ...rest
   } = props;
@@ -29,6 +31,7 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
   const endIndex = Math.min(items.length, startIndex + visibleCount + overscan * 2);
   const offsetY = startIndex * rowHeight;
   const hasSectionIndex = sectionIndexItems.length > 0;
+  const hasClassFilter = classFilterItems.length > 0;
 
   const scrollToIndex = React.useCallback(
     (targetIndex) => {
@@ -56,34 +59,40 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
     hasAppliedInitialScroll.current = true;
   }, [initialScrollIndex, items.length, scrollToIndex]);
 
-  const sectionBarRef = React.useRef(null);
+  const useHorizontalWheelScroll = () => {
+    const cleanupRef = React.useRef(null);
 
-  React.useEffect(() => {
-    const node = sectionBarRef.current;
-    if (!node) return undefined;
-
-    const handleWheel = (event) => {
-      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
-        return;
+    return React.useCallback((node) => {
+      if (cleanupRef.current) {
+        cleanupRef.current();
+        cleanupRef.current = null;
       }
-      event.preventDefault();
-      node.scrollLeft += event.deltaY;
-    };
+      if (!node) return;
 
-    node.addEventListener('wheel', handleWheel, { passive: false });
-    return () => {
-      node.removeEventListener('wheel', handleWheel);
-    };
-  }, []);
+      const handleWheel = (event) => {
+        if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+          return;
+        }
+        event.preventDefault();
+        node.scrollLeft += event.deltaY;
+      };
+
+      node.addEventListener('wheel', handleWheel, { passive: false });
+      cleanupRef.current = () => node.removeEventListener('wheel', handleWheel);
+    }, []);
+  };
+
+  const sectionBarRef = useHorizontalWheelScroll();
+  const classBarRef = useHorizontalWheelScroll();
 
   const sectionBar = hasSectionIndex ? (
     <Box
       ref={sectionBarRef}
       sx={{
         px: 1,
-        py: 0.75,
+        py: 0.9,
         mt: 0.5,
-        minHeight: 38,
+        minHeight: 40,
         borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
         backgroundColor: 'rgba(8, 10, 14, 0.95)',
         display: 'flex',
@@ -116,7 +125,8 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
             alignItems: 'center',
             gap: 0.5,
             px: 1,
-            py: 0.4,
+            py: 0.3,
+            my: 0.15,
             borderRadius: 999,
             border: '1px solid rgba(255, 255, 255, 0.12)',
             backgroundColor: 'rgba(255, 255, 255, 0.04)',
@@ -146,6 +156,87 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
     </Box>
   ) : null;
 
+  const classFilterBar = hasClassFilter ? (
+    <Box
+      ref={classBarRef}
+      sx={{
+        px: 1,
+        py: 0.75,
+        minHeight: 38,
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        backgroundColor: 'rgba(8, 10, 14, 0.9)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 0.6,
+        width: '100%',
+        minWidth: 0,
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+        overflowX: 'auto',
+        overflowY: 'hidden',
+        flexWrap: 'nowrap',
+        overscrollBehavior: 'contain',
+        scrollbarWidth: 'thin',
+        '&::-webkit-scrollbar': {
+          height: 6,
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: 'rgba(255, 255, 255, 0.2)',
+          borderRadius: 999,
+        },
+      }}
+    >
+      {classFilterItems.map((item) => (
+        <ButtonBase
+          key={`class-${item.key}`}
+          onClick={() => {
+            if (!onClassFilterChange) return;
+            const next = classFilterItems
+              .map((entry) =>
+                entry.key === item.key ? { ...entry, checked: !entry.checked } : entry
+              )
+              .filter((entry) => entry.checked)
+              .map((entry) => entry.key);
+            onClassFilterChange(next);
+          }}
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 0.4,
+            px: 0.6,
+            py: 0.3,
+            borderRadius: 999,
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            backgroundColor: item.checked
+              ? 'rgba(255, 255, 255, 0.12)'
+              : 'rgba(255, 255, 255, 0.04)',
+            whiteSpace: 'nowrap',
+            flex: '0 0 auto',
+            '&:hover': {
+              backgroundColor: item.checked
+                ? 'rgba(255, 255, 255, 0.16)'
+                : 'rgba(255, 255, 255, 0.1)',
+            },
+          }}
+        >
+          <Checkbox
+            size="small"
+            checked={item.checked}
+            sx={{ p: 0, color: 'rgba(255, 255, 255, 0.65)' }}
+          />
+          {item.icon ? (
+            <Box
+              component="img"
+              src={item.icon}
+              alt={`${item.label} icon`}
+              sx={{ width: '1.6em', height: '1.2em', objectFit: 'contain' }}
+            />
+          ) : null}
+        </ButtonBase>
+      ))}
+    </Box>
+  ) : null;
+
   if (items.length <= visibleCount + overscan * 2) {
     return (
       <Box
@@ -155,6 +246,7 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
         ]}
       >
         {sectionBar}
+        {classFilterBar}
         <Box
           ref={(node) => {
             scrollContainerRef.current = node;
@@ -181,6 +273,7 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
       ]}
     >
       {sectionBar}
+      {classFilterBar}
       <Box
         ref={(node) => {
           scrollContainerRef.current = node;
