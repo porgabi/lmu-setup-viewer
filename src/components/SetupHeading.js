@@ -145,7 +145,19 @@ export default function SetupHeading({ title, setupKey, trackInfo, carInfo }) {
         </Box>
       ) : null}
       {carName ? <AutoFitCarName text={carName} /> : null}
-      <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+      <Box
+        component="span"
+        sx={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 1,
+          px: 1,
+          py: 0.25,
+          borderRadius: 6,
+          backgroundColor: 'rgba(8, 10, 14, 0.25)',
+          backdropFilter: 'blur(3px)',
+        }}
+      >
         {countryCode ? (
           <ReactCountryFlag
             svg
