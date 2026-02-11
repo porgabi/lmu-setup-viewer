@@ -8,6 +8,7 @@ import {
   DialogTitle,
   Typography,
 } from '@mui/material';
+import ReactMarkdown from 'react-markdown';
 import { useSettings } from '../state/SettingsContext';
 import { useSetupContext } from '../state/SetupContext';
 import { electron } from '../services/electron';
@@ -298,9 +299,46 @@ export default function OptionsDialog({ open, onClose }) {
                     overflowY: 'auto',
                   }}
                 >
-                  <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
+                  <ReactMarkdown
+                    components={{
+                      p: ({ node, ...props }) => (
+                        <Typography variant="body2" sx={{ mb: 1 }} {...props} />
+                      ),
+                      ul: ({ node, ...props }) => (
+                        <Box component="ul" sx={{ pl: 2, mb: 1 }} {...props} />
+                      ),
+                      ol: ({ node, ...props }) => (
+                        <Box component="ol" sx={{ pl: 2, mb: 1 }} {...props} />
+                      ),
+                      li: ({ node, ...props }) => (
+                        <Box component="li" sx={{ mb: 0.5 }} {...props} />
+                      ),
+                      a: ({ node, ...props }) => (
+                        <Box
+                          component="a"
+                          {...props}
+                          target="_blank"
+                          rel="noreferrer"
+                          sx={{ color: '#bcd7ff', textDecoration: 'underline' }}
+                        />
+                      ),
+                      code: ({ node, inline, ...props }) => (
+                        <Box
+                          component="code"
+                          sx={{
+                            px: inline ? 0.4 : 0,
+                            py: inline ? 0.1 : 0,
+                            borderRadius: 0.5,
+                            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                            fontFamily: '"JetBrains Mono", "Consolas", "Courier New", monospace',
+                          }}
+                          {...props}
+                        />
+                      ),
+                    }}
+                  >
                     {updateNotes}
-                  </Typography>
+                  </ReactMarkdown>
                 </Box>
               ) : null}
             </Box>
