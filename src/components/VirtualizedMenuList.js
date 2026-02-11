@@ -56,8 +56,29 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
     hasAppliedInitialScroll.current = true;
   }, [initialScrollIndex, items.length, scrollToIndex]);
 
+  const sectionBarRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const node = sectionBarRef.current;
+    if (!node) return undefined;
+
+    const handleWheel = (event) => {
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+        return;
+      }
+      event.preventDefault();
+      node.scrollLeft += event.deltaY;
+    };
+
+    node.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      node.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
+
   const sectionBar = hasSectionIndex ? (
     <Box
+      ref={sectionBarRef}
       sx={{
         px: 1,
         py: 0.75,
@@ -75,6 +96,7 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
         overflowX: 'auto',
         overflowY: 'hidden',
         flexWrap: 'nowrap',
+        overscrollBehavior: 'contain',
         scrollbarWidth: 'thin',
         '&::-webkit-scrollbar': {
           height: 6,
@@ -83,13 +105,6 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
           backgroundColor: 'rgba(255, 255, 255, 0.2)',
           borderRadius: 999,
         },
-      }}
-      onWheel={(event) => {
-        if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
-          return;
-        }
-        event.preventDefault();
-        event.currentTarget.scrollLeft += event.deltaY;
       }}
     >
       {sectionIndexItems.map((section) => (
