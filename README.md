@@ -2,7 +2,7 @@
 
 LMU Setup Viewer is a lightweight desktop application to view and compare LMU setups. It came into being as I wanted a quick and hassle-free way to compare car setups across different tracks without having to load up the game every time.
 
-[showcase vid/images here]
+https://github.com/user-attachments/assets/d083db1f-8bb3-4077-b35d-775abcd53888
 
 ## Key features
 - **Sectioned setup views**: View setup properties grouped according to the in-game UI.
@@ -41,8 +41,8 @@ The app includes various options for further customization:
 
 ## Feedback & support
 If you have any feedback regarding the app, feel free to send a message to lmu.setupviewer@gmail.com or create an issue in the repository.
-
 Optional donations are also available via [Ko-fi](https://ko-fi.com/admgpr).
+
 [![Ko-fi page](ko-fi_banner.png)](https://ko-fi.com/admgpr)
 
 ## Supported platforms
