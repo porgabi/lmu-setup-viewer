@@ -40,12 +40,22 @@ const theme = createTheme({
       styleOverrides: {
         body: {
           backgroundColor: 'var(--hud-bg)',
-          backgroundImage:
-            'radial-gradient(900px 520px at 0% 0%, rgba(255, 118, 92, 0.55), transparent 60%), linear-gradient(135deg, var(--hud-red) 0%, var(--hud-red) 22%, rgba(0, 0, 0, 0) 22%), linear-gradient(135deg, var(--hud-blue) 22%, var(--hud-blue) 46%, rgba(0, 0, 0, 0) 46%), radial-gradient(750px 420px at 100% 100%, rgba(120, 35, 35, 0.45), transparent 65%), linear-gradient(-225deg, transparent 0% 64%, rgba(120, 25, 25, 0.85) 100% 72%, transparent 72% 100%), radial-gradient(1200px 700px at 55% 25%, rgba(255, 255, 255, 0.06), transparent 60%)',
+          backgroundImage: [
+            'radial-gradient(930px 540px at 0% 0%, rgba(255, 120, 94, 0.62), transparent 58%)',
+            'linear-gradient(135deg, var(--hud-red) 0%, var(--hud-red) 23.5%, rgba(0, 0, 0, 0) 23.5%)',
+            'linear-gradient(135deg, var(--hud-blue) 23.5%, var(--hud-blue) 50%, rgba(0, 0, 0, 0) 50%)',
+            'linear-gradient(135deg, rgba(8, 36, 76, 0.58) 50%, rgba(8, 36, 76, 0.58) 58%, rgba(0, 0, 0, 0) 58%)',
+            'radial-gradient(980px 360px at 100% 0%, rgba(165, 30, 42, 0.38), transparent 64%)',
+            'radial-gradient(860px 480px at 100% 100%, rgba(130, 32, 35, 0.58), transparent 68%)',
+            'linear-gradient(135deg, transparent 0% 78%, rgba(146, 30, 38, 0.82) 68% 88%, rgba(212, 194, 170, 0.42) 88% 91%, rgba(255, 255, 255, 0.32) 91% 100%)',
+            'linear-gradient(135deg, transparent 0% 82%, rgba(126, 25, 34, 0.62) 82% 95%, rgb(255, 255, 255) 95% 97%, rgb(255, 255, 255) 97% 100%)',
+            'radial-gradient(1200px 700px at 55% 25%, rgba(255, 255, 255, 0.06), transparent 60%)',
+          ].join(', '),
           backgroundAttachment: 'fixed',
           backgroundRepeat: 'no-repeat',
-          backgroundSize: '100% 100%, 100% 100%, 100% 100%, 100% 100%, 55% 100%, 100% 100%',
-          backgroundPosition: '0 0, 0 0, 0 0, 0 0, 100% 100%, 0 0',
+          backgroundSize:
+            '100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 42% 62%, 52% 74%, 100% 100%',
+          backgroundPosition: '0 0, 0 0, 0 0, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%, 0 0',
         },
         '#root': {
           minHeight: '100vh',
