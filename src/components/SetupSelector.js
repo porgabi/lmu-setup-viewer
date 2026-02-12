@@ -17,7 +17,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { useSetupContext } from '../state/SetupContext';
 import {
   buildSetupMenuData,
-  defaultClassOrder,
   defaultClassOrderKeys,
 } from '../domain/setupDisplay';
 import { renderSetupValue } from './setupDisplay';
@@ -130,6 +129,24 @@ export default function SetupSelector() {
   const [secondaryMenuWidth, setSecondaryMenuWidth] = React.useState(null);
   const [optionsOpen, setOptionsOpen] = React.useState(false);
 
+  const openPrimarySelector = React.useCallback(() => {
+    const width = primarySelectRef.current?.getBoundingClientRect?.().width;
+    if (width) {
+      setPrimaryMenuWidth(Math.round(width));
+    }
+    setSecondaryMenuOpen(false);
+    setPrimaryMenuOpen(true);
+  }, []);
+
+  const openSecondarySelector = React.useCallback(() => {
+    const width = secondarySelectRef.current?.getBoundingClientRect?.().width;
+    if (width) {
+      setSecondaryMenuWidth(Math.round(width));
+    }
+    setPrimaryMenuOpen(false);
+    setSecondaryMenuOpen(true);
+  }, []);
+
   const handlePrimaryChange = (event) => {
     setPrimarySetup(event.target.value);
   };
@@ -148,7 +165,7 @@ export default function SetupSelector() {
   }, [classOrderKeys]);
   const classFilter = React.useMemo(() => {
     return Array.isArray(settings?.classFilter) ? settings.classFilter : classOrderKeys;
-  }, [settings?.classFilter]);
+  }, [settings?.classFilter, classOrderKeys]);
   const classFilterItems = React.useMemo(() => {
     const selected = new Set(classFilter);
     return classOrderKeys.map((classKey) => ({
@@ -164,6 +181,52 @@ export default function SetupSelector() {
     },
     [updateSettings]
   );
+
+  React.useEffect(() => {
+    if (!electron?.onHotkeyCommand) return undefined;
+    return electron.onHotkeyCommand((commandId) => {
+      const activeElement = document.activeElement;
+      const activeTag = activeElement?.tagName?.toLowerCase();
+      const isTypingContext =
+        activeElement?.isContentEditable ||
+        activeTag === 'input' ||
+        activeTag === 'textarea';
+      if (isTypingContext) return;
+
+      if (commandId === 'open-options') {
+        setOptionsOpen(true);
+        return;
+      }
+
+      if (commandId === 'reload-setups') {
+        refreshSetupIndex();
+        return;
+      }
+
+      if (commandId === 'open-selector-1') {
+        openPrimarySelector();
+        return;
+      }
+
+      if (commandId === 'open-selector-2') {
+        if (!comparisonEnabled) {
+          setComparisonEnabled(true);
+        }
+        openSecondarySelector();
+        return;
+      }
+
+      if (commandId === 'toggle-comparison') {
+        setComparisonEnabled(!comparisonEnabled);
+      }
+    });
+  }, [
+    comparisonEnabled,
+    openPrimarySelector,
+    openSecondarySelector,
+    refreshSetupIndex,
+    setComparisonEnabled,
+  ]);
 
   const menuHeightMap = {
     short: 320,
@@ -229,7 +292,6 @@ export default function SetupSelector() {
     return () => observer.disconnect();
   }, []);
 
-  const gamePath = lmuPath || '(not set)';
   const primaryMenu = React.useMemo(
     () =>
       buildMenu(setupIndex, trackInfo, secondarySetup, primaryMenuOpen, classOrder, classFilter),
@@ -366,15 +428,10 @@ export default function SetupSelector() {
           <InputLabel>Setup</InputLabel>
           <Select
             value={primarySetup}
+            open={primaryMenuOpen}
             label="Setup"
             onChange={handlePrimaryChange}
-            onOpen={() => {
-              setPrimaryMenuOpen(true);
-              const width = primarySelectRef.current?.getBoundingClientRect?.().width;
-              if (width) {
-                setPrimaryMenuWidth(Math.round(width));
-              }
-            }}
+            onOpen={openPrimarySelector}
             onClose={() => setPrimaryMenuOpen(false)}
             MenuProps={(() => {
               const menuProps = buildMenuProps(primaryMenuWidth);
@@ -434,15 +491,10 @@ export default function SetupSelector() {
           <InputLabel>Compared setup</InputLabel>
           <Select
             value={secondarySetup}
+            open={secondaryMenuOpen}
             label="Compared setup"
             onChange={handleSecondaryChange}
-            onOpen={() => {
-              setSecondaryMenuOpen(true);
-              const width = secondarySelectRef.current?.getBoundingClientRect?.().width;
-              if (width) {
-                setSecondaryMenuWidth(Math.round(width));
-              }
-            }}
+            onOpen={openSecondarySelector}
             onClose={() => setSecondaryMenuOpen(false)}
             MenuProps={(() => {
               const menuProps = buildMenuProps(secondaryMenuWidth);

@@ -14,6 +14,7 @@ import { useSetupContext } from '../state/SetupContext';
 import { electron } from '../services/electron';
 import OptionsDiffHighlightSection from './options/OptionsDiffHighlightSection';
 import OptionsFeedbackSection from './options/OptionsFeedbackSection';
+import OptionsHotkeysSection from './options/OptionsHotkeysSection';
 import OptionsListSizeSection from './options/OptionsListSizeSection';
 import OptionsLmuFolderSection from './options/OptionsLmuFolderSection';
 import OptionsSortingOrderSection from './options/OptionsSortingOrderSection';
@@ -237,6 +238,7 @@ export default function OptionsDialog({ open, onClose }) {
                 setDraft((prev) => ({ ...prev, setupTableTextSize: event.target.value }))
               }
             />
+            <OptionsHotkeysSection />
             <OptionsUpdatesSection
               onCheckUpdates={handleCheckUpdates}
               checking={checkingUpdates}

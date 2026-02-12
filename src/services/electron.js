@@ -24,6 +24,7 @@ export const electron = {
   getAppVersion: () => safeInvoke(electronAPI?.getAppVersion, null),
   getPlatform: () => safeInvoke(electronAPI?.getPlatform, null),
   onZoomFactorChanged: (callback) => electronAPI?.onZoomFactorChanged?.(callback),
+  onHotkeyCommand: (callback) => electronAPI?.onHotkeyCommand?.(callback),
   getZoomFactor: () => safeInvoke(electronAPI?.getZoomFactor, null),
 };
 

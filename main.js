@@ -18,6 +18,37 @@ let tray = null;
 let mainWindow = null;
 let isQuitting = false;
 
+function mapInputToHotkeyCommand(input) {
+  if (!input || input.type !== 'keyDown' || input.isAutoRepeat) {
+    return null;
+  }
+
+  const key = String(input.key || '').toLowerCase();
+  const hasCtrlOnly = Boolean(input.control && !input.shift && !input.alt && !input.meta);
+  const hasCtrlShiftOnly = Boolean(input.control && input.shift && !input.alt && !input.meta);
+  const hasNoModifiers = Boolean(!input.control && !input.shift && !input.alt && !input.meta);
+
+  if (hasCtrlShiftOnly && key === 'tab') {
+    return 'cycle-tabs-backward';
+  }
+
+  if (hasCtrlOnly && key === 'tab') {
+    return 'cycle-tabs-forward';
+  }
+
+  if (!hasNoModifiers) {
+    return null;
+  }
+
+  if (key === 'o') return 'open-options';
+  if (key === 'r') return 'reload-setups';
+  if (key === '1') return 'open-selector-1';
+  if (key === '2') return 'open-selector-2';
+  if (key === 'c') return 'toggle-comparison';
+
+  return null;
+}
+
 function getTrayIconPath() {
   const iconName = process.platform === 'win32' ? 'app.ico' : 'app.png';
   const unpackedPath = path.join(process.resourcesPath, 'app.asar.unpacked', 'assets', 'icons', iconName);
@@ -184,6 +215,12 @@ function createWindow() {
 
   mainWindow.webContents.on('zoom-changed', syncZoomFromWebContents);
   mainWindow.webContents.on('did-change-zoom-level', syncZoomFromWebContents);
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    const command = mapInputToHotkeyCommand(input);
+    if (!command) return;
+    event.preventDefault();
+    mainWindow.webContents.send('hotkey-command', command);
+  });
 
   mainWindow.on('close', (event) => {
     if (isQuitting) return;

@@ -83,6 +83,20 @@ export default function App() {
     preloadBrandAndClassIcons();
   }, []);
 
+  React.useEffect(() => {
+    if (!electron?.onHotkeyCommand) return undefined;
+    return electron.onHotkeyCommand((commandId) => {
+      if (commandId === 'cycle-tabs-forward') {
+        setValue((prev) => (prev + 1) % TAB_DEFINITIONS.length);
+        return;
+      }
+
+      if (commandId === 'cycle-tabs-backward') {
+        setValue((prev) => (prev - 1 + TAB_DEFINITIONS.length) % TAB_DEFINITIONS.length);
+      }
+    });
+  }, []);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };

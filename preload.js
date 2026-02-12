@@ -23,4 +23,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('zoom-factor-changed', handler);
     return () => ipcRenderer.removeListener('zoom-factor-changed', handler);
   },
+  onHotkeyCommand: (callback) => {
+    const handler = (_event, commandId) => callback(commandId);
+    ipcRenderer.on('hotkey-command', handler);
+    return () => ipcRenderer.removeListener('hotkey-command', handler);
+  },
 });
