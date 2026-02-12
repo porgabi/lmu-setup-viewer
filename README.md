@@ -1,70 +1,54 @@
-# Getting Started with Create React App
+# About
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+LMU Setup Viewer is a lightweight desktop application to view and compare LMU setups. It came into being as I wanted a quick and hassle-free way to compare car setups across different tracks without having to load up the game every time.
 
-## Available Scripts
+[showcase vid/images here]
 
-In the project directory, you can run:
+## Key features
+- **Sectioned setup views**: View setup properties grouped according to the in-game UI.
+- **Side-by-side comparison**: Load two setups at once for direct comparison.
+- **Difference highlighting**: Optionally highlight changed settings and show per-section diff counts.
+- **Track-based setup grouping**: Setup selectors group entries by track.
+- **Track quick-jump index**: Jump directly to a track in long setup lists.
+- **Class filtering**: Show only selected car classes in setup selectors.
+- **Custom class sort order**: Control how classes are ordered in setup lists.
+- **Hotkey navigation**: Use keyboard shortcuts for faster navigation.
+- **LMU-inspired UX**: UX mirrors the look and feel of the game.
 
-### `npm start`
+## Download & initial configuration
+Get the latest version of the app from the [releases page](https://github.com/porgabi/lmu-setup-viewer/releases/latest).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+When first running the app, the root folder of the game ("Le Mans Ultimate") must be set in order to load the setup files. This folder is typically found under the `\SteamLibrary\steamapps\common\Le Mans Ultimate` path.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Updates
+Users can choose between letting the app automatically check for updates or doing so manually. If there's a newer version found, simply download the new EXE and replace the old one with it.
 
-### `npm test`
+## Hotkeys
+LMU Setup Viewer comes with a few default hotkeys to aid in quick navigation:
+- **O**: Open options
+- **R**: Reload setups
+- **1**: Open setup selector 1
+- **2**: Open setup selector 2
+- **C**: Toggle comparison mode
+- **Ctrl + Tab**: Cycle setup tabs forward
+- **Ctrl + Shift + Tab**: Cycle setup tabs backward
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Custom options
+The app includes various options for further customization:
+- Setup sorting order: Allows changing the class-based ordering of setups in the setup selectors.
+- Setup list size: Determines the number of setups shown at once in the setup selectors.
+- Setup table text size: Sets the font size in the setup tables.
 
-### `npm run build`
+## Feedback & support
+If you have any feedback regarding the app, feel free to send a message to lmu.setupviewer@gmail.com or create an issue in the repository.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Optional donations are also available via [Ko-fi](https://ko-fi.com/admgpr).
+[![Ko-fi page](ko-fi_banner.png)](https://ko-fi.com/admgpr)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Supported platforms
+Windows 10/11 is the primary supported OS. Linux should also be supported, however I haven't had the chance to test it yet so no promises.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Technical overview
+LMU Setup Viewer is built using Electron, React, MUI, and plain JS (which is likely to get swapped for TS later).
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+AI coding tools were used in the creation of this application.
