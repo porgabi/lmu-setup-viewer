@@ -63,7 +63,13 @@ function getTrayIconPath() {
 function ensureTray() {
   if (tray) return tray;
 
-  tray = new Tray(getTrayIconPath());
+  try {
+    tray = new Tray(getTrayIconPath());
+  } catch (error) {
+    console.error('Failed to create tray icon.', error);
+    tray = null;
+    return null;
+  }
   tray.setToolTip('LMU Setup Viewer');
 
   const contextMenu = Menu.buildFromTemplate([
@@ -121,6 +127,8 @@ function compareSemver(a, b) {
 }
 
 function fetchJson(url) {
+  const REQUEST_TIMEOUT_MS = 8000;
+
   return new Promise((resolve, reject) => {
     const request = https.request(
       url,
@@ -149,9 +157,30 @@ function fetchJson(url) {
       }
     );
 
+    request.setTimeout(REQUEST_TIMEOUT_MS, () => {
+      request.destroy(new Error(`Request timed out after ${REQUEST_TIMEOUT_MS}ms.`));
+    });
     request.on('error', reject);
     request.end();
   });
+}
+
+async function fetchJsonWithRetry(url, retries = 1) {
+  let lastError = null;
+
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      return await fetchJson(url);
+    } catch (error) {
+      lastError = error;
+      if (attempt === retries) {
+        break;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 300));
+    }
+  }
+
+  throw lastError || new Error('Request failed.');
 }
 
 function getDownloadUrl(release) {
@@ -227,9 +256,12 @@ function createWindow() {
 
     const settings = store?.get('settings') || {};
     if (settings.minimizeToTrayOnClose) {
+      const trayInstance = ensureTray();
+      if (!trayInstance) {
+        return;
+      }
       event.preventDefault();
       mainWindow.hide();
-      ensureTray();
     }
   });
 
@@ -406,7 +438,7 @@ app.whenReady().then(() => {
 
     try {
       const url = `https://api.github.com/repos/${UPDATE_REPO.owner}/${UPDATE_REPO.repo}/releases/latest`;
-      const release = await fetchJson(url);
+      const release = await fetchJsonWithRetry(url, 1);
       const latestVersionRaw = release.tag_name || release.name;
       const latestVersion = normalizeVersionString(latestVersionRaw);
       const currentVersion = normalizeVersionString(app.getVersion());
