@@ -39,6 +39,35 @@
         </div>
       </header>
 
+      <section class="panel">
+        <h2>Why It Exists</h2>
+        <p class="body-copy">
+          Comparing setups inside LMU can be slow when you only want to inspect values. LMU Setup Viewer focuses on a
+          quick read-and-compare workflow, so you can open setup files and inspect differences faster.
+        </p>
+        <ul class="features compact-features">
+          <li><strong>LMU-style UX:</strong> visual style and layout are inspired by the in-game setup flow.</li>
+          <li>
+            <strong>Built for large libraries:</strong> virtualized selectors, quick-jump index, and class filters
+            keep long setup lists manageable.
+          </li>
+          <li>
+            <strong>Comparison-first workflow:</strong> side-by-side setup views with optional diff highlighting and
+            section-level difference status.
+          </li>
+        </ul>
+      </section>
+
+      <section class="panel">
+        <h2>How It Works</h2>
+        <ol class="steps">
+          <li><strong>Set LMU folder</strong> once in options.</li>
+          <li><strong>Select one or two setups</strong> from grouped setup lists.</li>
+          <li><strong>Review and compare</strong> values across setup tabs and sections.</li>
+          <li><strong>Customize</strong> your app usage with custom filters and options.</li>
+        </ol>
+      </section>
+
       <section class="panel screenshots">
         <h2>App Preview</h2>
         <div class="carousel-wrap">
@@ -48,21 +77,25 @@
               <button class="shot-button" type="button" data-shot-index="0" aria-label="Open screenshot 1">
                 <img src="./assets/images/screenshot-1.png" alt="LMU Setup Viewer screenshot 1" loading="lazy" />
               </button>
+              <figcaption>Inspect the details of a single setup.</figcaption>
             </figure>
             <figure>
               <button class="shot-button" type="button" data-shot-index="1" aria-label="Open screenshot 2">
                 <img src="./assets/images/screenshot-2.png" alt="LMU Setup Viewer screenshot 2" loading="lazy" />
               </button>
+              <figcaption>Easily compare two setups with aligned sections.</figcaption>
             </figure>
             <figure>
               <button class="shot-button" type="button" data-shot-index="2" aria-label="Open screenshot 3">
                 <img src="./assets/images/screenshot-3.png" alt="LMU Setup Viewer screenshot 3" loading="lazy" />
               </button>
+              <figcaption>Filter for setups based on car class in setup selectors.</figcaption>
             </figure>
             <figure>
               <button class="shot-button" type="button" data-shot-index="3" aria-label="Open screenshot 4">
                 <img src="./assets/images/screenshot-4.png" alt="LMU Setup Viewer screenshot 4" loading="lazy" />
               </button>
+              <figcaption>Customize the app for yourself using various display options.</figcaption>
             </figure>
           </div>
           <button class="carousel-nav" id="preview-next" type="button" aria-label="Scroll screenshots right">›</button>
@@ -70,17 +103,61 @@
       </section>
 
       <section class="panel">
-        <h2>Key Features</h2>
+        <h2>App Capabilities</h2>
         <ul class="features">
           <li>Sectioned setup views aligned with the in-game layout.</li>
           <li>Side-by-side comparison mode for two setups.</li>
           <li>Optional difference highlighting with per-section diff counts.</li>
-          <li>Track-based setup grouping in selectors.</li>
-          <li>Track quick-jump index for long setup lists.</li>
-          <li>Class filtering in setup selectors.</li>
-          <li>Custom class sort order for setup listing.</li>
-          <li>Hotkey navigation for faster workflow.</li>
+          <li>Track grouping with quick-jump selector index.</li>
+          <li>Class filtering and customizable class sort order.</li>
         </ul>
+      </section>
+
+      <section class="panel faq">
+        <h2>FAQ</h2>
+        <article>
+          <h3>Which platforms are supported?</h3>
+          <p>Windows 10/11 is the primary target. Linux support theoretically exists, but has yet to be tested in practice.</p>
+        </article>
+        <article>
+          <h3>Where are setups read from?</h3>
+          <p>From your LMU installation under <code>UserData/player/Settings</code> after selecting the game folder.</p>
+        </article>
+        <article>
+          <h3>Is LMU Setup Viewer open source?</h3>
+          <p>Yes. The project source code is available publicly on GitHub.</p>
+        </article>
+        <article>
+          <h3>Do I need an account to use it?</h3>
+          <p>No. You can use the app without creating or signing into any account.</p>
+        </article>
+        <article>
+          <h3>How do updates work?</h3>
+          <p>
+            You can check for updates manually at any time, and optionally enable automatic update checks on app
+            launch.
+          </p>
+        </article>
+        <article>
+          <h3>Does the app require internet access?</h3>
+          <p>Only for optional update checks and visiting external links.</p>
+        </article>
+      </section>
+
+      <section class="panel cta">
+        <h2>Compare Setups Faster, Drive Sooner</h2>
+        <p class="body-copy">Portable executable. No installer required.</p>
+        <div class="hero-actions">
+          <a
+            class="btn btn-primary"
+            href="https://github.com/porgabi/lmu-setup-viewer/releases/download/v1.0.0/LMU.Setup.Viewer.1.0.0.exe"
+          >
+            Download latest version
+          </a>
+          <a class="btn btn-secondary" href="https://github.com/porgabi/lmu-setup-viewer/releases">
+            Browse all versions
+          </a>
+        </div>
       </section>
 
       <footer class="panel footer">
