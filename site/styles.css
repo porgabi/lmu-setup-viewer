@@ -441,6 +441,16 @@ img {
   font-size: 1.03rem;
 }
 
+.faq a {
+  color: #bcd7ff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.faq a:hover {
+  color: #e0ecff;
+}
+
 .cta .hero-actions {
   margin-top: 12px;
 }
