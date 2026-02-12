@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LMU Setup Viewer</title>
+    <meta
+      name="description"
+      content="LMU Setup Viewer is a lightweight desktop app to view and compare Le Mans Ultimate setup files."
+    />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/app.png" />
+    <link rel="shortcut icon" href="./assets/icons/app.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true"></div>
+    <main class="layout">
+      <header class="hero panel">
+        <h1>LMU Setup Viewer</h1>
+        <p class="lead">
+          LMU Setup Viewer is a lightweight desktop application to view and compare LMU setups.
+        </p>
+        <div class="hero-actions">
+          <a
+            class="btn btn-primary"
+            href="https://github.com/porgabi/lmu-setup-viewer/releases/download/v1.0.0/LMU.Setup.Viewer.1.0.0.exe"
+          >
+            Download latest version
+          </a>
+          <a class="btn btn-secondary" href="https://github.com/porgabi/lmu-setup-viewer/releases">
+            Browse all versions
+          </a>
+        </div>
+      </header>
+
+      <section class="panel screenshots">
+        <h2>App Preview</h2>
+        <div class="carousel-wrap">
+          <button class="carousel-nav" id="preview-prev" type="button" aria-label="Scroll screenshots left">‹</button>
+          <div class="shots-grid" id="preview-carousel">
+            <figure>
+              <button class="shot-button" type="button" data-shot-index="0" aria-label="Open screenshot 1">
+                <img src="./assets/images/screenshot-1.png" alt="LMU Setup Viewer screenshot 1" loading="lazy" />
+              </button>
+            </figure>
+            <figure>
+              <button class="shot-button" type="button" data-shot-index="1" aria-label="Open screenshot 2">
+                <img src="./assets/images/screenshot-2.png" alt="LMU Setup Viewer screenshot 2" loading="lazy" />
+              </button>
+            </figure>
+            <figure>
+              <button class="shot-button" type="button" data-shot-index="2" aria-label="Open screenshot 3">
+                <img src="./assets/images/screenshot-3.png" alt="LMU Setup Viewer screenshot 3" loading="lazy" />
+              </button>
+            </figure>
+            <figure>
+              <button class="shot-button" type="button" data-shot-index="3" aria-label="Open screenshot 4">
+                <img src="./assets/images/screenshot-4.png" alt="LMU Setup Viewer screenshot 4" loading="lazy" />
+              </button>
+            </figure>
+          </div>
+          <button class="carousel-nav" id="preview-next" type="button" aria-label="Scroll screenshots right">›</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Key Features</h2>
+        <ul class="features">
+          <li>Sectioned setup views aligned with the in-game layout.</li>
+          <li>Side-by-side comparison mode for two setups.</li>
+          <li>Optional difference highlighting with per-section diff counts.</li>
+          <li>Track-based setup grouping in selectors.</li>
+          <li>Track quick-jump index for long setup lists.</li>
+          <li>Class filtering in setup selectors.</li>
+          <li>Custom class sort order for setup listing.</li>
+          <li>Hotkey navigation for faster workflow.</li>
+        </ul>
+      </section>
+
+      <footer class="panel footer">
+        <a href="https://github.com/porgabi/lmu-setup-viewer">GitHub Repository</a>
+        <a href="https://ko-fi.com/admgpr">Support on Ko-fi</a>
+      </footer>
+    </main>
+    <div class="lightbox" id="preview-lightbox" hidden>
+      <div class="lightbox-backdrop" data-lightbox-close></div>
+      <div class="lightbox-content panel" role="dialog" aria-modal="true" aria-label="Screenshot viewer">
+        <button class="lightbox-close" type="button" data-lightbox-close aria-label="Close screenshot viewer">
+          ×
+        </button>
+        <button class="lightbox-nav lightbox-prev" type="button" id="lightbox-prev" aria-label="Previous screenshot">
+          ‹
+        </button>
+        <figure class="lightbox-figure">
+          <img id="lightbox-image" src="" alt="" />
+        </figure>
+        <button class="lightbox-nav lightbox-next" type="button" id="lightbox-next" aria-label="Next screenshot">
+          ›
+        </button>
+        <div class="lightbox-strip" id="lightbox-strip" aria-label="Screenshot list"></div>
+      </div>
+    </div>
+    <script src="./script.js"></script>
+  </body>
+</html>
