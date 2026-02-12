@@ -319,6 +319,10 @@ function applyZoomFactor(settings) {
   mainWindow.webContents.setZoomFactor(clamped);
 }
 
+function hasOwnSetting(payload, key) {
+  return Boolean(payload) && Object.prototype.hasOwnProperty.call(payload, key);
+}
+
 function syncZoomFromWebContents() {
   if (!mainWindow || !mainWindow.webContents || !store) return;
   const zoomFactor = mainWindow.webContents.getZoomFactor();
@@ -408,7 +412,9 @@ app.whenReady().then(() => {
     store.set('settings', next);
     applyLoginItemSettings(next);
     applyAlwaysOnTop(next);
-    applyZoomFactor(next);
+    if (hasOwnSetting(payload, 'zoomFactor')) {
+      applyZoomFactor(next);
+    }
     return next;
   });
 
@@ -418,7 +424,9 @@ app.whenReady().then(() => {
     store.set('settings', next);
     applyLoginItemSettings(next);
     applyAlwaysOnTop(next);
-    applyZoomFactor(next);
+    if (hasOwnSetting(payload, 'zoomFactor')) {
+      applyZoomFactor(next);
+    }
     return next;
   });
 
