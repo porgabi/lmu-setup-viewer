@@ -273,7 +273,19 @@ export default function OptionsDialog({ open, onClose }) {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={updateDialogOpen} onClose={() => setUpdateDialogOpen(false)} disableScrollLock>
+      <Dialog
+        open={updateDialogOpen}
+        onClose={() => setUpdateDialogOpen(false)}
+        disableScrollLock
+        fullWidth
+        maxWidth={false}
+        PaperProps={{
+          sx: {
+            width: 'min(760px, calc(100vw - 48px))',
+            maxWidth: '760px',
+          },
+        }}
+      >
         <DialogTitle>
           {updateInfo?.status === 'available'
             ? 'Update available'
@@ -303,12 +315,12 @@ export default function OptionsDialog({ open, onClose }) {
                   sx={{
                     p: 1.5,
                     borderRadius: 1.5,
-                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    maxHeight: 220,
-                    overflowY: 'auto',
-                  }}
-                >
+                     backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                     border: '1px solid rgba(255, 255, 255, 0.08)',
+                     maxHeight: 420,
+                     overflowY: 'auto',
+                   }}
+                 >
                   <ReactMarkdown
                     components={{
                       p: ({ node, ...props }) => (
