@@ -3,6 +3,10 @@ module.exports = {
     countryCode: 'BH',
     displayName: 'Bahrain',
   },
+  Bahrainwec: {
+    countryCode: 'BH',
+    displayName: 'Bahrain WEC',
+  },
   'Circuit Of The Americas': {
     countryCode: 'US',
     displayName: 'COTA',
@@ -15,9 +19,17 @@ module.exports = {
     countryCode: 'JP',
     displayName: 'Fuji Classic',
   },
+  Fujiwec: {
+    countryCode: 'JP',
+    displayName: 'Fuji WEC',
+  },
   Imola: {
     countryCode: 'IT',
     displayName: 'Imola',
+  },
+  ImolaWEC: {
+    countryCode: 'IT',
+    displayName: 'Imola WEC',
   },
   Interlagos: {
     countryCode: 'BR',
@@ -27,13 +39,25 @@ module.exports = {
     countryCode: 'FR',
     displayName: 'Le Mans',
   },
+  Lemans2023Wec: {
+    countryCode: 'FR',
+    displayName: 'Le Mans WEC',
+  },
   Monza: {
     countryCode: 'IT',
     displayName: 'Monza',
   },
+  Monzawec: {
+    countryCode: 'IT',
+    displayName: 'Monza WEC',
+  },
   Portimao: {
     countryCode: 'PT',
     displayName: 'Portimao',
+  },
+  Portimaowec: {
+    countryCode: 'PT',
+    displayName: 'Portimao WEC',
   },
   Qatar: {
     countryCode: 'QA',
@@ -42,6 +66,10 @@ module.exports = {
   Sebring: {
     countryCode: 'US',
     displayName: 'Sebring',
+  },
+  Sebringwec: {
+    countryCode: 'US',
+    displayName: 'Sebring WEC',
   },
   Silverstone: {
     countryCode: 'GB',
@@ -54,6 +82,10 @@ module.exports = {
   Spa_Endce: {
     countryCode: 'BE',
     displayName: 'Spa Endurance',
+  },
+  SpaWEC: {
+    countryCode: 'BE',
+    displayName: 'Spa WEC',
   },
   Paulricard: {
     countryCode: 'FR',
