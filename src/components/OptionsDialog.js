@@ -37,6 +37,7 @@ export default function OptionsDialog({ open, onClose }) {
   const [currentVersion, setCurrentVersion] = React.useState(null);
   const [platform, setPlatform] = React.useState(null);
   const launchUpdateCheckRef = React.useRef(false);
+  const checkUpdatesOnLaunchAtStartupRef = React.useRef(null);
 
   React.useEffect(() => {
     if (!open) return;
@@ -67,7 +68,14 @@ export default function OptionsDialog({ open, onClose }) {
 
   React.useEffect(() => {
     if (loadingSettings) return;
-    if (!settings.checkUpdatesOnLaunch) return;
+    if (checkUpdatesOnLaunchAtStartupRef.current == null) {
+      checkUpdatesOnLaunchAtStartupRef.current = Boolean(settings.checkUpdatesOnLaunch);
+    }
+  }, [loadingSettings, settings.checkUpdatesOnLaunch]);
+
+  React.useEffect(() => {
+    if (loadingSettings) return;
+    if (!checkUpdatesOnLaunchAtStartupRef.current) return;
     if (launchUpdateCheckRef.current) return;
 
     launchUpdateCheckRef.current = true;
@@ -95,7 +103,7 @@ export default function OptionsDialog({ open, onClose }) {
     };
 
     runCheck();
-  }, [checkingUpdates, loadingSettings, settings.checkUpdatesOnLaunch]);
+  }, [checkingUpdates, loadingSettings]);
 
   React.useEffect(() => {
     if (!open) return undefined;

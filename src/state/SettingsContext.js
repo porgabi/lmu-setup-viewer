@@ -24,9 +24,34 @@ function mergeSettings(base, overrides) {
   return { ...base, ...(overrides || {}) };
 }
 
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function areValuesEqual(a, b) {
+  if (Object.is(a, b)) return true;
+
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) return false;
+    for (let index = 0; index < a.length; index += 1) {
+      if (!areValuesEqual(a[index], b[index])) return false;
+    }
+    return true;
+  }
+
+  if (isPlainObject(a) && isPlainObject(b)) {
+    const aKeys = Object.keys(a);
+    const bKeys = Object.keys(b);
+    if (aKeys.length !== bKeys.length) return false;
+    return aKeys.every((key) => areValuesEqual(a[key], b[key]));
+  }
+
+  return false;
+}
+
 function isPersistedSettingsValid(result, expected, keysToCheck) {
   if (!result || typeof result !== 'object') return false;
-  return keysToCheck.every((key) => Object.is(result[key], expected[key]));
+  return keysToCheck.every((key) => areValuesEqual(result[key], expected[key]));
 }
 
 export function SettingsProvider({ children }) {
