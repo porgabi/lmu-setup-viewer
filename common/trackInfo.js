@@ -1,97 +1,97 @@
 module.exports = {
-  Bahrain: {
+  bahrain: {
     countryCode: 'BH',
     displayName: 'Bahrain',
   },
-  Bahrainwec: {
+  bahrainwec: {
     countryCode: 'BH',
     displayName: 'Bahrain WEC',
   },
-  'Circuit de Barcelona': {
+  'circuit de barcelona': {
     countryCode: 'ES',
     displayName: 'Barcelona',
   },
-  'Circuit Of The Americas': {
+  'circuit of the americas': {
     countryCode: 'US',
     displayName: 'COTA',
   },
-  Fuji: {
+  fuji: {
     countryCode: 'JP',
     displayName: 'Fuji',
   },
-  Fuji_Cl: {
+  fuji_cl: {
     countryCode: 'JP',
     displayName: 'Fuji Classic',
   },
-  Fujiwec: {
+  fujiwec: {
     countryCode: 'JP',
     displayName: 'Fuji WEC',
   },
-  Imola: {
+  imola: {
     countryCode: 'IT',
     displayName: 'Imola',
   },
-  ImolaWEC: {
+  imolawec: {
     countryCode: 'IT',
     displayName: 'Imola WEC',
   },
-  Interlagos: {
+  interlagos: {
     countryCode: 'BR',
     displayName: 'Interlagos',
   },
-  Lemans: {
+  lemans: {
     countryCode: 'FR',
     displayName: 'Le Mans',
   },
-  Lemans2023Wec: {
+  lemans2023wec: {
     countryCode: 'FR',
     displayName: 'Le Mans WEC',
   },
-  Monza: {
+  monza: {
     countryCode: 'IT',
     displayName: 'Monza',
   },
-  Monzawec: {
+  monzawec: {
     countryCode: 'IT',
     displayName: 'Monza WEC',
   },
-  Portimao: {
+  portimao: {
     countryCode: 'PT',
     displayName: 'Portimao',
   },
-  Portimaowec: {
+  portimaowec: {
     countryCode: 'PT',
     displayName: 'Portimao WEC',
   },
-  Qatar: {
+  qatar: {
     countryCode: 'QA',
     displayName: 'Qatar',
   },
-  Sebring: {
+  sebring: {
     countryCode: 'US',
     displayName: 'Sebring',
   },
-  Sebringwec: {
+  sebringwec: {
     countryCode: 'US',
     displayName: 'Sebring WEC',
   },
-  Silverstone: {
+  silverstone: {
     countryCode: 'GB',
     displayName: 'Silverstone',
   },
-  Spa: {
+  spa: {
     countryCode: 'BE',
     displayName: 'Spa',
   },
-  Spa_Endce: {
+  spa_endce: {
     countryCode: 'BE',
     displayName: 'Spa Endurance',
   },
-  SpaWEC: {
+  spawec: {
     countryCode: 'BE',
     displayName: 'Spa WEC',
   },
-  Paulricard: {
+  paulricard: {
     countryCode: 'FR',
     displayName: 'Paul Ricard',
   },

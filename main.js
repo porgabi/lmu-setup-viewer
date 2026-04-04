@@ -49,6 +49,10 @@ function mapInputToHotkeyCommand(input) {
   return null;
 }
 
+function normalizeTrackKey(trackName) {
+  return String(trackName || '').trim().toLowerCase();
+}
+
 function getTrayIconPath() {
   const iconName = process.platform === 'win32' ? 'app.ico' : 'app.png';
   const unpackedPath = path.join(process.resourcesPath, 'app.asar.unpacked', 'assets', 'icons', iconName);
@@ -346,8 +350,10 @@ async function buildSetupIndex(settingsPath) {
   const entries = await fs.promises.readdir(settingsPath, { withFileTypes: true });
 
   for (const entry of entries) {
+    const trackKey = normalizeTrackKey(entry.name);
+
     // Filter out unnecessary folders.
-    if (entry.isDirectory() && entry.name in TRACK_INFO) {
+    if (entry.isDirectory() && trackKey in TRACK_INFO) {
       const folderPath = path.join(settingsPath, entry.name);
       const files = await fs.promises.readdir(folderPath, { withFileTypes: true });
 
@@ -372,12 +378,36 @@ async function buildSetupIndex(settingsPath) {
       );
 
       if (setupNames.length > 0) {
-        result[entry.name] = setupNames;
+        result[trackKey] = setupNames;
       }
     }
   }
 
   return result;
+}
+
+async function resolveTrackFolderPath(settingsPath, trackKey) {
+  if (!settingsPath || !trackKey) return null;
+
+  const normalizedTrackKey = normalizeTrackKey(trackKey);
+
+  const directPath = path.join(settingsPath, normalizedTrackKey);
+  try {
+    const stats = await fs.promises.stat(directPath);
+    if (stats.isDirectory()) {
+      return directPath;
+    }
+  } catch (error) {
+    // Continue with case-insensitive lookup.
+  }
+
+  const entries = await fs.promises.readdir(settingsPath, { withFileTypes: true });
+  const matchingEntry = entries.find(
+    (entry) => entry.isDirectory() && normalizeTrackKey(entry.name) === normalizedTrackKey
+  );
+
+  if (!matchingEntry) return null;
+  return path.join(settingsPath, matchingEntry.name);
 }
 
 // Create window once Electron is ready
@@ -503,7 +533,9 @@ app.whenReady().then(() => {
       if (!settingsPath) return null;
       const { track, setupName } = payload;
       if (!track || !setupName) return null;
-      const fullPath = path.join(settingsPath, track, `${setupName}.svm`);
+      const trackFolderPath = await resolveTrackFolderPath(settingsPath, track);
+      if (!trackFolderPath) return null;
+      const fullPath = path.join(trackFolderPath, `${setupName}.svm`);
       const data = await fs.promises.readFile(fullPath, 'utf-8');
       return data;
     } catch (err) {
