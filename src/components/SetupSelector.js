@@ -19,6 +19,7 @@ import {
   buildSetupMenuData,
   defaultClassOrderKeys,
 } from '../domain/setupDisplay';
+import { resolveCarInfo } from '../domain/carInfo';
 import { renderSetupValue } from './setupDisplay';
 import SetupMenuItem from './SetupMenuItem';
 import VirtualizedMenuList from './VirtualizedMenuList';
@@ -27,13 +28,22 @@ import { useSettings } from '../state/SettingsContext';
 import { electron } from '../services/electron';
 import { getAssetPath } from '../domain/assetPaths';
 
-function buildMenu(setupIndex, trackInfo, excludeValue, showIcons, classOrder, classFilter) {
+function buildMenu(
+  setupIndex,
+  trackInfo,
+  excludeValue,
+  showIcons,
+  classOrder,
+  classFilter,
+  carFilter
+) {
   const sections = buildSetupMenuData(
     setupIndex,
     trackInfo,
     excludeValue,
     classOrder,
-    classFilter
+    classFilter,
+    carFilter
   );
   const items = [];
 
@@ -101,6 +111,47 @@ function findSetupItemIndex(items, setupKey) {
   const index = items.findIndex((item) => item?.props?.value === setupKey);
   if (index === -1) return 0;
   return Math.max(index, 0);
+}
+
+function buildCarFilterItems(setupIndex, classOrder) {
+  if (!setupIndex || typeof setupIndex !== 'object') {
+    return [];
+  }
+
+  const uniqueCars = new Map();
+  Object.values(setupIndex).forEach((setups) => {
+    if (!Array.isArray(setups)) return;
+
+    setups.forEach((setup) => {
+      const vehicleClass = typeof setup === 'string' ? '' : setup?.carTechnicalName;
+      const carInfo = resolveCarInfo(vehicleClass);
+      const key = carInfo?.technical || '';
+      if (!key || uniqueCars.has(key)) return;
+
+      uniqueCars.set(key, {
+        key,
+        label: carInfo?.displayName || key,
+        class: carInfo?.class || '',
+        brand: carInfo?.brand || '',
+        classIconPath: carInfo?.class ? getAssetPath(`assets/classes/${carInfo.class}.png`) : '',
+        brandIconPath: carInfo?.brand ? getAssetPath(`assets/brands/${carInfo.brand}.png`) : '',
+      });
+    });
+  });
+
+  const items = Array.from(uniqueCars.values());
+  items.sort((a, b) => {
+    const aOrder = classOrder.has(a.class) ? classOrder.get(a.class) : classOrder.size + 1;
+    const bOrder = classOrder.has(b.class) ? classOrder.get(b.class) : classOrder.size + 1;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+
+    const brandCompare = a.brand.localeCompare(b.brand);
+    if (brandCompare !== 0) return brandCompare;
+
+    return a.label.localeCompare(b.label);
+  });
+
+  return items;
 }
 
 function findSetupTrack(setupKey) {
@@ -187,6 +238,46 @@ export default function SetupSelector() {
       updateSettings({ classFilter: next });
     },
     [updateSettings]
+  );
+  const availableCarFilterItems = React.useMemo(
+    () => buildCarFilterItems(setupIndex, classOrder),
+    [setupIndex, classOrder]
+  );
+  const availableCarFilterKeys = React.useMemo(
+    () => availableCarFilterItems.map((item) => item.key),
+    [availableCarFilterItems]
+  );
+  const carFilter = React.useMemo(() => {
+    if (!availableCarFilterKeys.length) return null;
+    if (!Array.isArray(settings?.carFilter)) return null;
+
+    const availableKeys = new Set(availableCarFilterKeys);
+    const filtered = settings.carFilter.filter((key) => availableKeys.has(key));
+    if (filtered.length === 0) return [];
+    if (filtered.length === availableCarFilterKeys.length) return null;
+    return filtered;
+  }, [settings?.carFilter, availableCarFilterKeys]);
+  const carFilterItems = React.useMemo(() => {
+    const selected = carFilter ? new Set(carFilter) : null;
+    return availableCarFilterItems.map((item) => ({
+      ...item,
+      checked: selected ? selected.has(item.key) : true,
+    }));
+  }, [availableCarFilterItems, carFilter]);
+  const handleCarFilterChange = React.useCallback(
+    (next) => {
+      const availableKeys = new Set(availableCarFilterKeys);
+      const selected = Array.isArray(next) ? next.filter((key) => availableKeys.has(key)) : [];
+      const normalized =
+        selected.length === 0
+          ? []
+          : selected.length === availableCarFilterKeys.length
+            ? null
+            : selected;
+
+      updateSettings({ carFilter: normalized });
+    },
+    [availableCarFilterKeys, updateSettings]
   );
 
   React.useEffect(() => {
@@ -301,13 +392,29 @@ export default function SetupSelector() {
 
   const primaryMenu = React.useMemo(
     () =>
-      buildMenu(setupIndex, trackInfo, secondarySetup, primaryMenuOpen, classOrder, classFilter),
-    [setupIndex, trackInfo, secondarySetup, primaryMenuOpen, classOrder, classFilter]
+      buildMenu(
+        setupIndex,
+        trackInfo,
+        secondarySetup,
+        primaryMenuOpen,
+        classOrder,
+        classFilter,
+        carFilter
+      ),
+    [setupIndex, trackInfo, secondarySetup, primaryMenuOpen, classOrder, classFilter, carFilter]
   );
   const secondaryMenu = React.useMemo(
     () =>
-      buildMenu(setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder, classFilter),
-    [setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder, classFilter]
+      buildMenu(
+        setupIndex,
+        trackInfo,
+        primarySetup,
+        secondaryMenuOpen,
+        classOrder,
+        classFilter,
+        carFilter
+      ),
+    [setupIndex, trackInfo, primarySetup, secondaryMenuOpen, classOrder, classFilter, carFilter]
   );
   const primaryMenuItems = primaryMenu.items;
   const secondaryMenuItems = secondaryMenu.items;
@@ -459,6 +566,8 @@ export default function SetupSelector() {
                   selectedTrack: primarySelectedTrack,
                   classFilterItems,
                   onClassFilterChange: handleClassFilterChange,
+                  carFilterItems,
+                  onCarFilterChange: handleCarFilterChange,
                 },
               };
             })()}
@@ -523,6 +632,8 @@ export default function SetupSelector() {
                   selectedTrack: secondarySelectedTrack,
                   classFilterItems,
                   onClassFilterChange: handleClassFilterChange,
+                  carFilterItems,
+                  onCarFilterChange: handleCarFilterChange,
                 },
               };
             })()}
