@@ -7,6 +7,10 @@ module.exports = {
     countryCode: 'BH',
     displayName: 'Bahrain WEC',
   },
+  'Circuit de Barcelona': {
+    countryCode: 'ES',
+    displayName: 'Barcelona',
+  },
   'Circuit Of The Americas': {
     countryCode: 'US',
     displayName: 'COTA',
