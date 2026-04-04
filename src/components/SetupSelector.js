@@ -103,6 +103,13 @@ function findSetupItemIndex(items, setupKey) {
   return Math.max(index, 0);
 }
 
+function findSetupTrack(setupKey) {
+  if (!setupKey) return '';
+  const separatorIndex = setupKey.indexOf('/');
+  if (separatorIndex === -1) return '';
+  return setupKey.slice(0, separatorIndex);
+}
+
 export default function SetupSelector() {
   const {
     lmuPath,
@@ -320,6 +327,14 @@ export default function SetupSelector() {
     () => buildSectionIndexItems(secondaryMenu.sections),
     [secondaryMenu.sections]
   );
+  const primarySelectedTrack = React.useMemo(
+    () => findSetupTrack(primarySetup),
+    [primarySetup]
+  );
+  const secondarySelectedTrack = React.useMemo(
+    () => findSetupTrack(secondarySetup),
+    [secondarySetup]
+  );
   const showPathBanner = !lmuPath;
 
   return (
@@ -441,6 +456,7 @@ export default function SetupSelector() {
                   ...menuProps.MenuListProps,
                   initialScrollIndex: primaryScrollIndex,
                   sectionIndexItems: primarySectionIndexItems,
+                  selectedTrack: primarySelectedTrack,
                   classFilterItems,
                   onClassFilterChange: handleClassFilterChange,
                 },
@@ -504,6 +520,7 @@ export default function SetupSelector() {
                   ...menuProps.MenuListProps,
                   initialScrollIndex: secondaryScrollIndex,
                   sectionIndexItems: secondarySectionIndexItems,
+                  selectedTrack: secondarySelectedTrack,
                   classFilterItems,
                   onClassFilterChange: handleClassFilterChange,
                 },

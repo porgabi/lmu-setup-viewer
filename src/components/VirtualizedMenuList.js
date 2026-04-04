@@ -10,6 +10,7 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
     overscan = 4,
     initialScrollIndex,
     sectionIndexItems = [],
+    selectedTrack = '',
     classFilterItems = [],
     onClassFilterChange,
     sx,
@@ -19,6 +20,7 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
   const items = React.useMemo(() => React.Children.toArray(children), [children]);
   const [scrollTop, setScrollTop] = React.useState(0);
   const scrollContainerRef = React.useRef(null);
+  const sectionButtonRefs = React.useRef(new Map());
   const hasAppliedInitialScroll = React.useRef(false);
 
   const handleScroll = (event) => {
@@ -59,6 +61,18 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
     hasAppliedInitialScroll.current = true;
   }, [initialScrollIndex, items.length, scrollToIndex]);
 
+  React.useEffect(() => {
+    if (!selectedTrack || !sectionIndexItems.length) return;
+    const buttonNode = sectionButtonRefs.current.get(selectedTrack);
+    if (!buttonNode) return;
+
+    buttonNode.scrollIntoView({
+      behavior: 'auto',
+      inline: 'center',
+      block: 'nearest',
+    });
+  }, [selectedTrack, sectionIndexItems]);
+
   const useHorizontalWheelScroll = () => {
     const cleanupRef = React.useRef(null);
 
@@ -87,7 +101,9 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
 
   const sectionBar = hasSectionIndex ? (
     <Box
-      ref={sectionBarRef}
+      ref={(node) => {
+        sectionBarRef(node);
+      }}
       sx={{
         px: 1,
         py: 0.9,
@@ -120,6 +136,13 @@ const VirtualizedMenuList = React.forwardRef(function VirtualizedMenuList(props,
         <ButtonBase
           key={`section-${section.track}`}
           onClick={() => scrollToIndex(section.index)}
+          ref={(node) => {
+            if (node) {
+              sectionButtonRefs.current.set(section.track, node);
+            } else {
+              sectionButtonRefs.current.delete(section.track);
+            }
+          }}
           sx={{
             display: 'inline-flex',
             alignItems: 'center',
