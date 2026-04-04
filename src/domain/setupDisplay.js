@@ -70,13 +70,15 @@ export function buildSetupMenuData(
   trackInfo,
   excludeValue,
   classOrder = defaultClassOrder,
-  classFilter = null
+  classFilter = null,
+  carFilter = null
 ) {
   if (!setupIndex || typeof setupIndex !== 'object') {
     return [];
   }
 
   const filterSet = Array.isArray(classFilter) ? new Set(classFilter) : null;
+  const carFilterSet = Array.isArray(carFilter) ? new Set(carFilter) : null;
 
   return Object.entries(setupIndex)
     .map(([track, setups]) => {
@@ -94,8 +96,13 @@ export function buildSetupMenuData(
           const carInfo = resolveCarInfo(carTechnicalName);
           const { brandIconPath, classIconPath } = getSetupDisplayAssets(carInfo);
           const classKey = carInfo?.class;
+          const carKey = carInfo?.technical || '';
 
           if (filterSet && !filterSet.has(classKey)) {
+            return null;
+          }
+
+          if (carFilterSet && !carFilterSet.has(carKey)) {
             return null;
           }
 

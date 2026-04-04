@@ -1,12 +1,14 @@
 {
   "name": "lmu-setup-viewer",
-  "version": "0.3.0",
+  "author": "Gábor Pór",
+  "version": "1.1.0",
   "main": "main.js",
   "homepage": "./",
   "private": true,
   "build": {
     "appId": "com.lmu.setupviewer",
     "productName": "LMU Setup Viewer",
+    "artifactName": "LMU Setup Viewer ${version}.${ext}",
     "directories": {
       "output": "dist",
       "buildResources": "assets/icons"

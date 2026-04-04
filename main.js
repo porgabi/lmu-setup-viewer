@@ -247,7 +247,13 @@ function createWindow() {
   mainWindow.webContents.on('before-input-event', (event, input) => {
     const command = mapInputToHotkeyCommand(input);
     if (!command) return;
-    event.preventDefault();
+
+    // Do not block plain character input (e.g. search fields in dropdown popovers).
+    // Only prevent default for tab-cycling accelerators that should not propagate.
+    if (command === 'cycle-tabs-forward' || command === 'cycle-tabs-backward') {
+      event.preventDefault();
+    }
+
     mainWindow.webContents.send('hotkey-command', command);
   });
 

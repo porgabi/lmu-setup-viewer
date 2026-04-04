@@ -7,6 +7,7 @@ export const defaultSettings = {
   diffHighlightEnabled: true,
   dropdownSortOrder: ['hy', 'lmgt3', 'lmp2_elms', 'lmp2_wec', 'gte', 'lmp3'],
   classFilter: ['hy', 'lmgt3', 'lmp2_elms', 'lmp2_wec', 'gte', 'lmp3'],
+  carFilter: null,
   dropdownListSize: 'short',
   setupTableTextSize: 'compact',
   checkUpdatesOnLaunch: false,
