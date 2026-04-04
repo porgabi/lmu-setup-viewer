@@ -19,6 +19,11 @@
     "class": "lmp3",
     "brand": "ligier"
   },
+  "Duqueine_D09_P3": {
+    "displayName": "Duqueine D09",
+    "class": "lmp3",
+    "brand": "duqueine"
+  },
   "Aston_Martin_Vantage_AMR": {
     "displayName": "Aston Martin Vantage AMR",
     "class": "gte",
@@ -98,6 +103,11 @@
     "displayName": "Ferrari 499P",
     "class": "hy",
     "brand": "ferrari"
+  },
+  "Genesis_GMR001": {
+    "displayName": "Genesis GMR-001",
+    "class": "hy",
+    "brand": "genesis"
   },
   "Glickenhaus_SGC007": {
     "displayName": "Glickenhaus SCG007",
