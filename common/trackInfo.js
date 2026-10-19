@@ -15,6 +15,10 @@ module.exports = {
     countryCode: 'US',
     displayName: 'COTA',
   },
+  daytonarc: {
+    countryCode: 'US',
+    displayName: 'Daytona',
+  },
   fuji: {
     countryCode: 'JP',
     displayName: 'Fuji',
@@ -39,6 +43,10 @@ module.exports = {
     countryCode: 'BR',
     displayName: 'Interlagos',
   },
+  lagunaseca: {
+    countryCode: 'US',
+    displayName: 'Laguna Seca',
+  },
   lemans: {
     countryCode: 'FR',
     displayName: 'Le Mans',
@@ -46,6 +54,10 @@ module.exports = {
   lemans2023wec: {
     countryCode: 'FR',
     displayName: 'Le Mans WEC',
+  },
+  longbeach: {
+    countryCode: 'US',
+    displayName: 'Long Beach',
   },
   monza: {
     countryCode: 'IT',
@@ -66,6 +78,10 @@ module.exports = {
   qatar: {
     countryCode: 'QA',
     displayName: 'Qatar',
+  },
+  'road atlanta': {
+    countryCode: 'US',
+    displayName: 'Road Atlanta',
   },
   sebring: {
     countryCode: 'US',
